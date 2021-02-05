@@ -74,5 +74,6 @@ func NewAccessoryAirPurifier(info accessory.Info, args ...interface{}) *Accessor
 		acc.AirPurifier.RotationSpeed.SetStepValue(1.0)
 	}
 	acc.AddService(acc.AirPurifier.Service)
+
 	return &acc
 }

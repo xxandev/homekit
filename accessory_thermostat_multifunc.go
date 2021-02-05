@@ -80,6 +80,7 @@ func NewAccessoryThermostatMultifunc(info accessory.Info, args ...interface{}) *
 	acc := AccessoryThermostatMultifunc{}
 	acc.Accessory = accessory.New(info, accessory.TypeThermostat)
 	acc.ThermostatMultifunc = newServiceThermostatMultifunc()
+
 	amountArgs := len(args)
 	if amountArgs > 0 {
 		acc.ThermostatMultifunc.TargetHeatingCoolingState.SetValue(argToInt(args[0], 0))
