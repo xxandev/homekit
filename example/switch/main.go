@@ -12,7 +12,7 @@ import (
 
 const (
 	accessoryName string = "switch"
-	accessorySn   string = "ExampleSW"
+	accessorySn   string = "ExmplSW"
 	accessoryPin  string = "19283746"
 	accessoryPort string = "10001"
 )
