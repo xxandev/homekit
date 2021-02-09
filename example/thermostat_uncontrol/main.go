@@ -39,6 +39,7 @@ func main() {
 					acc.Thermostat.CurrentHeatingCoolingState.SetValue(state + 1)
 				}
 				fmt.Printf("acc update current state: %T - %v \n", acc.Thermostat.CurrentHeatingCoolingState.GetValue(), acc.Thermostat.CurrentHeatingCoolingState.GetValue())
+				continue
 			case <-tickerUpdateTemp.C:
 				acc.Thermostat.CurrentTemperature.SetValue(float64(time.Now().Second()-30) + float64(time.Now().Second()+40)/100)
 				fmt.Printf("acc update current temp: %T - %v \n", acc.Thermostat.CurrentTemperature.GetValue(), acc.Thermostat.CurrentTemperature.GetValue())
