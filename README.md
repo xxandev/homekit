@@ -13,6 +13,10 @@ OS: ubuntu 20.04 lts
 
 GO: version 1.15.7 linux/amd64
 
+https://golang.org/
+
+https://golang.org/dl/
+
 ## List accessories:
 - Air Purifier
 - Camera **dev**
