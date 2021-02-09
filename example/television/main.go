@@ -11,10 +11,9 @@ import (
 )
 
 const (
-	accessoryName string = "switch"
-	accessorySn   string = "ExmplSW"
+	accessoryName string = "television"
+	accessorySn   string = "ExmplTV"
 	accessoryPin  string = "19283746"
-	accessoryPort string = "10001"
 )
 
 func main() {
@@ -29,7 +28,7 @@ func main() {
 	_ = acc.AddInputSource(6, "AppleTV", characteristic.InputSourceTypeOther)
 	_ = acc.AddInputSource(7, "Xbox", characteristic.InputSourceTypeOther)
 	_ = acc.AddInputSource(8, "Paystation", characteristic.InputSourceTypeOther)
-	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: accessoryPin, Port: accessoryPort}, acc.Accessory)
+	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: accessoryPin}, acc.Accessory)
 	if err != nil {
 		fmt.Println("accessory [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]", "error create transport:", err)
 		os.Exit(1)
