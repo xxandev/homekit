@@ -1,7 +1,5 @@
 # HomeKit  Accessoryies
-This repository is an add-on to brutella/hc from Matthias Hochgatterer
-
-**https://github.com/brutella/hc **
+This repository is an add-on to brutella/hc from Matthias Hochgatterer https://github.com/brutella/hc
 
 **hc version:** 1.2.3
 
