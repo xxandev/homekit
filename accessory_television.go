@@ -13,6 +13,13 @@ type AccessoryTelevision struct {
 	Speaker    *service.Speaker
 }
 
+//CharactTelevisionInputSource -
+type CharactTelevisionInputSource struct {
+	ID   int
+	Name string
+	Type int
+}
+
 // NewAccessoryTelevision returns AccessorySwitch (args... are not used)
 func NewAccessoryTelevision(info accessory.Info, args ...interface{}) *AccessoryTelevision {
 	acc := AccessoryTelevision{}
