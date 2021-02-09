@@ -6,14 +6,14 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-type serviceFanSimple struct {
+type serviceFanControlled struct {
 	*service.Service
 	On            *characteristic.On
 	RotationSpeed *characteristic.RotationSpeed
 }
 
-func newServiceFanSimple() *serviceFanSimple {
-	svc := serviceFanSimple{}
+func newServiceFanSimple() *serviceFanControlled {
+	svc := serviceFanControlled{}
 	svc.Service = service.New(service.TypeFan)
 
 	svc.On = characteristic.NewOn()
@@ -28,7 +28,7 @@ func newServiceFanSimple() *serviceFanSimple {
 //AccessoryFanControlled struct
 type AccessoryFanControlled struct {
 	*accessory.Accessory
-	Fan *serviceFanSimple
+	Fan *serviceFanControlled
 }
 
 //NewAccessoryFanControlled return AccessoryFanControlled
