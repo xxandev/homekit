@@ -6,14 +6,16 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-type serviceFanControlled struct {
+//ServiceFanControlled -
+type ServiceFanControlled struct {
 	*service.Service
 	On            *characteristic.On
 	RotationSpeed *characteristic.RotationSpeed
 }
 
-func newServiceFanSimple() *serviceFanControlled {
-	svc := serviceFanControlled{}
+//NewServiceFanSimple -
+func NewServiceFanSimple() *ServiceFanControlled {
+	svc := ServiceFanControlled{}
 	svc.Service = service.New(service.TypeFan)
 
 	svc.On = characteristic.NewOn()
@@ -28,7 +30,7 @@ func newServiceFanSimple() *serviceFanControlled {
 //AccessoryFanControlled struct
 type AccessoryFanControlled struct {
 	*accessory.Accessory
-	Fan *serviceFanControlled
+	Fan *ServiceFanControlled
 }
 
 //NewAccessoryFanControlled return AccessoryFanControlled
@@ -43,7 +45,7 @@ type AccessoryFanControlled struct {
 func NewAccessoryFanControlled(info accessory.Info, args ...interface{}) *AccessoryFanControlled {
 	acc := AccessoryFanControlled{}
 	acc.Accessory = accessory.New(info, accessory.TypeFan)
-	acc.Fan = newServiceFanSimple()
+	acc.Fan = NewServiceFanSimple()
 	amountArgs := len(args)
 	if amountArgs > 0 {
 		acc.Fan.RotationSpeed.SetValue(argToFloat64(args[0], 0.0))

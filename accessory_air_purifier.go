@@ -6,7 +6,8 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-type serviceAirPurifier struct {
+//ServiceAirPurifier -
+type ServiceAirPurifier struct {
 	*service.Service
 	Active                  *characteristic.Active
 	CurrentAirPurifierState *characteristic.CurrentAirPurifierState
@@ -14,8 +15,9 @@ type serviceAirPurifier struct {
 	RotationSpeed           *characteristic.RotationSpeed
 }
 
-func newServiceAirPurifier() *serviceAirPurifier {
-	svc := serviceAirPurifier{}
+//NewServiceAirPurifier -
+func NewServiceAirPurifier() *ServiceAirPurifier {
+	svc := ServiceAirPurifier{}
 	svc.Service = service.New(service.TypeAirPurifier)
 
 	svc.Active = characteristic.NewActive()
@@ -36,7 +38,7 @@ func newServiceAirPurifier() *serviceAirPurifier {
 //AccessoryAirPurifier struct
 type AccessoryAirPurifier struct {
 	*accessory.Accessory
-	AirPurifier *serviceAirPurifier
+	AirPurifier *ServiceAirPurifier
 }
 
 //NewAccessoryAirPurifier returns AccessoryAirPurifier
@@ -51,7 +53,7 @@ type AccessoryAirPurifier struct {
 func NewAccessoryAirPurifier(info accessory.Info, args ...interface{}) *AccessoryAirPurifier {
 	acc := AccessoryAirPurifier{}
 	acc.Accessory = accessory.New(info, accessory.TypeAirPurifier)
-	acc.AirPurifier = newServiceAirPurifier()
+	acc.AirPurifier = NewServiceAirPurifier()
 	amountArgs := len(args)
 	if amountArgs > 0 {
 		acc.AirPurifier.RotationSpeed.SetValue(argToFloat64(args[0], 0.0))

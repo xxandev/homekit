@@ -6,7 +6,8 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-type serviceFanV2Multifunc struct {
+//ServiceFanV2Multifunc -
+type ServiceFanV2Multifunc struct {
 	*service.Service
 	Active               *characteristic.Active
 	CurrentFanState      *characteristic.CurrentFanState
@@ -17,8 +18,9 @@ type serviceFanV2Multifunc struct {
 	LockPhysicalControls *characteristic.LockPhysicalControls
 }
 
-func newServiceFanV2Multifunc() *serviceFanV2Multifunc {
-	svc := serviceFanV2Multifunc{}
+//NewServiceFanV2Multifunc -
+func NewServiceFanV2Multifunc() *ServiceFanV2Multifunc {
+	svc := ServiceFanV2Multifunc{}
 	svc.Service = service.New(service.TypeFanV2)
 
 	svc.Active = characteristic.NewActive()
@@ -48,14 +50,14 @@ func newServiceFanV2Multifunc() *serviceFanV2Multifunc {
 //AccessoryFanV2Multifunc struct
 type AccessoryFanV2Multifunc struct {
 	*accessory.Accessory
-	FanV2 *serviceFanV2Multifunc
+	FanV2 *ServiceFanV2Multifunc
 }
 
 //NewAccessoryFanV2Multifunc return AccessoryFanV2Multifunc (args... are not used)
 func NewAccessoryFanV2Multifunc(info accessory.Info, args ...interface{}) *AccessoryFanV2Multifunc {
 	acc := AccessoryFanV2Multifunc{}
 	acc.Accessory = accessory.New(info, accessory.TypeFan)
-	acc.FanV2 = newServiceFanV2Multifunc()
+	acc.FanV2 = NewServiceFanV2Multifunc()
 	acc.AddService(acc.FanV2.Service)
 	return &acc
 }

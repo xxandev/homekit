@@ -6,7 +6,8 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-type serviceDoor struct {
+//ServiceDoor -
+type ServiceDoor struct {
 	*service.Service
 	CurrentPosition     *characteristic.CurrentPosition
 	PositionState       *characteristic.PositionState
@@ -14,8 +15,9 @@ type serviceDoor struct {
 	ObstructionDetected *characteristic.ObstructionDetected
 }
 
-func newServiceDoor() *serviceDoor {
-	svc := serviceDoor{}
+//NewServiceDoor -
+func NewServiceDoor() *ServiceDoor {
+	svc := ServiceDoor{}
 	svc.Service = service.New(service.TypeDoor)
 
 	svc.CurrentPosition = characteristic.NewCurrentPosition()
@@ -36,7 +38,7 @@ func newServiceDoor() *serviceDoor {
 //AccessoryDoor struct
 type AccessoryDoor struct {
 	*accessory.Accessory
-	Door *serviceDoor
+	Door *ServiceDoor
 }
 
 //NewAccessoryDoor returns AccessoryDoor
@@ -51,7 +53,7 @@ type AccessoryDoor struct {
 func NewAccessoryDoor(info accessory.Info, args ...interface{}) *AccessoryDoor {
 	acc := AccessoryDoor{}
 	acc.Accessory = accessory.New(info, accessory.TypeDoor)
-	acc.Door = newServiceDoor()
+	acc.Door = NewServiceDoor()
 	amountArgs := len(args)
 	if amountArgs > 0 {
 		acc.Door.TargetPosition.SetValue(argToInt(args[0], 0))

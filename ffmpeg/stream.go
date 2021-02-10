@@ -47,7 +47,7 @@ func (s *stream) start(video rtp.VideoParameters, audio rtp.AudioParameters) err
 	if s.inputDevice == "rtsp" {
 		// rtsp support
 		ffmpegVideo = fmt.Sprintf("-re -i %s", s.inputFilename) +
-			fmt.Sprintf(" -an -vcodec %s -pix_fmt yuv420p -r 30 -x264-params bframes=0", s.videoEncoder(video)) +
+			fmt.Sprintf(" -an -vcodec %s -pix_fmt yuv420p -r 30 -x264-params bframes=16", s.videoEncoder(video)) +
 			fmt.Sprintf(" -video_size %d:-2", video.Attributes.Width) +
 			fmt.Sprintf(" -level:v %s", videoLevel(video.CodecParams)) +
 			" -f rawvideo" +

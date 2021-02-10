@@ -6,7 +6,8 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-type serviceThermostatMultifunc struct {
+//ServiceThermostatMultifunc -
+type ServiceThermostatMultifunc struct {
 	*service.Service
 	CurrentHeatingCoolingState  *characteristic.CurrentHeatingCoolingState
 	TargetHeatingCoolingState   *characteristic.TargetHeatingCoolingState
@@ -19,8 +20,9 @@ type serviceThermostatMultifunc struct {
 	TargetRelativeHumidity      *characteristic.TargetRelativeHumidity
 }
 
-func newServiceThermostatMultifunc() *serviceThermostatMultifunc {
-	svc := serviceThermostatMultifunc{}
+//NewServiceThermostatMultifunc -
+func NewServiceThermostatMultifunc() *ServiceThermostatMultifunc {
+	svc := ServiceThermostatMultifunc{}
 	svc.Service = service.New(service.TypeThermostat)
 
 	svc.CurrentHeatingCoolingState = characteristic.NewCurrentHeatingCoolingState()
@@ -56,7 +58,7 @@ func newServiceThermostatMultifunc() *serviceThermostatMultifunc {
 //AccessoryThermostatMultifunc struct
 type AccessoryThermostatMultifunc struct {
 	*accessory.Accessory
-	ThermostatMultifunc *serviceThermostatMultifunc
+	ThermostatMultifunc *ServiceThermostatMultifunc
 }
 
 //NewAccessoryThermostatMultifunc returns AccessoryThermostatMultifunc
@@ -79,7 +81,7 @@ type AccessoryThermostatMultifunc struct {
 func NewAccessoryThermostatMultifunc(info accessory.Info, args ...interface{}) *AccessoryThermostatMultifunc {
 	acc := AccessoryThermostatMultifunc{}
 	acc.Accessory = accessory.New(info, accessory.TypeThermostat)
-	acc.ThermostatMultifunc = newServiceThermostatMultifunc()
+	acc.ThermostatMultifunc = NewServiceThermostatMultifunc()
 
 	amountArgs := len(args)
 	if amountArgs > 0 {
