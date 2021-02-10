@@ -13,7 +13,7 @@ import (
 const (
 	accessoryName string = "switch"
 	accessorySn   string = "ExmplSW"
-	accessoryPin  string = "19283746"
+	accessoryPin  string = "11112222"
 )
 
 func main() {

@@ -12,7 +12,7 @@ import (
 const (
 	accessoryName string = "faucet"
 	accessorySn   string = "ExmplFCT"
-	accessoryPin  string = "19283746"
+	accessoryPin  string = "11112222"
 )
 
 func main() {

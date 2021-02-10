@@ -14,7 +14,7 @@ import (
 const (
 	accessoryName string = "camera"
 	accessorySn   string = "ExmplCam"
-	accessoryPin  string = "19283746"
+	accessoryPin  string = "11112222"
 )
 
 func main() {

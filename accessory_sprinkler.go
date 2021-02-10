@@ -26,6 +26,7 @@ func NewServiceSprinkler() *ServiceSprinkler {
 //AccessorySprinkler struct
 type AccessorySprinkler struct {
 	*accessory.Accessory
+	Valve      *service.Valve
 	Sprinklers *ServiceSprinkler
 }
 

@@ -13,7 +13,7 @@ import (
 const (
 	accessoryName string = "thermostat"
 	accessorySn   string = "ExmplTRMHTN"
-	accessoryPin  string = "19283746"
+	accessoryPin  string = "11112222"
 )
 
 func invState(arg int) int {
