@@ -25,9 +25,9 @@ func main() {
 		os.Exit(1)
 	}
 	go acc.Gate.TargetDoorState.OnValueRemoteUpdate(func(state int) {
-		fmt.Printf("acc remote update on: %T - %v \n", state, state)
+		fmt.Printf("acc remote update target state: %T - %v \n", state, state)
 		acc.Gate.CurrentDoorState.SetValue(state)
-		fmt.Printf("acc update current position: %T - %v \n", acc.Gate.CurrentDoorState.GetValue(), acc.Gate.CurrentDoorState.GetValue())
+		fmt.Printf("acc update current state: %T - %v \n", acc.Gate.CurrentDoorState.GetValue(), acc.Gate.CurrentDoorState.GetValue())
 	})
 	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
 	hc.OnTermination(func() { <-transp.Stop() })
