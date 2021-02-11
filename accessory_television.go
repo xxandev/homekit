@@ -6,11 +6,45 @@ import (
 	"github.com/brutella/hc/service"
 )
 
+//ServiceTelevisionSpeaker -
+type ServiceTelevisionSpeaker struct {
+	*service.Service
+
+	Mute              *characteristic.Mute
+	Active            *characteristic.Active
+	Volume            *characteristic.Volume
+	VolumeControlType *characteristic.VolumeControlType
+	VolumeSelector    *characteristic.VolumeSelector
+}
+
+//NewServiceTelevisionSpeaker -
+func NewServiceTelevisionSpeaker() *ServiceTelevisionSpeaker {
+	svc := ServiceTelevisionSpeaker{}
+	svc.Service = service.New(service.TypeSpeaker)
+
+	svc.Mute = characteristic.NewMute()
+	svc.AddCharacteristic(svc.Mute.Characteristic)
+
+	svc.Active = characteristic.NewActive()
+	svc.AddCharacteristic(svc.Active.Characteristic)
+
+	svc.Volume = characteristic.NewVolume()
+	svc.AddCharacteristic(svc.Volume.Characteristic)
+
+	svc.VolumeControlType = characteristic.NewVolumeControlType()
+	svc.AddCharacteristic(svc.VolumeControlType.Characteristic)
+
+	svc.VolumeSelector = characteristic.NewVolumeSelector()
+	svc.AddCharacteristic(svc.VolumeSelector.Characteristic)
+
+	return &svc
+}
+
 //AccessoryTelevision struct
 type AccessoryTelevision struct {
 	*accessory.Accessory
-	Television *service.Television
-	Speaker    *service.Speaker
+	Television        *service.Television
+	TelevisionSpeaker *ServiceTelevisionSpeaker
 }
 
 // NewAccessoryTelevision returns AccessorySwitch (args... are not used)
@@ -18,10 +52,10 @@ func NewAccessoryTelevision(info accessory.Info, args ...interface{}) *Accessory
 	acc := AccessoryTelevision{}
 	acc.Accessory = accessory.New(info, accessory.TypeTelevision)
 	acc.Television = service.NewTelevision()
-	acc.Speaker = service.NewSpeaker()
+	acc.TelevisionSpeaker = NewServiceTelevisionSpeaker()
 
 	acc.AddService(acc.Television.Service)
-	acc.AddService(acc.Speaker.Service)
+	acc.AddService(acc.TelevisionSpeaker.Service)
 
 	return &acc
 }
