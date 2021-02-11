@@ -2,13 +2,56 @@ package homekit
 
 import (
 	"github.com/brutella/hc/accessory"
+	"github.com/brutella/hc/characteristic"
 	"github.com/brutella/hc/service"
 )
+
+//ServiceHumidifierDehumidifier -
+type ServiceHumidifierDehumidifier struct {
+	*service.Service
+
+	Active                                *characteristic.Active
+	CurrentHumidifierDehumidifierState    *characteristic.CurrentHumidifierDehumidifierState
+	TargetHumidifierDehumidifierState     *characteristic.TargetHumidifierDehumidifierState
+	CurrentRelativeHumidity               *characteristic.CurrentRelativeHumidity
+	TargetRelativeHumidity                *characteristic.TargetRelativeHumidity
+	RelativeHumidityDehumidifierThreshold *characteristic.RelativeHumidityDehumidifierThreshold
+	RelativeHumidityHumidifierThreshold   *characteristic.RelativeHumidityHumidifierThreshold
+}
+
+//NewServiceHumidifierDehumidifier -
+func NewServiceHumidifierDehumidifier() *ServiceHumidifierDehumidifier {
+	svc := ServiceHumidifierDehumidifier{}
+	svc.Service = service.New(service.TypeHumidifierDehumidifier)
+
+	svc.Active = characteristic.NewActive()
+	svc.AddCharacteristic(svc.Active.Characteristic)
+
+	svc.CurrentHumidifierDehumidifierState = characteristic.NewCurrentHumidifierDehumidifierState()
+	svc.AddCharacteristic(svc.CurrentHumidifierDehumidifierState.Characteristic)
+
+	svc.TargetHumidifierDehumidifierState = characteristic.NewTargetHumidifierDehumidifierState()
+	svc.AddCharacteristic(svc.TargetHumidifierDehumidifierState.Characteristic)
+
+	svc.CurrentRelativeHumidity = characteristic.NewCurrentRelativeHumidity()
+	svc.AddCharacteristic(svc.CurrentRelativeHumidity.Characteristic)
+
+	svc.TargetRelativeHumidity = characteristic.NewTargetRelativeHumidity()
+	svc.AddCharacteristic(svc.TargetRelativeHumidity.Characteristic)
+
+	svc.RelativeHumidityDehumidifierThreshold = characteristic.NewRelativeHumidityDehumidifierThreshold()
+	svc.AddCharacteristic(svc.RelativeHumidityDehumidifierThreshold.Characteristic)
+
+	svc.RelativeHumidityHumidifierThreshold = characteristic.NewRelativeHumidityHumidifierThreshold()
+	svc.AddCharacteristic(svc.RelativeHumidityHumidifierThreshold.Characteristic)
+
+	return &svc
+}
 
 //AccessoryHumidifierDehumidifier struct
 type AccessoryHumidifierDehumidifier struct {
 	*accessory.Accessory
-	HumidifierDehumidifier *service.HumidifierDehumidifier
+	HumidifierDehumidifier *ServiceHumidifierDehumidifier
 }
 
 //NewAccessoryHumidifierDehumidifier returns AccessoryHumidifierDehumidifier
@@ -23,7 +66,7 @@ type AccessoryHumidifierDehumidifier struct {
 func NewAccessoryHumidifierDehumidifier(info accessory.Info, args ...interface{}) *AccessoryHumidifierDehumidifier {
 	acc := AccessoryHumidifierDehumidifier{}
 	acc.Accessory = accessory.New(info, accessory.TypeDehumidifier)
-	acc.HumidifierDehumidifier = service.NewHumidifierDehumidifier()
+	acc.HumidifierDehumidifier = NewServiceHumidifierDehumidifier()
 	amountArgs := len(args)
 	if amountArgs > 0 {
 		acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.SetValue(argToInt(args[0], 0))
