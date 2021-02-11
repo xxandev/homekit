@@ -31,11 +31,14 @@ func main() {
 			select {
 			case <-tickerUpdateState.C:
 				acc.Fan.On.SetValue(!acc.Fan.On.GetValue())
+				fmt.Printf("acc fan update on: %T - %v \n", acc.Fan.On.GetValue(), acc.Fan.On.GetValue())
 				continue
 			}
 		}
 	}()
-	go acc.Fan.On.OnValueRemoteUpdate(func(state bool) { fmt.Printf("acc remote update on: %T - %v \n", state, state) })
+	go acc.Fan.On.OnValueRemoteUpdate(func(v bool) {
+		fmt.Printf("acc fan remote update on: %T - %v \n", v, v)
+	})
 	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
 	hc.OnTermination(func() { <-transp.Stop() })
 	transp.Start()

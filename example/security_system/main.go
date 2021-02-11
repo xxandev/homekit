@@ -35,12 +35,14 @@ func main() {
 				} else {
 					acc.SecuritySystemSimple.SecuritySystemCurrentState.SetValue(acc.SecuritySystemSimple.SecuritySystemCurrentState.GetValue() + 1)
 				}
-				fmt.Printf("acc update current state: %T - %v \n", acc.SecuritySystemSimple.SecuritySystemCurrentState.GetValue(), acc.SecuritySystemSimple.SecuritySystemCurrentState.GetValue())
+				fmt.Printf("acc security system update current state: %T - %v \n", acc.SecuritySystemSimple.SecuritySystemCurrentState.GetValue(), acc.SecuritySystemSimple.SecuritySystemCurrentState.GetValue())
 				continue
 			}
 		}
 	}()
-	go acc.SecuritySystemSimple.SecuritySystemTargetState.OnValueRemoteUpdate(func(state int) { fmt.Printf("acc remote update target state: %T - %v \n", state, state) })
+	go acc.SecuritySystemSimple.SecuritySystemTargetState.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc security system remote update target state: %T - %v \n", v, v)
+	})
 	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
 	hc.OnTermination(func() { <-transp.Stop() })
 	transp.Start()

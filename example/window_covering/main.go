@@ -25,9 +25,9 @@ func main() {
 		os.Exit(1)
 	}
 	go acc.WindowCovering.TargetPosition.OnValueRemoteUpdate(func(state int) {
-		fmt.Printf("acc remote update target position: %T - %v \n", state, state)
+		fmt.Printf("acc window covering remote update target position: %T - %v \n", state, state)
 		acc.WindowCovering.CurrentPosition.SetValue(state)
-		fmt.Printf("acc update current position: %T - %v \n", acc.WindowCovering.CurrentPosition.GetValue(), acc.WindowCovering.CurrentPosition.GetValue())
+		fmt.Printf("acc window covering update current position: %T - %v \n", acc.WindowCovering.CurrentPosition.GetValue(), acc.WindowCovering.CurrentPosition.GetValue())
 	})
 	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
 	hc.OnTermination(func() { <-transp.Stop() })

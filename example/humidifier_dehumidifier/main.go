@@ -25,19 +25,19 @@ func main() {
 		os.Exit(1)
 	}
 	go acc.HumidifierDehumidifier.Active.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("acc remote update active: %T - %v \n", v, v)
+		fmt.Printf("acc humidifier-dehumidifier remote update active: %T - %v \n", v, v)
 	})
 	go acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("acc remote update target state: %T - %v \n", v, v)
+		fmt.Printf("acc humidifier-dehumidifier remote update target state: %T - %v \n", v, v)
 	})
 	go acc.HumidifierDehumidifier.TargetRelativeHumidity.OnValueRemoteUpdate(func(v float64) {
-		fmt.Printf("acc remote update target relative humidity: %T - %v \n", v, v)
+		fmt.Printf("acc humidifier-dehumidifier remote update target relative humidity: %T - %v \n", v, v)
 	})
 	go acc.HumidifierDehumidifier.RelativeHumidityDehumidifierThreshold.OnValueRemoteUpdate(func(v float64) {
-		fmt.Printf("acc remote update relative humidity dehumidifier threshold: %T - %v \n", v, v)
+		fmt.Printf("acc humidifier-dehumidifier remote update relative humidity dehumidifier threshold: %T - %v \n", v, v)
 	})
 	go acc.HumidifierDehumidifier.RelativeHumidityHumidifierThreshold.OnValueRemoteUpdate(func(v float64) {
-		fmt.Printf("acc remote update relative humidity humidifier threshold: %T - %v \n", v, v)
+		fmt.Printf("acc humidifier-dehumidifier remote update relative humidity humidifier threshold: %T - %v \n", v, v)
 	})
 	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
 	hc.OnTermination(func() { <-transp.Stop() })

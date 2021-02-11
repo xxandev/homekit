@@ -24,10 +24,10 @@ func main() {
 		fmt.Println("accessory [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]", "error create transport:", err)
 		os.Exit(1)
 	}
-	go acc.LockMechanism.LockTargetState.OnValueRemoteUpdate(func(state int) {
-		fmt.Printf("acc remote update target position: %T - %v \n", state, state)
-		acc.LockMechanism.LockCurrentState.SetValue(state)
-		fmt.Printf("acc update current position: %T - %v \n", acc.LockMechanism.LockCurrentState.GetValue(), acc.LockMechanism.LockCurrentState.GetValue())
+	go acc.LockMechanism.LockTargetState.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc door lock remote update target position: %T - %v \n", v, v)
+		acc.LockMechanism.LockCurrentState.SetValue(v)
+		fmt.Printf("acc door lock update current position: %T - %v \n", acc.LockMechanism.LockCurrentState.GetValue(), acc.LockMechanism.LockCurrentState.GetValue())
 	})
 	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
 	hc.OnTermination(func() { <-transp.Stop() })

@@ -20,26 +20,6 @@ func NewAccessoryTelevision(info accessory.Info, args ...interface{}) *Accessory
 	acc.Television = service.NewTelevision()
 	acc.Speaker = service.NewSpeaker()
 
-	acc.Television.Brightness.SetValue(0)
-	acc.Television.Brightness.SetMinValue(0)
-	acc.Television.Brightness.SetMaxValue(100)
-	acc.Television.Brightness.SetStepValue(1)
-
-	acc.Television.TargetMediaState.SetValue(0)
-	acc.Television.TargetMediaState.SetMinValue(0)
-	acc.Television.TargetMediaState.SetMaxValue(2)
-	acc.Television.TargetMediaState.SetStepValue(1)
-
-	acc.Television.PictureMode.SetValue(0)
-	acc.Television.PictureMode.SetMinValue(0)
-	acc.Television.PictureMode.SetMaxValue(7)
-	acc.Television.PictureMode.SetStepValue(1)
-
-	acc.Television.RemoteKey.SetValue(0)
-	acc.Television.RemoteKey.SetMinValue(0)
-	acc.Television.RemoteKey.SetMaxValue(15)
-	acc.Television.RemoteKey.SetStepValue(1)
-
 	acc.AddService(acc.Television.Service)
 	acc.AddService(acc.Speaker.Service)
 
@@ -59,4 +39,33 @@ func (acc *AccessoryTelevision) AddInputSource(id int, name string, inputSourceT
 	acc.AddService(inSource.Service)
 	acc.Television.AddLinkedService(inSource.Service)
 	return inSource
+}
+
+//ProcessInputSource -
+//ConfiguredName
+//InputSourceType
+//IsConfigured
+//Identifier
+//TargetVisibilityState
+//Name
+func (acc *AccessoryTelevision) ProcessInputSource(insource *service.InputSource, events ...func(interface{})) {
+	amountEvents := len(events)
+	if amountEvents > 0 {
+		insource.ConfiguredName.OnValueRemoteUpdate(func(v string) { events[0](v) })
+	}
+	if amountEvents > 1 {
+		insource.TargetVisibilityState.OnValueRemoteUpdate(func(v int) { events[1](v) })
+	}
+	if amountEvents > 2 {
+		insource.InputSourceType.OnValueRemoteUpdate(func(v int) { events[2](v) })
+	}
+	if amountEvents > 3 {
+		insource.IsConfigured.OnValueRemoteUpdate(func(v int) { events[3](v) })
+	}
+	if amountEvents > 4 {
+		insource.Identifier.OnValueRemoteUpdate(func(v int) { events[4](v) })
+	}
+	if amountEvents > 5 {
+		insource.Name.OnValueRemoteUpdate(func(v string) { events[5](v) })
+	}
 }

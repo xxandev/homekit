@@ -39,17 +39,21 @@ func main() {
 			select {
 			case <-tickerUpdateState.C:
 				acc.Thermostat.CurrentHeatingCoolingState.SetValue(invState(acc.Thermostat.CurrentHeatingCoolingState.GetValue()))
-				fmt.Printf("acc update current state: %T - %v \n", acc.Thermostat.CurrentHeatingCoolingState.GetValue(), acc.Thermostat.CurrentHeatingCoolingState.GetValue())
+				fmt.Printf("acc thermostat update current state: %T - %v \n", acc.Thermostat.CurrentHeatingCoolingState.GetValue(), acc.Thermostat.CurrentHeatingCoolingState.GetValue())
 				continue
 			case <-tickerUpdateTemp.C:
 				acc.Thermostat.CurrentTemperature.SetValue(float64(time.Now().Second()-30) + float64(time.Now().Second()+40)/100)
-				fmt.Printf("acc update current temp: %T - %v \n", acc.Thermostat.CurrentTemperature.GetValue(), acc.Thermostat.CurrentTemperature.GetValue())
+				fmt.Printf("acc thermostat update current temp: %T - %v \n", acc.Thermostat.CurrentTemperature.GetValue(), acc.Thermostat.CurrentTemperature.GetValue())
 				continue
 			}
 		}
 	}()
-	go acc.Thermostat.TargetHeatingCoolingState.OnValueRemoteUpdate(func(state int) { fmt.Printf("acc remote update target state: %T - %v \n", state, state) })
-	go acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(temp float64) { fmt.Printf("acc remote update target temp: %T - %v \n", temp, temp) })
+	go acc.Thermostat.TargetHeatingCoolingState.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc thermostat remote update target state: %T - %v \n", v, v)
+	})
+	go acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(v float64) {
+		fmt.Printf("acc thermostat remote update target temp: %T - %v \n", v, v)
+	})
 	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
 	hc.OnTermination(func() { <-transp.Stop() })
 	transp.Start()

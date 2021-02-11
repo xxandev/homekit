@@ -55,19 +55,41 @@ func main() {
 		fmt.Printf("input source %s remote update name: %T - %v \n", tvin1.Name.GetValue(), v, v)
 	})
 
-	go acc.Television.Active.OnValueRemoteUpdate(func(v int) { fmt.Printf("acc remote update active: %T - %v \n", v, v) })
-	go acc.Television.ActiveIdentifier.OnValueRemoteUpdate(func(v int) { fmt.Printf("acc remote update active identifier: %T - %v \n", v, v) })
-	go acc.Television.ConfiguredName.OnValueRemoteUpdate(func(v string) { fmt.Printf("acc remote update configured name: %T - %v \n", v, v) })
-	go acc.Television.SleepDiscoveryMode.OnValueRemoteUpdate(func(v int) { fmt.Printf("acc remote update sleep discovery mode: %T - %v \n", v, v) })
-	go acc.Television.Brightness.OnValueRemoteUpdate(func(v int) { fmt.Printf("acc remote update brightness: %T - %v \n", v, v) })
-	go acc.Television.ClosedCaptions.OnValueRemoteUpdate(func(v int) { fmt.Printf("acc remote update closed captions: %T - %v \n", v, v) })
-	go acc.Television.DisplayOrder.OnValueRemoteUpdate(func(v []byte) { fmt.Printf("acc remote update display order: %T - %v \n", v, v) })
-	go acc.Television.CurrentMediaState.OnValueRemoteUpdate(func(v int) { fmt.Printf("acc remote update current media state: %T - %v \n", v, v) })
-	go acc.Television.TargetMediaState.OnValueRemoteUpdate(func(v int) { fmt.Printf("acc remote update target media state: %T - %v \n", v, v) })
-	go acc.Television.PowerModeSelection.OnValueRemoteUpdate(func(v int) { fmt.Printf("acc remote update power mode selection: %T - %v \n", v, v) })
-	go acc.Television.PictureMode.OnValueRemoteUpdate(func(v int) { fmt.Printf("acc remote update picture mode: %T - %v \n", v, v) })
+	go acc.Television.Active.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc television remote update active: %T - %v \n", v, v)
+	})
+	go acc.Television.ActiveIdentifier.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc television remote update active identifier: %T - %v \n", v, v)
+	})
+	go acc.Television.ConfiguredName.OnValueRemoteUpdate(func(v string) {
+		fmt.Printf("acc television remote update configured name: %T - %v \n", v, v)
+	})
+	go acc.Television.SleepDiscoveryMode.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc television remote update sleep discovery mode: %T - %v \n", v, v)
+	})
+	go acc.Television.Brightness.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc television remote update brightness: %T - %v \n", v, v)
+	})
+	go acc.Television.ClosedCaptions.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc television remote update closed captions: %T - %v \n", v, v)
+	})
+	go acc.Television.DisplayOrder.OnValueRemoteUpdate(func(v []byte) {
+		fmt.Printf("acc television remote update display order: %T - %v \n", v, v)
+	})
+	go acc.Television.CurrentMediaState.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc television remote update current media state: %T - %v \n", v, v)
+	})
+	go acc.Television.TargetMediaState.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc television remote update target media state: %T - %v \n", v, v)
+	})
+	go acc.Television.PowerModeSelection.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc television remote update power mode selection: %T - %v \n", v, v)
+	})
+	go acc.Television.PictureMode.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc television remote update picture mode: %T - %v \n", v, v)
+	})
 	go acc.Television.RemoteKey.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("acc remote update remote key: %T - %v >>", v, v)
+		fmt.Printf("acc television remote update remote key: %T - %v >>", v, v)
 		switch v {
 		case characteristic.RemoteKeyRewind:
 			fmt.Println("Rewind")

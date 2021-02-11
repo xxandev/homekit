@@ -31,12 +31,17 @@ func main() {
 			select {
 			case <-tickerUpdateState.C:
 				acc.LightbulbDimmer.On.SetValue(!acc.LightbulbDimmer.On.GetValue())
+				fmt.Printf("acc lightbulb update on: %T - %v \n", acc.LightbulbDimmer.On.GetValue(), acc.LightbulbDimmer.On.GetValue())
 				continue
 			}
 		}
 	}()
-	go acc.LightbulbDimmer.On.OnValueRemoteUpdate(func(state bool) { fmt.Printf("acc remote update on: %T - %v \n", state, state) })
-	go acc.LightbulbDimmer.Brightness.OnValueRemoteUpdate(func(state int) { fmt.Printf("acc remote update brightness: %T - %v \n", state, state) })
+	go acc.LightbulbDimmer.On.OnValueRemoteUpdate(func(v bool) {
+		fmt.Printf("acc lightbulb remote update on: %T - %v \n", v, v)
+	})
+	go acc.LightbulbDimmer.Brightness.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc lightbulb remote update brightness: %T - %v \n", v, v)
+	})
 	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
 	hc.OnTermination(func() { <-transp.Stop() })
 	transp.Start()

@@ -31,6 +31,7 @@ func main() {
 			select {
 			case <-tickerUpdateTemp.C:
 				acc.TempSensor.CurrentTemperature.SetValue(float64(time.Now().Second()-30) + float64(time.Now().Second()+40)/100)
+				fmt.Printf("acc sensor temp update current state: %T - %v \n", acc.TempSensor.CurrentTemperature.GetValue(), acc.TempSensor.CurrentTemperature.GetValue())
 				continue
 			}
 		}
