@@ -15,11 +15,9 @@ https://golang.org/dl/
 
 ## List accessories:
 - Air Purifier
-- Camera **dev**
 - Humidifier dehumidifier
 - Door
 - Door lock
-- Doorbell **dev**
 - Fan
 - Faucet
 - Gate (GarageDoorOpener)
@@ -36,11 +34,12 @@ https://golang.org/dl/
 - Sensor motion
 - Sensor smoke
 - Sensor temperature
-- Smart speaker **dev**
 - Switch
 - Television
 - Thermostat
-- WiFi router **dev**
-- WiFi satellite **dev**
 - Window covering
 - Window
+- Camera **dev** (https://github.com/brutella/hkcam)
+- Doorbell **dev** (https://github.com/ra1nb0w/hkdoorbell)
+- Smart speaker **dev** (https://github.com/homebridge/HAP-NodeJS/blob/master/src/accessories/SmartSpeaker_accessory.ts)
+- WiFi router **dev** (https://github.com/homebridge/HAP-NodeJS/blob/master/src/accessories/Wi-FiRouter_accessory.ts)
