@@ -11,7 +11,7 @@ import (
 
 const (
 	accessoryName string = "irrigation"
-	accessorySn   string = "ExmplSPR"
+	accessorySn   string = "ExmplIRG"
 	accessoryPin  string = "11112222"
 )
 

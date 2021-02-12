@@ -10,8 +10,8 @@ import (
 )
 
 const (
-	accessoryName string = "switch"
-	accessorySn   string = "ExmplSW"
+	accessoryName string = "humdehum"
+	accessorySn   string = "ExmplHDH"
 	accessoryPin  string = "11112222"
 )
 
