@@ -7,11 +7,9 @@ This repository is an add-on to brutella/hc from Matthias Hochgatterer https://g
 
 OS: ubuntu 20.04 lts
 
-GO: version 1.15.8 linux/amd64
+GO: version 1.15.8 linux/amd64 (https://golang.org/, https://golang.org/dl/)
 
-https://golang.org/
-
-https://golang.org/dl/
+APPLE DEVICE: ipad (os 14.4)
 
 ## List accessories:
 - Air Purifier
