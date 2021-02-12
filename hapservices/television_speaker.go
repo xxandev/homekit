@@ -5,7 +5,7 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//TelevisionSpeaker -
+//TelevisionSpeaker (+Mute, Active, Volume, VolumeControlType, VolumeSelector)
 type TelevisionSpeaker struct {
 	*service.Service
 
@@ -16,7 +16,7 @@ type TelevisionSpeaker struct {
 	VolumeSelector    *characteristic.VolumeSelector
 }
 
-//NewTelevisionSpeaker -
+//NewTelevisionSpeaker return *TelevisionSpeaker
 func NewTelevisionSpeaker() *TelevisionSpeaker {
 	svc := TelevisionSpeaker{}
 	svc.Service = service.New(service.TypeSpeaker)

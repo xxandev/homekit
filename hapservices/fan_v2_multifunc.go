@@ -5,7 +5,7 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//FanV2Multifunc -
+//FanV2Multifunc (+Active, CurrentFanState, TargetFanState, RotationDirection, RotationSpeed, SwingMode, LockPhysicalControls)
 type FanV2Multifunc struct {
 	*service.Service
 	Active               *characteristic.Active
@@ -17,7 +17,7 @@ type FanV2Multifunc struct {
 	LockPhysicalControls *characteristic.LockPhysicalControls
 }
 
-//NewFanV2Multifunc -
+//NewFanV2Multifunc return *FanV2Multifunc
 func NewFanV2Multifunc() *FanV2Multifunc {
 	svc := FanV2Multifunc{}
 	svc.Service = service.New(service.TypeFanV2)

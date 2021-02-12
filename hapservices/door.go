@@ -5,16 +5,16 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//Door -
+//Door (+CurrentPosition, +TargetPosition, +PositionState, ObstructionDetected)
 type Door struct {
 	*service.Service
 	CurrentPosition     *characteristic.CurrentPosition
-	PositionState       *characteristic.PositionState
 	TargetPosition      *characteristic.TargetPosition
+	PositionState       *characteristic.PositionState
 	ObstructionDetected *characteristic.ObstructionDetected
 }
 
-//NewDoor -
+//NewDoor return *Door
 func NewDoor() *Door {
 	svc := Door{}
 	svc.Service = service.New(service.TypeDoor)

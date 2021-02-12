@@ -5,14 +5,14 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//LightbulbDimmer -
+//LightbulbDimmer (+On, Brightness)
 type LightbulbDimmer struct {
 	*service.Service
 	On         *characteristic.On
 	Brightness *characteristic.Brightness
 }
 
-//NewLightbulbDimmer -
+//NewLightbulbDimmer return *LightbulbDimmer
 func NewLightbulbDimmer() *LightbulbDimmer {
 	svc := LightbulbDimmer{}
 	svc.Service = service.New(service.TypeLightbulb)

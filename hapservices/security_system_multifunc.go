@@ -5,7 +5,7 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//SecuritySystemMultifunc -
+//SecuritySystemMultifunc (+SecuritySystemCurrentState, +SecuritySystemTargetState, SecuritySystemAlarmType, StatusFault, StatusTampered)
 type SecuritySystemMultifunc struct {
 	*service.Service
 	SecuritySystemCurrentState *characteristic.SecuritySystemCurrentState
@@ -15,7 +15,7 @@ type SecuritySystemMultifunc struct {
 	StatusTampered             *characteristic.StatusTampered
 }
 
-//NewSecuritySystemMultifunc -
+//NewSecuritySystemMultifunc return *SecuritySystemMultifunc
 func NewSecuritySystemMultifunc() *SecuritySystemMultifunc {
 	svc := SecuritySystemMultifunc{}
 	svc.Service = service.New(service.TypeSecuritySystem)

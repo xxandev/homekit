@@ -6,10 +6,11 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//TypeWiFiRouter -
+//TypeWiFiRouter - 0000020A-0000-1000-8000-0026BB765291
 const TypeWiFiRouter string = "20A"
 
-//WiFiRouter -
+//WiFiRouter (+ConfiguredName, +ManagedNetworkEnable, +NetworkAccessViolationControl, +NetworkClientProfileControl,
+//+NetworkClientStatusControl, +RouterStatus, +SupportedRouterConfiguration, +WANConfigurationList, +WANStatusList)
 type WiFiRouter struct {
 	*service.Service
 	ConfiguredName                *characteristic.ConfiguredName
@@ -23,7 +24,7 @@ type WiFiRouter struct {
 	WANStatusList                 *hapcharacteristics.WANStatusList
 }
 
-//NewWiFiRouter -
+//NewWiFiRouter return *WiFiRouter
 func NewWiFiRouter() *WiFiRouter {
 	svc := WiFiRouter{}
 	svc.Service = service.New(TypeWiFiRouter)

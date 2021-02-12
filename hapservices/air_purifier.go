@@ -5,7 +5,7 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//AirPurifier -
+//AirPurifier (+Active, +CurrentAirPurifierState, +TargetAirPurifierState, RotationSpeed)
 type AirPurifier struct {
 	*service.Service
 	Active                  *characteristic.Active
@@ -14,7 +14,7 @@ type AirPurifier struct {
 	RotationSpeed           *characteristic.RotationSpeed
 }
 
-//NewAirPurifier -
+//NewAirPurifier return *AirPurifier
 func NewAirPurifier() *AirPurifier {
 	svc := AirPurifier{}
 	svc.Service = service.New(service.TypeAirPurifier)

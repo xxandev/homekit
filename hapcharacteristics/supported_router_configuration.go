@@ -2,19 +2,19 @@ package hapcharacteristics
 
 import "github.com/brutella/hc/characteristic"
 
-//TypeSupportedRouterConfiguration -
+//TypeSupportedRouterConfiguration - 00000210-0000-1000-8000-0026BB765291
 const TypeSupportedRouterConfiguration string = "210"
 
-//SupportedRouterConfiguration -
+//SupportedRouterConfiguration - Formats TLV8
 type SupportedRouterConfiguration struct {
 	*characteristic.Bytes
 }
 
-//NewSupportedRouterConfiguration -
+//NewSupportedRouterConfiguration return *SupportedRouterConfiguration
 func NewSupportedRouterConfiguration() *SupportedRouterConfiguration {
 	char := characteristic.NewBytes(TypeSupportedRouterConfiguration)
 	char.Format = characteristic.FormatTLV8
-	char.Perms = []string{characteristic.PermRead, characteristic.PermWrite, characteristic.PermEvents}
+	char.Perms = []string{characteristic.PermRead}
 
 	char.SetValue([]byte{})
 

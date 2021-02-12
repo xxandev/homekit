@@ -5,7 +5,8 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//HumidifierDehumidifier -
+//HumidifierDehumidifier (+Active, +CurrentRelativeHumidity, +CurrentHumidifierDehumidifierState,
+//+TargetHumidifierDehumidifierState, RelativeHumidityDehumidifierThreshold, RelativeHumidityHumidifierThreshold)
 type HumidifierDehumidifier struct {
 	*service.Service
 
@@ -13,12 +14,15 @@ type HumidifierDehumidifier struct {
 	CurrentHumidifierDehumidifierState    *characteristic.CurrentHumidifierDehumidifierState
 	TargetHumidifierDehumidifierState     *characteristic.TargetHumidifierDehumidifierState
 	CurrentRelativeHumidity               *characteristic.CurrentRelativeHumidity
-	TargetRelativeHumidity                *characteristic.TargetRelativeHumidity
 	RelativeHumidityDehumidifierThreshold *characteristic.RelativeHumidityDehumidifierThreshold
 	RelativeHumidityHumidifierThreshold   *characteristic.RelativeHumidityHumidifierThreshold
+	// RotationSpeed *characteristic.RotationSpeed
+	// SwingMode *characteristic.SwingMode
+	// WaterLevel *characteristic.WaterLevel
+	// LockPhysicalControls  *characteristic.LockPhysicalControls
 }
 
-//NewHumidifierDehumidifier -
+//NewHumidifierDehumidifier return *HumidifierDehumidifier
 func NewHumidifierDehumidifier() *HumidifierDehumidifier {
 	svc := HumidifierDehumidifier{}
 	svc.Service = service.New(service.TypeHumidifierDehumidifier)
@@ -34,9 +38,6 @@ func NewHumidifierDehumidifier() *HumidifierDehumidifier {
 
 	svc.CurrentRelativeHumidity = characteristic.NewCurrentRelativeHumidity()
 	svc.AddCharacteristic(svc.CurrentRelativeHumidity.Characteristic)
-
-	svc.TargetRelativeHumidity = characteristic.NewTargetRelativeHumidity()
-	svc.AddCharacteristic(svc.TargetRelativeHumidity.Characteristic)
 
 	svc.RelativeHumidityDehumidifierThreshold = characteristic.NewRelativeHumidityDehumidifierThreshold()
 	svc.AddCharacteristic(svc.RelativeHumidityDehumidifierThreshold.Characteristic)

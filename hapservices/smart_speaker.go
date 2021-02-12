@@ -5,10 +5,10 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//TypeSmartSpeaker -
+//TypeSmartSpeaker - 00000228-0000-1000-8000-0026BB765291
 const TypeSmartSpeaker string = "228"
 
-//SmartSpeaker -
+//SmartSpeaker (+CurrentMediaState, +TargetMediaState, Name, ConfiguredName, Mute, Volume)
 type SmartSpeaker struct {
 	*service.Service
 	CurrentMediaState *characteristic.CurrentMediaState
@@ -19,7 +19,7 @@ type SmartSpeaker struct {
 	Volume            *characteristic.Volume
 }
 
-//NewSmartSpeaker -
+//NewSmartSpeaker return *SmartSpeaker
 func NewSmartSpeaker() *SmartSpeaker {
 	svc := SmartSpeaker{}
 	svc.Service = service.New(TypeSmartSpeaker)

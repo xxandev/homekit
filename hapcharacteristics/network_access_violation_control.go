@@ -2,15 +2,15 @@ package hapcharacteristics
 
 import "github.com/brutella/hc/characteristic"
 
-//TypeNetworkAccessViolationControl -
+//TypeNetworkAccessViolationControl - 0000021F-0000-1000-8000-0026BB765291
 const TypeNetworkAccessViolationControl string = "21F"
 
-//NetworkAccessViolationControl -
+//NetworkAccessViolationControl - Formats TLV8
 type NetworkAccessViolationControl struct {
 	*characteristic.Bytes
 }
 
-//NewNetworkAccessViolationControl -
+//NewNetworkAccessViolationControl return *NetworkAccessViolationControl
 func NewNetworkAccessViolationControl() *NetworkAccessViolationControl {
 	char := characteristic.NewBytes(TypeNetworkAccessViolationControl)
 	char.Format = characteristic.FormatTLV8

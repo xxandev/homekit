@@ -30,9 +30,6 @@ func main() {
 	go acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("acc humidifier-dehumidifier remote update target state: %T - %v \n", v, v)
 	})
-	go acc.HumidifierDehumidifier.TargetRelativeHumidity.OnValueRemoteUpdate(func(v float64) {
-		fmt.Printf("acc humidifier-dehumidifier remote update target relative humidity: %T - %v \n", v, v)
-	})
 	go acc.HumidifierDehumidifier.RelativeHumidityDehumidifierThreshold.OnValueRemoteUpdate(func(v float64) {
 		fmt.Printf("acc humidifier-dehumidifier remote update relative humidity dehumidifier threshold: %T - %v \n", v, v)
 	})

@@ -2,15 +2,15 @@ package hapcharacteristics
 
 import "github.com/brutella/hc/characteristic"
 
-//TypeNetworkClientStatusControl -
+//TypeNetworkClientStatusControl - 0000020D-0000-1000-8000-0026BB765291
 const TypeNetworkClientStatusControl string = "20D"
 
-//NetworkClientStatusControl -
+//NetworkClientStatusControl - Formats TLV8
 type NetworkClientStatusControl struct {
 	*characteristic.Bytes
 }
 
-//NewNetworkClientStatusControl -
+//NewNetworkClientStatusControl return *NetworkClientStatusControl
 func NewNetworkClientStatusControl() *NetworkClientStatusControl {
 	char := characteristic.NewBytes(TypeNetworkClientStatusControl)
 	char.Format = characteristic.FormatTLV8

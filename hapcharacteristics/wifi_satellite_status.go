@@ -3,25 +3,25 @@ package hapcharacteristics
 import "github.com/brutella/hc/characteristic"
 
 const (
-	//WiFiSatelliteStatusUnknown -
+	//WiFiSatelliteStatusUnknown - unknown(0)
 	WiFiSatelliteStatusUnknown int = 0
 
-	//WiFiSatelliteStatusConnect -
+	//WiFiSatelliteStatusConnect - connect(1)
 	WiFiSatelliteStatusConnect int = 1
 
-	//WiFiSatelliteStatusNotConnect -
+	//WiFiSatelliteStatusNotConnect - not connect(2)
 	WiFiSatelliteStatusNotConnect int = 2
 )
 
-//TypeWiFiSatelliteStatus -
+//TypeWiFiSatelliteStatus - 0000021E-0000-1000-8000-0026BB765291
 const TypeWiFiSatelliteStatus string = "21E"
 
-//WiFiSatelliteStatus -
+//WiFiSatelliteStatus - Formats UINT8
 type WiFiSatelliteStatus struct {
 	*characteristic.Int
 }
 
-//NewWiFiSatelliteStatus -
+//NewWiFiSatelliteStatus return *WiFiSatelliteStatus
 func NewWiFiSatelliteStatus() *WiFiSatelliteStatus {
 	char := characteristic.NewInt(TypeWiFiSatelliteStatus)
 	char.Format = characteristic.FormatUInt8

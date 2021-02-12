@@ -51,9 +51,6 @@ func main() {
 	tvin1.TargetVisibilityState.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("input source %s remote update target visibility state: %T - %v \n", tvin1.Name.GetValue(), v, v)
 	})
-	tvin1.Name.OnValueRemoteUpdate(func(v string) {
-		fmt.Printf("input source %s remote update name: %T - %v \n", tvin1.Name.GetValue(), v, v)
-	})
 
 	go acc.Television.Active.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("acc television remote update active: %T - %v \n", v, v)

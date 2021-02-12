@@ -3,23 +3,25 @@ package hapcharacteristics
 import "github.com/brutella/hc/characteristic"
 
 const (
-	//ManagedNetworkEnableDisable -
+	//ManagedNetworkEnableDisable - disable(0)
 	ManagedNetworkEnableDisable int = 0
-	//ManagedNetworkEnableEnable -
+
+	//ManagedNetworkEnableEnable - enable(1)
 	ManagedNetworkEnableEnable int = 1
-	//ManagedNetworkEnableUnknown -
+
+	//ManagedNetworkEnableUnknown - unknown(2)
 	ManagedNetworkEnableUnknown int = 2
 )
 
-//TypeManagedNetworkEnable -
+//TypeManagedNetworkEnable - 00000215-0000-1000-8000-0026BB765291
 const TypeManagedNetworkEnable string = "215"
 
-//ManagedNetworkEnable -
+//ManagedNetworkEnable - Formats UINT8
 type ManagedNetworkEnable struct {
 	*characteristic.Int
 }
 
-//NewManagedNetworkEnable -
+//NewManagedNetworkEnable return *ManagedNetworkEnable
 func NewManagedNetworkEnable() *ManagedNetworkEnable {
 	char := characteristic.NewInt(TypeManagedNetworkEnable)
 	char.Format = characteristic.FormatUInt8
