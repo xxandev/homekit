@@ -27,23 +27,15 @@ func NewAccessorySecuritySystemSimple(info accessory.Info, args ...interface{}) 
 	amountArgs := len(args)
 	if amountArgs > 0 {
 		acc.SecuritySystemSimple.SecuritySystemTargetState.SetValue(argToInt(args[0], 0))
-	} else {
-		acc.SecuritySystemSimple.SecuritySystemTargetState.SetValue(0)
 	}
 	if amountArgs > 1 {
 		acc.SecuritySystemSimple.SecuritySystemTargetState.SetMinValue(argToInt(args[1], 0))
-	} else {
-		acc.SecuritySystemSimple.SecuritySystemTargetState.SetMinValue(0)
 	}
 	if amountArgs > 2 {
 		acc.SecuritySystemSimple.SecuritySystemTargetState.SetMaxValue(argToInt(args[2], 3))
-	} else {
-		acc.SecuritySystemSimple.SecuritySystemTargetState.SetMaxValue(3)
 	}
 	if amountArgs > 3 {
 		acc.SecuritySystemSimple.SecuritySystemTargetState.SetStepValue(argToInt(args[3], 1))
-	} else {
-		acc.SecuritySystemSimple.SecuritySystemTargetState.SetStepValue(1)
 	}
 	acc.AddService(acc.SecuritySystemSimple.Service)
 	return &acc

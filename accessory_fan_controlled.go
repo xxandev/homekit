@@ -1,36 +1,14 @@
 package homekit
 
 import (
+	"github.com/alpr777/homekit/hapservices"
 	"github.com/brutella/hc/accessory"
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
 )
-
-//ServiceFanControlled -
-type ServiceFanControlled struct {
-	*service.Service
-	On            *characteristic.On
-	RotationSpeed *characteristic.RotationSpeed
-}
-
-//NewServiceFanSimple -
-func NewServiceFanSimple() *ServiceFanControlled {
-	svc := ServiceFanControlled{}
-	svc.Service = service.New(service.TypeFan)
-
-	svc.On = characteristic.NewOn()
-	svc.AddCharacteristic(svc.On.Characteristic)
-
-	svc.RotationSpeed = characteristic.NewRotationSpeed()
-	svc.AddCharacteristic(svc.RotationSpeed.Characteristic)
-
-	return &svc
-}
 
 //AccessoryFanControlled struct
 type AccessoryFanControlled struct {
 	*accessory.Accessory
-	Fan *ServiceFanControlled
+	Fan *hapservices.FanControlled
 }
 
 //NewAccessoryFanControlled return AccessoryFanControlled
@@ -45,27 +23,19 @@ type AccessoryFanControlled struct {
 func NewAccessoryFanControlled(info accessory.Info, args ...interface{}) *AccessoryFanControlled {
 	acc := AccessoryFanControlled{}
 	acc.Accessory = accessory.New(info, accessory.TypeFan)
-	acc.Fan = NewServiceFanSimple()
+	acc.Fan = hapservices.NewFanControlled()
 	amountArgs := len(args)
 	if amountArgs > 0 {
 		acc.Fan.RotationSpeed.SetValue(argToFloat64(args[0], 0.0))
-	} else {
-		acc.Fan.RotationSpeed.SetValue(0.0)
 	}
 	if amountArgs > 1 {
 		acc.Fan.RotationSpeed.SetMinValue(argToFloat64(args[1], 0.0))
-	} else {
-		acc.Fan.RotationSpeed.SetMinValue(0.0)
 	}
 	if amountArgs > 2 {
 		acc.Fan.RotationSpeed.SetMaxValue(argToFloat64(args[2], 100.0))
-	} else {
-		acc.Fan.RotationSpeed.SetMaxValue(100.0)
 	}
 	if amountArgs > 3 {
 		acc.Fan.RotationSpeed.SetStepValue(argToFloat64(args[3], 1.0))
-	} else {
-		acc.Fan.RotationSpeed.SetStepValue(1.0)
 	}
 	acc.AddService(acc.Fan.Service)
 	return &acc

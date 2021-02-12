@@ -27,23 +27,15 @@ func NewAccessoryWindow(info accessory.Info, args ...interface{}) *AccessoryWind
 	amountArgs := len(args)
 	if amountArgs > 0 {
 		acc.Window.TargetPosition.SetValue(argToInt(args[0], 0))
-	} else {
-		acc.Window.TargetPosition.SetValue(0)
 	}
 	if amountArgs > 1 {
 		acc.Window.TargetPosition.SetMinValue(argToInt(args[1], 0))
-	} else {
-		acc.Window.TargetPosition.SetMinValue(0)
 	}
 	if amountArgs > 2 {
 		acc.Window.TargetPosition.SetMaxValue(argToInt(args[2], 100))
-	} else {
-		acc.Window.TargetPosition.SetMaxValue(100)
 	}
 	if amountArgs > 3 {
 		acc.Window.TargetPosition.SetStepValue(argToInt(args[3], 1))
-	} else {
-		acc.Window.TargetPosition.SetStepValue(1)
 	}
 	acc.AddService(acc.Window.Service)
 	return &acc

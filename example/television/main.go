@@ -19,7 +19,7 @@ const (
 func main() {
 	// runtime.GOMAXPROCS(4)
 	// log.Debug.Enable()
-	acc := homekit.NewAccessoryTelevision(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "EXAMPLE", Model: "ACC-TEST", FirmwareRevision: "1.2"})
+	acc := homekit.NewAccessoryTelevision(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "alpr777", Model: "ACC-TEST", FirmwareRevision: "1.2"})
 	tvin1 := acc.AddInputSource(1, "HDMI 1", characteristic.InputSourceTypeHdmi)
 	_ = acc.AddInputSource(2, "HDMI 2", characteristic.InputSourceTypeHdmi)
 	_ = acc.AddInputSource(3, "YouTube", characteristic.InputSourceTypeApplication)

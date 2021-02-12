@@ -21,7 +21,7 @@ func main() {
 	// runtime.GOMAXPROCS(4)
 	// log.Debug.Enable()
 	// ffmpeg.EnableVerboseLogging()
-	acc := homekit.NewAccessoryCamera(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "EXAMPLE", Model: "ACC-TEST", FirmwareRevision: "1.2"})
+	acc := homekit.NewAccessoryCamera(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "alpr777", Model: "ACC-TEST", FirmwareRevision: "1.2"})
 	ffmpeg := acc.SetupFFMPEGStreaming(ffmpeg.Config{
 		InputDevice:      "v4l2",
 		InputFilename:    "/dev/video0",

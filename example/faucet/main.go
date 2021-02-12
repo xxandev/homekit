@@ -10,21 +10,24 @@ import (
 )
 
 const (
-	accessoryName string = "speaker"
-	accessorySn   string = "ExmplSPIK"
+	accessoryName string = "faucet"
+	accessorySn   string = "ExmplFCT"
 	accessoryPin  string = "11112222"
 )
 
 func main() {
 	// runtime.GOMAXPROCS(4)
 	// log.Debug.Enable()
-	acc := homekit.NewAccessorySpeaker(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "EXAMPLE", Model: "ACC-TEST", FirmwareRevision: "1.2"})
+	acc := homekit.NewAccessoryFaucet(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "alpr777", Model: "ACC-TEST", FirmwareRevision: "1.2"})
 	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: accessoryPin}, acc.Accessory)
 	if err != nil {
 		fmt.Println("accessory [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]", "error create transport:", err)
 		os.Exit(1)
 	}
-	go acc.Speaker.Mute.OnValueRemoteUpdate(func(state bool) { fmt.Printf("acc remote update mute: %T - %v \n", state, state) })
+	go acc.Valve.Active.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc remote update valve active: %T - %v \n", v, v)
+		acc.Valve.InUse.SetValue(v)
+	})
 	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
 	hc.OnTermination(func() { <-transp.Stop() })
 	transp.Start()

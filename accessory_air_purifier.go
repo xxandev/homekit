@@ -1,44 +1,14 @@
 package homekit
 
 import (
+	"github.com/alpr777/homekit/hapservices"
 	"github.com/brutella/hc/accessory"
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
 )
-
-//ServiceAirPurifier -
-type ServiceAirPurifier struct {
-	*service.Service
-	Active                  *characteristic.Active
-	CurrentAirPurifierState *characteristic.CurrentAirPurifierState
-	TargetAirPurifierState  *characteristic.TargetAirPurifierState
-	RotationSpeed           *characteristic.RotationSpeed
-}
-
-//NewServiceAirPurifier -
-func NewServiceAirPurifier() *ServiceAirPurifier {
-	svc := ServiceAirPurifier{}
-	svc.Service = service.New(service.TypeAirPurifier)
-
-	svc.Active = characteristic.NewActive()
-	svc.AddCharacteristic(svc.Active.Characteristic)
-
-	svc.CurrentAirPurifierState = characteristic.NewCurrentAirPurifierState()
-	svc.AddCharacteristic(svc.CurrentAirPurifierState.Characteristic)
-
-	svc.TargetAirPurifierState = characteristic.NewTargetAirPurifierState()
-	svc.AddCharacteristic(svc.TargetAirPurifierState.Characteristic)
-
-	svc.RotationSpeed = characteristic.NewRotationSpeed()
-	svc.AddCharacteristic(svc.RotationSpeed.Characteristic)
-
-	return &svc
-}
 
 //AccessoryAirPurifier struct
 type AccessoryAirPurifier struct {
 	*accessory.Accessory
-	AirPurifier *ServiceAirPurifier
+	AirPurifier *hapservices.AirPurifier
 }
 
 //NewAccessoryAirPurifier returns AccessoryAirPurifier
@@ -53,27 +23,19 @@ type AccessoryAirPurifier struct {
 func NewAccessoryAirPurifier(info accessory.Info, args ...interface{}) *AccessoryAirPurifier {
 	acc := AccessoryAirPurifier{}
 	acc.Accessory = accessory.New(info, accessory.TypeAirPurifier)
-	acc.AirPurifier = NewServiceAirPurifier()
+	acc.AirPurifier = hapservices.NewAirPurifier()
 	amountArgs := len(args)
 	if amountArgs > 0 {
 		acc.AirPurifier.RotationSpeed.SetValue(argToFloat64(args[0], 0.0))
-	} else {
-		acc.AirPurifier.RotationSpeed.SetValue(0.0)
 	}
 	if amountArgs > 1 {
 		acc.AirPurifier.RotationSpeed.SetMinValue(argToFloat64(args[1], 0.0))
-	} else {
-		acc.AirPurifier.RotationSpeed.SetMinValue(0.0)
 	}
 	if amountArgs > 2 {
 		acc.AirPurifier.RotationSpeed.SetMaxValue(argToFloat64(args[2], 100.0))
-	} else {
-		acc.AirPurifier.RotationSpeed.SetMaxValue(100.00)
 	}
 	if amountArgs > 3 {
 		acc.AirPurifier.RotationSpeed.SetStepValue(argToFloat64(args[3], 1.0))
-	} else {
-		acc.AirPurifier.RotationSpeed.SetStepValue(1.0)
 	}
 	acc.AddService(acc.AirPurifier.Service)
 

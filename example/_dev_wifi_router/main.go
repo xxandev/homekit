@@ -10,21 +10,20 @@ import (
 )
 
 const (
-	accessoryName string = "faucet"
-	accessorySn   string = "ExmplFCT"
+	accessoryName string = "router"
+	accessorySn   string = "ExmplRT"
 	accessoryPin  string = "11112222"
 )
 
 func main() {
 	// runtime.GOMAXPROCS(4)
 	// log.Debug.Enable()
-	acc := homekit.NewAccessoryFaucet(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "EXAMPLE", Model: "ACC-TEST", FirmwareRevision: "1.2"})
+	acc := homekit.NewAccessoryWifiRouter(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "alpr777", Model: "ACC-TEST", FirmwareRevision: "1.2"})
 	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: accessoryPin}, acc.Accessory)
 	if err != nil {
 		fmt.Println("accessory [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]", "error create transport:", err)
 		os.Exit(1)
 	}
-	go acc.Faucet.Active.OnValueRemoteUpdate(func(state int) { fmt.Printf("acc remote update active: %T - %v \n", state, state) })
 	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
 	hc.OnTermination(func() { <-transp.Stop() })
 	transp.Start()

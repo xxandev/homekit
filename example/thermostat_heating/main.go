@@ -26,7 +26,7 @@ func invState(arg int) int {
 func main() {
 	// runtime.GOMAXPROCS(4)
 	// log.Debug.Enable()
-	acc := homekit.NewAccessoryThermostat(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "EXAMPLE", Model: "ACC-TEST", FirmwareRevision: "1.2"}, 0, 0, 1, 1)
+	acc := homekit.NewAccessoryThermostat(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "alpr777", Model: "ACC-TEST", FirmwareRevision: "1.2"}, 0, 0, 1, 1)
 	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: accessoryPin}, acc.Accessory)
 	if err != nil {
 		fmt.Println("accessory [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]", "error create transport:", err)

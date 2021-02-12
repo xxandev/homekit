@@ -1,50 +1,17 @@
 package homekit
 
 import (
+	"github.com/alpr777/homekit/hapservices"
 	"github.com/brutella/hc/accessory"
 	"github.com/brutella/hc/characteristic"
 	"github.com/brutella/hc/service"
 )
 
-//ServiceTelevisionSpeaker -
-type ServiceTelevisionSpeaker struct {
-	*service.Service
-
-	Mute              *characteristic.Mute
-	Active            *characteristic.Active
-	Volume            *characteristic.Volume
-	VolumeControlType *characteristic.VolumeControlType
-	VolumeSelector    *characteristic.VolumeSelector
-}
-
-//NewServiceTelevisionSpeaker -
-func NewServiceTelevisionSpeaker() *ServiceTelevisionSpeaker {
-	svc := ServiceTelevisionSpeaker{}
-	svc.Service = service.New(service.TypeSpeaker)
-
-	svc.Mute = characteristic.NewMute()
-	svc.AddCharacteristic(svc.Mute.Characteristic)
-
-	svc.Active = characteristic.NewActive()
-	svc.AddCharacteristic(svc.Active.Characteristic)
-
-	svc.Volume = characteristic.NewVolume()
-	svc.AddCharacteristic(svc.Volume.Characteristic)
-
-	svc.VolumeControlType = characteristic.NewVolumeControlType()
-	svc.AddCharacteristic(svc.VolumeControlType.Characteristic)
-
-	svc.VolumeSelector = characteristic.NewVolumeSelector()
-	svc.AddCharacteristic(svc.VolumeSelector.Characteristic)
-
-	return &svc
-}
-
 //AccessoryTelevision struct
 type AccessoryTelevision struct {
 	*accessory.Accessory
-	Television        *service.Television
-	TelevisionSpeaker *ServiceTelevisionSpeaker
+	Television *service.Television
+	Speaker    *hapservices.TelevisionSpeaker
 }
 
 // NewAccessoryTelevision returns AccessorySwitch (args... are not used)
@@ -52,10 +19,10 @@ func NewAccessoryTelevision(info accessory.Info, args ...interface{}) *Accessory
 	acc := AccessoryTelevision{}
 	acc.Accessory = accessory.New(info, accessory.TypeTelevision)
 	acc.Television = service.NewTelevision()
-	acc.TelevisionSpeaker = NewServiceTelevisionSpeaker()
+	acc.Speaker = hapservices.NewTelevisionSpeaker()
 
 	acc.AddService(acc.Television.Service)
-	acc.AddService(acc.TelevisionSpeaker.Service)
+	acc.AddService(acc.Speaker.Service)
 
 	return &acc
 }

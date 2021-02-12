@@ -36,23 +36,15 @@ func NewAccessoryThermostat(info accessory.Info, args ...interface{}) *Accessory
 	amountArgs := len(args)
 	if amountArgs > 0 {
 		acc.Thermostat.TargetHeatingCoolingState.SetValue(argToInt(args[0], 0))
-	} else {
-		acc.Thermostat.TargetHeatingCoolingState.SetValue(0)
 	}
 	if amountArgs > 1 {
 		acc.Thermostat.TargetHeatingCoolingState.SetMinValue(argToInt(args[1], 0))
-	} else {
-		acc.Thermostat.TargetHeatingCoolingState.SetMinValue(0)
 	}
 	if amountArgs > 2 {
 		acc.Thermostat.TargetHeatingCoolingState.SetMaxValue(argToInt(args[2], 3))
-	} else {
-		acc.Thermostat.TargetHeatingCoolingState.SetMaxValue(3)
 	}
 	if amountArgs > 3 {
 		acc.Thermostat.TargetHeatingCoolingState.SetStepValue(argToInt(args[3], 1))
-	} else {
-		acc.Thermostat.TargetHeatingCoolingState.SetStepValue(1)
 	}
 
 	if amountArgs > 4 {
