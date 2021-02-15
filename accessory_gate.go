@@ -8,14 +8,14 @@ import (
 //AccessoryGate struct
 type AccessoryGate struct {
 	*accessory.Accessory
-	Gate *service.GarageDoorOpener
+	GarageDoorOpener *service.GarageDoorOpener
 }
 
 //NewAccessoryGate return AccessoryGate (args... are not used)
 func NewAccessoryGate(info accessory.Info, args ...interface{}) *AccessoryGate {
 	acc := AccessoryGate{}
 	acc.Accessory = accessory.New(info, accessory.TypeGarageDoorOpener)
-	acc.Gate = service.NewGarageDoorOpener()
-	acc.AddService(acc.Gate.Service)
+	acc.GarageDoorOpener = service.NewGarageDoorOpener()
+	acc.AddService(acc.GarageDoorOpener.Service)
 	return &acc
 }
