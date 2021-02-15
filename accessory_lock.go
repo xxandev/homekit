@@ -5,15 +5,15 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//AccessoryDoorLock struct
-type AccessoryDoorLock struct {
+//AccessoryLock struct
+type AccessoryLock struct {
 	*accessory.Accessory
 	LockMechanism *service.LockMechanism
 }
 
-//NewAccessoryDoorLock return AccessoryDoorLock (args... are not used)
-func NewAccessoryDoorLock(info accessory.Info, args ...interface{}) *AccessoryDoorLock {
-	acc := AccessoryDoorLock{}
+//NewAccessoryLock return AccessoryDoorLock (args... are not used)
+func NewAccessoryLock(info accessory.Info, args ...interface{}) *AccessoryLock {
+	acc := AccessoryLock{}
 	acc.Accessory = accessory.New(info, accessory.TypeDoorLock)
 	acc.LockMechanism = service.NewLockMechanism()
 	acc.AddService(acc.LockMechanism.Service)
