@@ -36,12 +36,12 @@ APPLE DEVICE: ipad (os 14.4)
 - Sensor motion
 - Sensor smoke
 - Sensor temperature
-- Switch
+- [Switch](https://github.com/alpr777/homekit/tree/main/example/switch)
 - Television
 - Thermostat
 - Window covering
 - Window
-- Camera **dev** (https://github.com/brutella/hkcam)
-- Doorbell **dev** (https://github.com/ra1nb0w/hkdoorbell)
-- Smart speaker **dev** (https://github.com/homebridge/HAP-NodeJS/blob/master/src/accessories/SmartSpeaker_accessory.ts)
-- WiFi router **dev** (https://github.com/homebridge/HAP-NodeJS/blob/master/src/accessories/Wi-FiRouter_accessory.ts)
+- Camera [**dev**](https://github.com/brutella/hkcam)
+- Doorbell [**dev**](https://github.com/ra1nb0w/hkdoorbell)
+- Smart speaker [**dev**](https://github.com/homebridge/HAP-NodeJS/blob/master/src/accessories/SmartSpeaker_accessory.ts)
+- WiFi router [**dev**](https://github.com/homebridge/HAP-NodeJS/blob/master/src/accessories/Wi-FiRouter_accessory.ts)
