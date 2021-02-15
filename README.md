@@ -1,7 +1,9 @@
 # HomeKit  Accessoryies
 This repository is an add-on to brutella/hc from Matthias Hochgatterer https://github.com/brutella/hc
 
+![](https://github.com/alpr777/homekit/blob/main/gallery/home_on.png)
 
+![](https://github.com/alpr777/homekit/blob/main/gallery/home_off.png)
 
 **hc version:** 1.2.3 (aac10474c5d81a74dc91be5db4cca38301d1ec8a)
 
