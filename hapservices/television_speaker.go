@@ -9,8 +9,8 @@ import (
 type TelevisionSpeaker struct {
 	*service.Service
 
-	Mute              *characteristic.Mute
-	Active            *characteristic.Active
+	Mute *characteristic.Mute
+	//Active            *characteristic.Active
 	Volume            *characteristic.Volume
 	VolumeControlType *characteristic.VolumeControlType
 	VolumeSelector    *characteristic.VolumeSelector
@@ -24,8 +24,8 @@ func NewTelevisionSpeaker() *TelevisionSpeaker {
 	svc.Mute = characteristic.NewMute()
 	svc.AddCharacteristic(svc.Mute.Characteristic)
 
-	svc.Active = characteristic.NewActive()
-	svc.AddCharacteristic(svc.Active.Characteristic)
+	// svc.Active = characteristic.NewActive()
+	// svc.AddCharacteristic(svc.Active.Characteristic)
 
 	svc.Volume = characteristic.NewVolume()
 	svc.AddCharacteristic(svc.Volume.Characteristic)

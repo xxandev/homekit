@@ -13,3 +13,9 @@
 ![](https://github.com/alpr777/homekit/blob/main/gallery/tv_6.png)
 
 ![](https://github.com/alpr777/homekit/blob/main/gallery/tv_7.png)
+
+![](https://github.com/alpr777/homekit/blob/main/gallery/tv_8.jpg)
+
+![](https://github.com/alpr777/homekit/blob/main/gallery/tv_6.jpg)
+
+![](https://github.com/alpr777/homekit/blob/main/gallery/tv_7.jpg)
