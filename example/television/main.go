@@ -52,6 +52,19 @@ func main() {
 		fmt.Printf("input source %s remote update target visibility state: %T - %v \n", tvin1.Name.GetValue(), v, v)
 	})
 
+	go acc.Speaker.Mute.OnValueRemoteUpdate(func(v bool) {
+		fmt.Printf("acc speaker remote update mute: %T - %v \n", v, v)
+	})
+	go acc.Speaker.Volume.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc speaker remote update volume: %T - %v \n", v, v)
+	})
+	go acc.Speaker.VolumeControlType.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc speaker remote update volume control type: %T - %v \n", v, v)
+	})
+	go acc.Speaker.VolumeSelector.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("acc speaker remote update volume selector: %T - %v \n", v, v)
+	})
+
 	go acc.Television.Active.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("acc television remote update active: %T - %v \n", v, v)
 	})
