@@ -2,36 +2,27 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"log"
 
 	"github.com/alpr777/homekit"
 	"github.com/brutella/hc"
 	"github.com/brutella/hc/accessory"
 )
 
-const (
-	accessoryName string = "air purifier"
-	accessorySn   string = "ExmplAirPur"
-	accessoryPin  string = "11112222"
-)
-
 func main() {
-	// runtime.GOMAXPROCS(4)
 	// log.Debug.Enable()
-	acc := homekit.NewAccessoryAirPurifier(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "alpr777", Model: "ACC-TEST", FirmwareRevision: "1.2"}, 0, 0, 100, 1)
-	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: accessoryPin}, acc.Accessory)
+	acc := homekit.NewAccessoryAirPurifier(accessory.Info{Name: "Air purifier", SerialNumber: "Ex-Air-Pru", Model: "HAP-AP", Manufacturer: homekit.Manufacturer, FirmwareRevision: homekit.Revision}, 0, 0, 100, 1)
+	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: "11223344"}, acc.Accessory)
 	if err != nil {
-		fmt.Println("accessory [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]", "error create transport:", err)
-		os.Exit(1)
+		log.Fatalf("[ %v / %v ] error create hap transport: %v\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue(), err)
 	}
 	go acc.AirPurifier.Active.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("acc air purifier remote update active: %T - %v \n", v, v)
 		if v > 0 {
 			acc.AirPurifier.CurrentAirPurifierState.SetValue(2)
 		} else {
 			acc.AirPurifier.CurrentAirPurifierState.SetValue(0)
 		}
-		fmt.Printf("acc air purifier update current state: %T - %v \n", acc.AirPurifier.CurrentAirPurifierState.GetValue(), acc.AirPurifier.CurrentAirPurifierState.GetValue())
+		fmt.Printf("acc air purifier remote update: update active %T - %v, current state %T - %v \n", v, v, acc.AirPurifier.CurrentAirPurifierState.GetValue(), acc.AirPurifier.CurrentAirPurifierState.GetValue())
 	})
 	go acc.AirPurifier.RotationSpeed.OnValueRemoteUpdate(func(v float64) {
 		fmt.Printf("acc air purifier remote update rotation speed: %T - %v \n", v, v)
@@ -39,7 +30,7 @@ func main() {
 	go acc.AirPurifier.TargetAirPurifierState.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("acc air purifier remote update target state: %T - %v \n", v, v)
 	})
-	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
+	fmt.Printf("[ %v / %v ] accessories transport start\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue())
 	hc.OnTermination(func() { <-transp.Stop() })
 	transp.Start()
 }

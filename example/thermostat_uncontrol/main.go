@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"log"
 	"time"
 
 	"github.com/alpr777/homekit"
@@ -10,20 +10,12 @@ import (
 	"github.com/brutella/hc/accessory"
 )
 
-const (
-	accessoryName string = "thermostat"
-	accessorySn   string = "ExmplTRMUnC"
-	accessoryPin  string = "11112222"
-)
-
 func main() {
-	// runtime.GOMAXPROCS(4)
 	// log.Debug.Enable()
-	acc := homekit.NewAccessoryThermostat(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "alpr777", Model: "ACC-TEST", FirmwareRevision: "1.2"}, 3, 3, 3, 0)
-	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: accessoryPin}, acc.Accessory)
+	acc := homekit.NewAccessoryThermostat(accessory.Info{Name: "Thermostat", SerialNumber: "Ex-Therm-Non", Model: "HAP-TRM-NON", Manufacturer: homekit.Manufacturer, FirmwareRevision: homekit.Revision}, 3, 3, 3, 0)
+	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: "11223344"}, acc.Accessory)
 	if err != nil {
-		fmt.Println("accessory [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]", "error create transport:", err)
-		os.Exit(1)
+		log.Fatalf("[ %v / %v ] error create hap transport: %v\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue(), err)
 	}
 	go func() {
 		tickerUpdateState := time.NewTicker(10 * time.Second)
@@ -52,7 +44,7 @@ func main() {
 	go acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(v float64) {
 		fmt.Printf("acc thermostat remote update target temp: %T - %v \n", v, v)
 	})
-	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
+	fmt.Println("homekit accessory transport start [", "/", acc.Accessory.Info.Name.GetValue(), "]")
 	hc.OnTermination(func() { <-transp.Stop() })
 	transp.Start()
 }

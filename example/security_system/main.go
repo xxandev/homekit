@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"log"
 	"time"
 
 	"github.com/alpr777/homekit"
@@ -10,40 +10,28 @@ import (
 	"github.com/brutella/hc/accessory"
 )
 
-const (
-	accessoryName string = "alarm"
-	accessorySn   string = "ExmplSecSys"
-	accessoryPin  string = "11112222"
-)
-
 func main() {
-	// runtime.GOMAXPROCS(4)
 	// log.Debug.Enable()
-	acc := homekit.NewAccessorySecuritySystemSimple(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "alpr777", Model: "ACC-TEST", FirmwareRevision: "1.2"})
-	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: accessoryPin}, acc.Accessory)
+	acc := homekit.NewAccessorySecuritySystemSimple(accessory.Info{Name: "Alarm", SerialNumber: "Ex-Secur", Model: "HAP-SCR-SS", Manufacturer: homekit.Manufacturer, FirmwareRevision: homekit.Revision})
+	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: "11223344"}, acc.Accessory)
 	if err != nil {
-		fmt.Println("accessory [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]", "error create transport:", err)
-		os.Exit(1)
+		log.Fatalf("[ %v / %v ] error create hap transport: %v\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue(), err)
 	}
 	go func() {
-		tickerUpdateState := time.NewTicker(30 * time.Second)
-		for {
-			select {
-			case <-tickerUpdateState.C:
-				if acc.SecuritySystemSimple.SecuritySystemCurrentState.GetValue() >= 4 {
-					acc.SecuritySystemSimple.SecuritySystemCurrentState.SetValue(0)
-				} else {
-					acc.SecuritySystemSimple.SecuritySystemCurrentState.SetValue(acc.SecuritySystemSimple.SecuritySystemCurrentState.GetValue() + 1)
-				}
-				fmt.Printf("acc security system update current state: %T - %v \n", acc.SecuritySystemSimple.SecuritySystemCurrentState.GetValue(), acc.SecuritySystemSimple.SecuritySystemCurrentState.GetValue())
-				continue
+		t := time.NewTicker(30 * time.Second)
+		for range t.C {
+			if acc.SecuritySystemSimple.SecuritySystemCurrentState.GetValue() >= 4 {
+				acc.SecuritySystemSimple.SecuritySystemCurrentState.SetValue(0)
+			} else {
+				acc.SecuritySystemSimple.SecuritySystemCurrentState.SetValue(acc.SecuritySystemSimple.SecuritySystemCurrentState.GetValue() + 1)
 			}
+			fmt.Printf("acc security system update current state: %T - %v \n", acc.SecuritySystemSimple.SecuritySystemCurrentState.GetValue(), acc.SecuritySystemSimple.SecuritySystemCurrentState.GetValue())
 		}
 	}()
 	go acc.SecuritySystemSimple.SecuritySystemTargetState.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("acc security system remote update target state: %T - %v \n", v, v)
 	})
-	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
+	fmt.Printf("[ %v / %v ] accessories transport start\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue())
 	hc.OnTermination(func() { <-transp.Stop() })
 	transp.Start()
 }

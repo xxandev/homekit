@@ -19,3 +19,10 @@ func NewAccessoryLightbulbColored(info accessory.Info, args ...interface{}) *Acc
 	acc.AddService(acc.LightbulbColored.Service)
 	return &acc
 }
+
+func (acc *AccessoryLightbulbColored) OnValueRemoteUpdate(fn func()) {
+	acc.LightbulbColored.On.OnValueRemoteUpdate(func(_ bool) { fn() })
+	acc.LightbulbColored.Brightness.OnValueRemoteUpdate(func(_ int) { fn() })
+	acc.LightbulbColored.Saturation.OnValueRemoteUpdate(func(_ float64) { fn() })
+	acc.LightbulbColored.Hue.OnValueRemoteUpdate(func(_ float64) { fn() })
+}

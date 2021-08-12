@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"log"
 	"time"
 
 	"github.com/alpr777/homekit"
@@ -10,30 +10,18 @@ import (
 	"github.com/brutella/hc/accessory"
 )
 
-const (
-	accessoryName string = "fan"
-	accessorySn   string = "ExmplFN"
-	accessoryPin  string = "11112222"
-)
-
 func main() {
-	// runtime.GOMAXPROCS(4)
 	// log.Debug.Enable()
-	acc := homekit.NewAccessoryFanControlled(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "alpr777", Model: "ACC-TEST", FirmwareRevision: "1.2"})
-	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: accessoryPin}, acc.Accessory)
+	acc := homekit.NewAccessoryFanControlled(accessory.Info{Name: "Fan", SerialNumber: "EX-Fan", Model: "HAP-FN-CTRL", Manufacturer: homekit.Manufacturer, FirmwareRevision: homekit.Revision})
+	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: "11223344"}, acc.Accessory)
 	if err != nil {
-		fmt.Println("accessory [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]", "error create transport:", err)
-		os.Exit(1)
+		log.Fatalf("[ %v / %v ] error create hap transport: %v\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue(), err)
 	}
 	go func() {
-		tickerUpdateState := time.NewTicker(30 * time.Second)
-		for {
-			select {
-			case <-tickerUpdateState.C:
-				acc.Fan.On.SetValue(!acc.Fan.On.GetValue())
-				fmt.Printf("acc fan update on: %T - %v \n", acc.Fan.On.GetValue(), acc.Fan.On.GetValue())
-				continue
-			}
+		t := time.NewTicker(30 * time.Second)
+		for range t.C {
+			acc.Fan.On.SetValue(!acc.Fan.On.GetValue())
+			fmt.Printf("acc fan update on: %T - %v \n", acc.Fan.On.GetValue(), acc.Fan.On.GetValue())
 		}
 	}()
 	go acc.Fan.On.OnValueRemoteUpdate(func(v bool) {
@@ -42,7 +30,7 @@ func main() {
 	go acc.Fan.RotationSpeed.OnValueRemoteUpdate(func(v float64) {
 		fmt.Printf("acc fan remote update rotation speed: %T - %v \n", v, v)
 	})
-	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
+	fmt.Printf("[ %v / %v ] accessories transport start\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue())
 	hc.OnTermination(func() { <-transp.Stop() })
 	transp.Start()
 }

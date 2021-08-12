@@ -1,7 +1,7 @@
 package homekit
 
 import (
-	"github.com/alpr777/homekit/hapservices"
+	haps "github.com/alpr777/homekit/hap-service"
 	"github.com/brutella/hc/accessory"
 	"github.com/brutella/hc/characteristic"
 	"github.com/brutella/hc/service"
@@ -11,15 +11,15 @@ import (
 type AccessoryTelevision struct {
 	*accessory.Accessory
 	Television *service.Television
-	Speaker    *hapservices.TelevisionSpeaker
+	Speaker    *haps.TelevisionSpeaker
 }
 
-// NewAccessoryTelevision returns AccessorySwitch (args... are not used)
+//NewAccessoryTelevision returns AccessoryTelevision (args... are not used)
 func NewAccessoryTelevision(info accessory.Info, args ...interface{}) *AccessoryTelevision {
 	acc := AccessoryTelevision{}
 	acc.Accessory = accessory.New(info, accessory.TypeTelevision)
 	acc.Television = service.NewTelevision()
-	acc.Speaker = hapservices.NewTelevisionSpeaker()
+	acc.Speaker = haps.NewTelevisionSpeaker()
 
 	acc.AddService(acc.Television.Service)
 	acc.AddService(acc.Speaker.Service)
@@ -42,31 +42,31 @@ func (acc *AccessoryTelevision) AddInputSource(id int, name string, inputSourceT
 	return inSource
 }
 
-//ProcessInputSource -
-//ConfiguredName
-//InputSourceType
-//IsConfigured
-//Identifier
-//TargetVisibilityState
-//Name
+//ProcessInputSource
+//  events[0](val string) - ConfiguredName
+//  events[1](val int) - InputSourceType
+//  events[2](val int) - IsConfigured
+//  events[3](val int) - Identifier
+//  events[4](val int) - TargetVisibilityState
+//  events[5](val string) - Name
 func (acc *AccessoryTelevision) ProcessInputSource(insource *service.InputSource, events ...func(interface{})) {
-	amountEvents := len(events)
-	if amountEvents > 0 {
+	n := len(events)
+	if n > 0 {
 		insource.ConfiguredName.OnValueRemoteUpdate(func(v string) { events[0](v) })
 	}
-	if amountEvents > 1 {
+	if n > 1 {
 		insource.TargetVisibilityState.OnValueRemoteUpdate(func(v int) { events[1](v) })
 	}
-	if amountEvents > 2 {
+	if n > 2 {
 		insource.InputSourceType.OnValueRemoteUpdate(func(v int) { events[2](v) })
 	}
-	if amountEvents > 3 {
+	if n > 3 {
 		insource.IsConfigured.OnValueRemoteUpdate(func(v int) { events[3](v) })
 	}
-	if amountEvents > 4 {
+	if n > 4 {
 		insource.Identifier.OnValueRemoteUpdate(func(v int) { events[4](v) })
 	}
-	if amountEvents > 5 {
+	if n > 5 {
 		insource.Name.OnValueRemoteUpdate(func(v string) { events[5](v) })
 	}
 }

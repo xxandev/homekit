@@ -1,6 +1,13 @@
 package homekit
 
-import "github.com/brutella/hc/accessory"
+import (
+	"fmt"
+	"log"
+	"sync"
+
+	"github.com/brutella/hc"
+	"github.com/brutella/hc/accessory"
+)
 
 //https://github.com/homebridge/HAP-NodeJS/blob/master/src/lib/Accessory.ts >> export const enum Categories
 const (
@@ -42,87 +49,108 @@ const (
 	AccessoryTypeTVStick            accessory.AccessoryType = 36
 )
 
-//argToBool -
-func argToBool(value interface{}, def bool) bool {
-	if val, ok := value.(bool); ok == true {
-		return val
-	}
-	return def
+const (
+	Revision             string = "1.2.4"
+	Manufacturer         string = "alpr777"
+	MaxBridgeAccessories int    = 150
+)
+
+type HomeKit struct {
+	mutex   sync.Mutex
+	logger  *log.Logger
+	started bool
+	accs    []*accessory.Accessory
+	apimap  map[uint64]AccessoryAPI
 }
 
-//argToInt - int signed, either 32 or 64 bits
-func argToInt(value interface{}, def int) int {
-	switch val := value.(type) {
-	case int:
-		return val
-	case int8:
-		return int(val)
-	case int16:
-		return int(val)
-	case int32:
-		return int(val)
-	case int64:
-		return int(val)
+// NewContainer returns a container.
+func New() *HomeKit {
+	return &HomeKit{
+		started: false,
+		accs:    make([]*accessory.Accessory, 0),
+		apimap:  make(map[uint64]AccessoryAPI),
 	}
-	return def
 }
 
-//argToInt32 - int32 signed 32-bit integers (-2147483648 to 2147483647)
-func argToInt32(value interface{}, def int32) int32 {
-	switch val := value.(type) {
-	case int32:
-		return val
-	case int:
-		return int32(val)
-	case int8:
-		return int32(val)
-	case int16:
-		return int32(val)
-	case int64:
-		return int32(val)
-	}
-	return def
+func (hk *HomeKit) SetLog(logger *log.Logger) {
+	hk.mutex.Lock()
+	hk.logger = logger
+	hk.mutex.Unlock()
 }
 
-//argToInt64 - int64 signed 64-bit integers (-9223372036854775808 to 9223372036854775807)
-func argToInt64(value interface{}, def int64) int64 {
-	switch val := value.(type) {
-	case int64:
-		return val
-	case int:
-		return int64(val)
-	case int8:
-		return int64(val)
-	case int16:
-		return int64(val)
-	case int32:
-		return int64(val)
+func (hk *HomeKit) AddAccessory(accs ...AccessoryAPI) error {
+	hk.mutex.Lock()
+	defer hk.mutex.Unlock()
+	if hk.started {
+		if hk.logger != nil {
+			hk.logger.Printf("error add hap accessory, adding is possible only before run\n")
+		}
+		return fmt.Errorf("adding is possible only before run")
 	}
-	return def
+	if accs == nil || len(accs) < 1 {
+		if hk.logger != nil {
+			hk.logger.Printf("error add hap accessory, no accessories selected to add\n")
+		}
+		return fmt.Errorf("no accessories selected to add ")
+	}
+	l := len(hk.accs)
+	for n, acc := range accs {
+		if acc == nil {
+			if hk.logger != nil {
+				hk.logger.Printf("error add hap accessory, max quantity \n")
+			}
+			continue
+		}
+		if l+n+1 > MaxBridgeAccessories {
+			if hk.logger != nil {
+				hk.logger.Printf("error add hap accessory, max quantity %v\n", MaxBridgeAccessories)
+			}
+			return fmt.Errorf("no accessories selected to add ")
+		}
+		/*
+			+++
+			check acc.GetID() > acc.GetID() == 0
+		*/
+		if hk.apimap[acc.GetID()] != nil {
+			if hk.logger != nil {
+				hk.logger.Printf("error add hap accessory %v / %v, id %v already taken\n", acc.GetSN(), acc.GetName(), acc.GetID())
+			}
+			return fmt.Errorf("id %v already taken", acc.GetID())
+		}
+		hk.apimap[acc.GetID()] = acc
+		hk.accs = append(hk.accs, acc.GetAccessory())
+	}
+	return nil
 }
 
-//argToFloat32 - float32 the set of all IEEE-754 32-bit floating-point numbers
-func argToFloat32(value interface{}, def float32) float32 {
-	switch val := value.(type) {
-	case float32:
-		return val
-	case float64:
-		return float32(val)
-	case int:
-		return float32(val)
+func (hk *HomeKit) GetAccessory(id uint64) (AccessoryAPI, error) {
+	hk.mutex.Lock()
+	defer hk.mutex.Unlock()
+	if hk.apimap[id] != nil {
+		if hk.logger != nil {
+			hk.logger.Printf("error get, accessory id %v not found\n", id)
+		}
+		return nil, fmt.Errorf("accessory id %v not found", id)
 	}
-	return def
+	return hk.apimap[id], nil
 }
 
-//argToFloat64 - float64 the set of all IEEE-754 64-bit floating-point numbers
-func argToFloat64(value interface{}, def float64) float64 {
-	switch val := value.(type) {
-	case float64:
-		return val
-	case float32:
-		return float64(val)
-	case int:
-		return float64(val)
+//
+func (hk *HomeKit) Run(BridgeInfo accessory.Info, TransportConfig hc.Config) error {
+	bridge := accessory.NewBridge(BridgeInfo)
+	transp, err := hc.NewIPTransport(TransportConfig, bridge.Accessory, hk.accs...)
+	if err != nil {
+		if hk.logger != nil {
+			hk.logger.Printf("error create hap transport %v / %v: %v\n", bridge.Info.SerialNumber.GetValue(), bridge.Info.Name.GetValue(), err)
+		}
+		return err
 	}
-	return def
+	if hk.logger != nil {
+		hk.logger.Printf("hap transport %v / %v running.\n", bridge.Info.SerialNumber.GetValue(), bridge.Info.Name.GetValue())
+		defer hk.logger.Printf("hap transport %v / %v stopped.\n", bridge.Info.SerialNumber.GetValue(), bridge.Info.Name.GetValue())
+	}
+	hk.started = true
+	hc.OnTermination(func() { <-transp.Stop() })
+	transp.Start()
+	return nil
 }

@@ -2,34 +2,25 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"log"
 
 	"github.com/alpr777/homekit"
 	"github.com/brutella/hc"
 	"github.com/brutella/hc/accessory"
 )
 
-const (
-	accessoryName string = "gate"
-	accessorySn   string = "ExmplGT"
-	accessoryPin  string = "11112222"
-)
-
 func main() {
-	// runtime.GOMAXPROCS(4)
 	// log.Debug.Enable()
-	acc := homekit.NewAccessoryGate(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "alpr777", Model: "ACC-TEST", FirmwareRevision: "1.2"})
-	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: accessoryPin}, acc.Accessory)
+	acc := homekit.NewAccessoryGate(accessory.Info{Name: "Gate", SerialNumber: "Ex-Gate", Model: "HAP-GT", Manufacturer: homekit.Manufacturer, FirmwareRevision: homekit.Revision})
+	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: "11223344"}, acc.Accessory)
 	if err != nil {
-		fmt.Println("accessory [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]", "error create transport:", err)
-		os.Exit(1)
+		log.Fatalf("[ %v / %v ] error create hap transport: %v\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue(), err)
 	}
 	go acc.GarageDoorOpener.TargetDoorState.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("acc gate remote update target state: %T - %v \n", v, v)
 		acc.GarageDoorOpener.CurrentDoorState.SetValue(v)
-		fmt.Printf("acc gate update current state: %T - %v \n", acc.GarageDoorOpener.CurrentDoorState.GetValue(), acc.GarageDoorOpener.CurrentDoorState.GetValue())
+		fmt.Printf("acc gate update: target state %T - %v, current state %T - %v\n", v, v, acc.GarageDoorOpener.CurrentDoorState.GetValue(), acc.GarageDoorOpener.CurrentDoorState.GetValue())
 	})
-	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
+	fmt.Printf("[ %v / %v ] accessories transport start\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue())
 	hc.OnTermination(func() { <-transp.Stop() })
 	transp.Start()
 }

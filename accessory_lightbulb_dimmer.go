@@ -1,21 +1,21 @@
 package homekit
 
 import (
-	"github.com/alpr777/homekit/hapservices"
+	haps "github.com/alpr777/homekit/hap-service"
 	"github.com/brutella/hc/accessory"
 )
 
 //AccessoryLightbulbDimmer struct
 type AccessoryLightbulbDimmer struct {
 	*accessory.Accessory
-	LightbulbDimmer *hapservices.LightbulbDimmer
+	LightbulbDimmer *haps.LightbulbDimmer
 }
 
 //NewAccessoryLightbulbDimmer return AccessoryLightbulbDimmer (args... are not used)
 func NewAccessoryLightbulbDimmer(info accessory.Info, args ...interface{}) *AccessoryLightbulbDimmer {
 	acc := AccessoryLightbulbDimmer{}
 	acc.Accessory = accessory.New(info, accessory.TypeLightbulb)
-	acc.LightbulbDimmer = hapservices.NewLightbulbDimmer()
+	acc.LightbulbDimmer = haps.NewLightbulbDimmer()
 	acc.AddService(acc.LightbulbDimmer.Service)
 	return &acc
 }

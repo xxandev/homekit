@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"log"
 
 	"github.com/alpr777/homekit"
 	"github.com/brutella/hc"
@@ -10,16 +10,9 @@ import (
 	"github.com/brutella/hc/characteristic"
 )
 
-const (
-	accessoryName string = "television"
-	accessorySn   string = "ExmplTV"
-	accessoryPin  string = "11112222"
-)
-
 func main() {
-	// runtime.GOMAXPROCS(4)
 	// log.Debug.Enable()
-	acc := homekit.NewAccessoryTelevision(accessory.Info{Name: accessoryName, SerialNumber: accessorySn, Manufacturer: "alpr777", Model: "ACC-TEST", FirmwareRevision: "1.2"})
+	acc := homekit.NewAccessoryTelevision(accessory.Info{Name: "Television", SerialNumber: "Ex-Tv", Model: "HAP-TV", Manufacturer: homekit.Manufacturer, FirmwareRevision: homekit.Revision})
 	tvin1 := acc.AddInputSource(1, "HDMI 1", characteristic.InputSourceTypeHdmi)
 	_ = acc.AddInputSource(2, "HDMI 2", characteristic.InputSourceTypeHdmi)
 	_ = acc.AddInputSource(3, "YouTube", characteristic.InputSourceTypeApplication)
@@ -28,10 +21,9 @@ func main() {
 	_ = acc.AddInputSource(6, "AppleTV", characteristic.InputSourceTypeOther)
 	_ = acc.AddInputSource(7, "Xbox", characteristic.InputSourceTypeOther)
 	_ = acc.AddInputSource(8, "Paystation", characteristic.InputSourceTypeOther)
-	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: accessoryPin}, acc.Accessory)
+	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: "11223344"}, acc.Accessory)
 	if err != nil {
-		fmt.Println("accessory [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]", "error create transport:", err)
-		os.Exit(1)
+		log.Fatalf("[ %v / %v ] error create hap transport: %v\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue(), err)
 	}
 	tvin1.ConfiguredName.OnValueRemoteUpdate(func(v string) {
 		fmt.Printf("input source %s remote update configured name: %T - %v \n", tvin1.Name.GetValue(), v, v)
@@ -129,7 +121,7 @@ func main() {
 			fmt.Println("Back")
 		}
 	})
-	fmt.Println("homekit accessory transport start [", acc.Info.SerialNumber.GetValue(), "/", acc.Info.Name.GetValue(), "]")
+	fmt.Printf("[ %v / %v ] accessories transport start\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue())
 	hc.OnTermination(func() { <-transp.Stop() })
 	transp.Start()
 }
