@@ -19,3 +19,7 @@ func NewAccessoryLightbulbSwitch(info accessory.Info, args ...interface{}) *Acce
 	acc.AddService(acc.LightbulbSwitch.Service)
 	return &acc
 }
+
+func (acc *AccessoryLightbulbSwitch) OnValuesRemoteUpdateEmpty(fn func()) {
+	acc.LightbulbSwitch.On.OnValueRemoteUpdate(func(_ bool) { fn() })
+}

@@ -19,3 +19,8 @@ func NewAccessoryLightbulbDimmer(info accessory.Info, args ...interface{}) *Acce
 	acc.AddService(acc.LightbulbDimmer.Service)
 	return &acc
 }
+
+func (acc *AccessoryLightbulbDimmer) OnValuesRemoteUpdateEmpty(fn func()) {
+	acc.LightbulbDimmer.On.OnValueRemoteUpdate(func(_ bool) { fn() })
+	acc.LightbulbDimmer.Brightness.OnValueRemoteUpdate(func(_ int) { fn() })
+}
