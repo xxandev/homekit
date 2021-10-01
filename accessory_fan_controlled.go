@@ -37,7 +37,7 @@ func NewAccessoryFanControlled(info accessory.Info, args ...interface{}) *Access
 	return &acc
 }
 
-func (acc *AccessoryFanControlled) OnValueRemoteUpdate(fn func()) {
+func (acc *AccessoryFanControlled) OnValuesRemoteUpdateEmpty(fn func()) {
 	acc.Fan.On.OnValueRemoteUpdate(func(_ bool) { fn() })
 	acc.Fan.RotationSpeed.OnValueRemoteUpdate(func(_ float64) { fn() })
 }
