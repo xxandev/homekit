@@ -5,21 +5,21 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//HumidifierDehumidifier (+Active, +CurrentRelativeHumidity, +CurrentHumidifierDehumidifierState,
-//+TargetHumidifierDehumidifierState, RelativeHumidityDehumidifierThreshold, RelativeHumidityHumidifierThreshold)
+//HumidifierDehumidifier
+//	◈ Active
+//	◈ CurrentRelativeHumidity
+//	◈ CurrentHumidifierDehumidifierState
+//	◈ TargetHumidifierDehumidifierState
+//	◇ RelativeHumidityDehumidifierThreshold
+//	◇ RelativeHumidityHumidifierThreshold
 type HumidifierDehumidifier struct {
 	*service.Service
-
 	Active                                *characteristic.Active
 	CurrentHumidifierDehumidifierState    *characteristic.CurrentHumidifierDehumidifierState
 	TargetHumidifierDehumidifierState     *characteristic.TargetHumidifierDehumidifierState
 	CurrentRelativeHumidity               *characteristic.CurrentRelativeHumidity
 	RelativeHumidityDehumidifierThreshold *characteristic.RelativeHumidityDehumidifierThreshold
 	RelativeHumidityHumidifierThreshold   *characteristic.RelativeHumidityHumidifierThreshold
-	// RotationSpeed *characteristic.RotationSpeed
-	// SwingMode *characteristic.SwingMode
-	// WaterLevel *characteristic.WaterLevel
-	// LockPhysicalControls  *characteristic.LockPhysicalControls
 }
 
 //NewHumidifierDehumidifier return *HumidifierDehumidifier

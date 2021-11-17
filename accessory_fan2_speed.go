@@ -6,16 +6,16 @@ import (
 )
 
 //AccessoryFanV2Multifunc struct
-type AccessoryFanV2Multifunc struct {
+type AccessoryFan2Speed struct {
 	*accessory.Accessory
-	FanV2 *haps.FanV2Multifunc
+	Fan2 *haps.Fan2RS
 }
 
 //NewAccessoryFanV2Multifunc return AccessoryFanV2Multifunc (args... are not used)
-func NewAccessoryFanV2Multifunc(info accessory.Info, args ...interface{}) *AccessoryFanV2Multifunc {
-	acc := AccessoryFanV2Multifunc{}
+func NewAccessoryFan2Speed(info accessory.Info, args ...interface{}) *AccessoryFan2Speed {
+	acc := AccessoryFan2Speed{}
 	acc.Accessory = accessory.New(info, accessory.TypeFan)
-	acc.FanV2 = haps.NewFanV2Multifunc()
-	acc.AddService(acc.FanV2.Service)
+	acc.Fan2 = haps.NewFanV2Multifunc()
+	acc.AddService(acc.Fan2.Service)
 	return &acc
 }

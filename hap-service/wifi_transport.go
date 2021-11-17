@@ -8,7 +8,10 @@ import (
 //TypeWifiTransport - 00000203-0000-1000-8000-0000022A
 const TypeWiFiTransport string = "22A"
 
-//WiFiTransport (+CurrentTransport, +WifiCapabilities, WifiConfigurationControl)
+//WiFiTransport
+//	◈ CurrentTransport
+//	◈ WifiCapabilities
+//	◇ WifiConfigurationControl
 type WiFiTransport struct {
 	*service.Service
 

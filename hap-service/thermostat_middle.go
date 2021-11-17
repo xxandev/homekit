@@ -5,9 +5,17 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//ThermostatMultifunc (+CurrentHeatingCoolingState, +TargetHeatingCoolingState, +CurrentTemperature, +TargetTemperature,
-//+TemperatureDisplayUnits, CoolingThresholdTemperature, HeatingThresholdTemperature, CurrentRelativeHumidity, TargetRelativeHumidity)
-type ThermostatMultifunc struct {
+//ThermostatMiddle
+//	◈ CurrentHeatingCoolingState
+//	◈ TargetHeatingCoolingState
+//	◈ CurrentTemperature
+//	◈ TargetTemperature
+//	◈ TemperatureDisplayUnits
+//	◇ CoolingThresholdTemperature
+//	◇ HeatingThresholdTemperature
+//	◇ CurrentRelativeHumidity
+//	◇ TargetRelativeHumidity
+type ThermostatMiddle struct {
 	*service.Service
 	CurrentHeatingCoolingState  *characteristic.CurrentHeatingCoolingState
 	TargetHeatingCoolingState   *characteristic.TargetHeatingCoolingState
@@ -20,9 +28,9 @@ type ThermostatMultifunc struct {
 	TargetRelativeHumidity      *characteristic.TargetRelativeHumidity
 }
 
-//NewThermostatMultifunc return *ThermostatMultifunc
-func NewThermostatMultifunc() *ThermostatMultifunc {
-	svc := ThermostatMultifunc{}
+//NewThermostatMiddle return *ThermostatMiddle
+func NewThermostatMiddle() *ThermostatMiddle {
+	svc := ThermostatMiddle{}
 	svc.Service = service.New(service.TypeThermostat)
 
 	svc.CurrentHeatingCoolingState = characteristic.NewCurrentHeatingCoolingState()

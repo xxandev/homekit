@@ -8,7 +8,8 @@ import (
 //TypeWiFiSatellite - 0000020F-0000-1000-8000-0026BB765291
 const TypeWiFiSatellite string = "20F"
 
-//WiFiSatellite (+WiFiSatelliteStatus)
+//WiFiSatellite
+//	◈ WiFiSatelliteStatus
 type WiFiSatellite struct {
 	*service.Service
 	WiFiSatelliteStatus *hapc.WiFiSatelliteStatus

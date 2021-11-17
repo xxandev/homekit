@@ -5,7 +5,12 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//TelevisionSpeaker (+Mute, Active, Volume, VolumeControlType, VolumeSelector)
+//TelevisionSpeaker
+//	◈ Mute
+//	◇ Active
+//	◇ Volume
+//	◇ VolumeControlType
+//	◇ VolumeSelector
 type TelevisionSpeaker struct {
 	*service.Service
 

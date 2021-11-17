@@ -6,20 +6,20 @@ import (
 )
 
 //AccessoryFanControlled struct
-type AccessoryFanControlled struct {
+type AccessoryFanSpeed struct {
 	*accessory.Accessory
-	Fan *haps.FanControlled
+	Fan *haps.FanRS
 }
 
-//NewAccessoryFanControlled return AccessoryFanControlled
+//NewAccessoryFanSpeed return AccessoryFanSpeed
 //  args[0](float64) - RotationSpeed.SetValue(args[0]) default(0)
 //  args[1](float64) - RotationSpeed.SetMinValue(args[1]) default(0)
 //  args[2](float64) - RotationSpeed.SetMaxValue(args[2]) default(100)
 //  args[3](float64) - RotationSpeed.SetStepValue(args[3]) default(1)
-func NewAccessoryFanControlled(info accessory.Info, args ...interface{}) *AccessoryFanControlled {
-	acc := AccessoryFanControlled{}
+func NewAccessoryFanSpeed(info accessory.Info, args ...interface{}) *AccessoryFanSpeed {
+	acc := AccessoryFanSpeed{}
 	acc.Accessory = accessory.New(info, accessory.TypeFan)
-	acc.Fan = haps.NewFanControlled()
+	acc.Fan = haps.NewFanRS()
 	n := len(args)
 	if n > 0 {
 		acc.Fan.RotationSpeed.SetValue(toFloat64(args[0], 0.0))
@@ -37,7 +37,7 @@ func NewAccessoryFanControlled(info accessory.Info, args ...interface{}) *Access
 	return &acc
 }
 
-func (acc *AccessoryFanControlled) OnValuesRemoteUpdateEmpty(fn func()) {
+func (acc *AccessoryFanSpeed) OnValuesRemoteUpdates(fn func()) {
 	acc.Fan.On.OnValueRemoteUpdate(func(_ bool) { fn() })
 	acc.Fan.RotationSpeed.OnValueRemoteUpdate(func(_ float64) { fn() })
 }

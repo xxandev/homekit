@@ -5,7 +5,11 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//Door (+CurrentPosition, +TargetPosition, +PositionState, ObstructionDetected)
+//Door
+//	◈ CurrentPosition
+//	◈ TargetPosition
+//	◈ PositionState
+//	◇ ObstructionDetected
 type Door struct {
 	*service.Service
 	CurrentPosition     *characteristic.CurrentPosition

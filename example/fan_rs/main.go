@@ -12,7 +12,7 @@ import (
 
 func main() {
 	// log.Debug.Enable()
-	acc := homekit.NewAccessoryFanControlled(accessory.Info{Name: "Fan", SerialNumber: "EX-Fan", Model: "HAP-FN-CTRL", Manufacturer: homekit.Manufacturer, FirmwareRevision: homekit.Revision})
+	acc := homekit.NewAccessoryFanSpeed(accessory.Info{Name: "Fan", SerialNumber: "EX-Fan", Model: "HAP-FN-CTRL", Manufacturer: homekit.Manufacturer, FirmwareRevision: homekit.Revision})
 	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: "11223344"}, acc.Accessory)
 	if err != nil {
 		log.Fatalf("[ %v / %v ] error create hap transport: %v\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue(), err)

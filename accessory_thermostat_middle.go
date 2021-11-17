@@ -1,17 +1,17 @@
 package homekit
 
 import (
+	haps "github.com/alpr777/homekit/hap-service"
 	"github.com/brutella/hc/accessory"
-	"github.com/brutella/hc/service"
 )
 
-//AccessoryThermostat struct
-type AccessoryThermostat struct {
+//AccessoryThermostatMultifunc struct
+type AccessoryThermostatMiddle struct {
 	*accessory.Accessory
-	Thermostat *service.Thermostat
+	Thermostat *haps.ThermostatMiddle
 }
 
-//NewAccessoryThermostat returns AccessoryThermostat
+//NewAccessoryThermostatMiddle returns NewAccessoryThermostatMiddle
 //  args[0](int) - TargetHeatingCoolingState.SetValue(args[0]) default(0)
 //  args[1](int) - TargetHeatingCoolingState.SetMinValue(args[1]) default(0)
 //  args[2](int) - TargetHeatingCoolingState.SetMaxValue(args[2]) default(3)
@@ -20,10 +20,10 @@ type AccessoryThermostat struct {
 //  args[5](float64) - TargetTemperature.SetMinValue(args[1]) default(10.0)
 //  args[6](float64) - TargetTemperature.SetMaxValue(args[2]) default(40.0)
 //  args[7](float64) - TargetTemperature.SetStepValue(args[3]) default(1.0)
-func NewAccessoryThermostat(info accessory.Info, args ...interface{}) *AccessoryThermostat {
-	acc := AccessoryThermostat{}
+func NewAccessoryThermostatMiddle(info accessory.Info, args ...interface{}) *AccessoryThermostatMiddle {
+	acc := AccessoryThermostatMiddle{}
 	acc.Accessory = accessory.New(info, accessory.TypeThermostat)
-	acc.Thermostat = service.NewThermostat()
+	acc.Thermostat = haps.NewThermostatMiddle()
 
 	n := len(args)
 	if n > 0 {
@@ -59,13 +59,7 @@ func NewAccessoryThermostat(info accessory.Info, args ...interface{}) *Accessory
 	} else {
 		acc.Thermostat.TargetTemperature.SetStepValue(1.0)
 	}
-
 	acc.AddService(acc.Thermostat.Service)
 
 	return &acc
-}
-
-func (acc *AccessoryThermostat) OnValuesRemoteUpdates(fn func()) {
-	acc.Thermostat.TargetHeatingCoolingState.OnValueRemoteUpdate(func(_ int) { fn() })
-	acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(_ float64) { fn() })
 }

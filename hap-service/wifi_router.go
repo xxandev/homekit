@@ -9,8 +9,16 @@ import (
 //TypeWiFiRouter - 0000020A-0000-1000-8000-0026BB765291
 const TypeWiFiRouter string = "20A"
 
-//WiFiRouter (+ConfiguredName, +ManagedNetworkEnable, +NetworkAccessViolationControl, +NetworkClientProfileControl,
-//+NetworkClientStatusControl, +RouterStatus, +SupportedRouterConfiguration, +WANConfigurationList, +WANStatusList)
+//WiFiRouter
+//	◈ ConfiguredName
+//	◈ ManagedNetworkEnable
+//	◈ NetworkAccessViolationControl
+//	◈ NetworkClientProfileControl
+//	◈ NetworkClientStatusControl
+//	◈ RouterStatus
+//	◈ SupportedRouterConfiguration
+//	◈ WANConfigurationList
+//	◈ WANStatusList
 type WiFiRouter struct {
 	*service.Service
 	ConfiguredName                *characteristic.ConfiguredName

@@ -5,7 +5,9 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//LightbulbDimmer (+On, Brightness)
+//LightbulbDimmer
+//	◈ On
+//	◇ Brightness
 type LightbulbDimmer struct {
 	*service.Service
 	On         *characteristic.On

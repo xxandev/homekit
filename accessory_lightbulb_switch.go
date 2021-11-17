@@ -20,6 +20,6 @@ func NewAccessoryLightbulbSwitch(info accessory.Info, args ...interface{}) *Acce
 	return &acc
 }
 
-func (acc *AccessoryLightbulbSwitch) OnValuesRemoteUpdateEmpty(fn func()) {
+func (acc *AccessoryLightbulbSwitch) OnValuesRemoteUpdates(fn func()) {
 	acc.LightbulbSwitch.On.OnValueRemoteUpdate(func(_ bool) { fn() })
 }

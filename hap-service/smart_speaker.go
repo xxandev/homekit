@@ -8,7 +8,13 @@ import (
 //TypeSmartSpeaker - 00000228-0000-1000-8000-0026BB765291
 const TypeSmartSpeaker string = "228"
 
-//SmartSpeaker (+CurrentMediaState, +TargetMediaState, Name, ConfiguredName, Mute, Volume)
+//SmartSpeaker
+//	◈ CurrentMediaState
+//	◈ TargetMediaState
+//	◇ Name
+//	◇ ConfiguredName
+//	◇ Mute
+//	◇ Volume
 type SmartSpeaker struct {
 	*service.Service
 	CurrentMediaState *characteristic.CurrentMediaState

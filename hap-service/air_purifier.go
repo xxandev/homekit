@@ -5,7 +5,11 @@ import (
 	"github.com/brutella/hc/service"
 )
 
-//AirPurifier (+Active, +CurrentAirPurifierState, +TargetAirPurifierState, RotationSpeed)
+//AirPurifier
+//	◈ Active
+//	◈ CurrentAirPurifierState
+//	◈ TargetAirPurifierState
+//	◇ RotationSpeed
 type AirPurifier struct {
 	*service.Service
 	Active                  *characteristic.Active
