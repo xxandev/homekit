@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/brutella/hc"
 	"github.com/brutella/hc/accessory"
 )
 
@@ -61,6 +62,24 @@ type ConfigAccessory struct {
 	SN   string `json:"sn" xml:"sn"`
 	Port uint16 `json:"port" xml:"port"`
 	Pin  string `json:"pin,omitempty" xml:"pin,omitempty"`
+}
+
+func (a *ConfigAccessory) GetInfo(manufacturer, model, revision string) accessory.Info {
+	return accessory.Info{
+		Name:             a.GetName(),
+		SerialNumber:     a.GetSN(),
+		Manufacturer:     manufacturer,
+		Model:            model,
+		FirmwareRevision: revision,
+	}
+}
+
+func (a *ConfigAccessory) GetConfigHC(storagepath string) hc.Config {
+	return hc.Config{
+		StoragePath: storagepath,
+		Pin:         a.GetPin(),
+		Port:        a.GetPort(),
+	}
 }
 
 func (a *ConfigAccessory) GetID() uint64 {
@@ -131,6 +150,24 @@ type ConfigBridge struct {
 	Pin  string `json:"pin,omitempty" xml:"pin,omitempty"`
 }
 
+func (b *ConfigBridge) GetInfo(manufacturer, model, revision string) accessory.Info {
+	return accessory.Info{
+		Name:             b.GetName(),
+		SerialNumber:     b.GetSN(),
+		Manufacturer:     manufacturer,
+		Model:            model,
+		FirmwareRevision: revision,
+	}
+}
+
+func (b *ConfigBridge) GetConfigHC(storagepath string) hc.Config {
+	return hc.Config{
+		StoragePath: storagepath,
+		Pin:         b.GetPin(),
+		Port:        b.GetPort(),
+	}
+}
+
 func (b *ConfigBridge) GetID() uint64 {
 	return 1
 }
@@ -196,6 +233,16 @@ type ConfigSlaveAccessory struct {
 	ID   uint64 `json:"id" xml:"id"`
 	Name string `json:"name,omitempty" xml:"name,omitempty"`
 	SN   string `json:"sn,omitempty" xml:"sn,omitempty"`
+}
+
+func (sa *ConfigSlaveAccessory) GetInfo(manufacturer, model, revision string) accessory.Info {
+	return accessory.Info{
+		Name:             sa.GetName(),
+		SerialNumber:     sa.GetSN(),
+		Manufacturer:     manufacturer,
+		Model:            model,
+		FirmwareRevision: revision,
+	}
 }
 
 func (sa *ConfigSlaveAccessory) GetID() uint64 {
