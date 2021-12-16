@@ -9,6 +9,7 @@ import (
 
 	"github.com/brutella/hc"
 	"github.com/brutella/hc/accessory"
+	"github.com/brutella/hc/log"
 )
 
 //https://github.com/homebridge/HAP-NodeJS/blob/master/src/lib/Accessory.ts >> export const enum Categories
@@ -79,6 +80,21 @@ func (a *ConfigAccessory) GetConfigHC(storagepath string) hc.Config {
 		StoragePath: storagepath,
 		Pin:         a.GetPin(),
 		Port:        a.GetPort(),
+	}
+}
+
+//OnDebug
+//  if use systemd, recommended flag 64, or 77 for full debug
+func (a *ConfigAccessory) OnDebug(active bool) {
+	log.Debug.SetFlags(67) // if use systemd, recommended flag 64, or 77 for full debug
+	log.Info.SetFlags(67)  // if use systemd, recommended flag 64, or 77 for full debug
+	log.Debug.SetPrefix("[HAP_DBG]")
+	log.Info.SetPrefix("[HAP_INFO]")
+	log.Debug.Disable()
+	log.Info.Disable()
+	if active {
+		log.Debug.Enable()
+		log.Info.Enable()
 	}
 }
 
@@ -168,6 +184,21 @@ func (b *ConfigBridge) GetConfigHC(storagepath string) hc.Config {
 	}
 }
 
+//OnDebug
+//  if use systemd, recommended flag 64, or 77 for full debug
+func (b *ConfigBridge) OnDebug(active bool) {
+	log.Debug.SetFlags(67) // if use systemd, recommended flag 64, or 77 for full debug
+	log.Info.SetFlags(67)  // if use systemd, recommended flag 64, or 77 for full debug
+	log.Debug.SetPrefix("[HAP_DBG]")
+	log.Info.SetPrefix("[HAP_INFO]")
+	log.Debug.Disable()
+	log.Info.Disable()
+	if active {
+		log.Debug.Enable()
+		log.Info.Enable()
+	}
+}
+
 func (b *ConfigBridge) GetID() uint64 {
 	return 1
 }
@@ -237,6 +268,7 @@ type ConfigSlaveAccessory struct {
 
 func (sa *ConfigSlaveAccessory) GetInfo(manufacturer, model, revision string) accessory.Info {
 	return accessory.Info{
+		ID:               sa.ID,
 		Name:             sa.GetName(),
 		SerialNumber:     sa.GetSN(),
 		Manufacturer:     manufacturer,
