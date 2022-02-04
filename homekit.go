@@ -53,7 +53,7 @@ const (
 )
 
 const (
-	Revision             string = "1.2.4"
+	Revision             string = "1.2.3"
 	Manufacturer         string = "alpr777"
 	MaxBridgeAccessories int    = 150
 )
