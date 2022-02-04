@@ -19,3 +19,7 @@ func NewAccessoryFan2Switch(info accessory.Info, args ...interface{}) *Accessory
 	acc.AddService(acc.Fan2.Service)
 	return &acc
 }
+
+func (acc *AccessoryFan2Switch) OnValuesRemoteUpdates(fn func()) {
+	acc.Fan2.Active.OnValueRemoteUpdate(func(int) { fn() })
+}

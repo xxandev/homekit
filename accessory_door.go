@@ -14,7 +14,7 @@ type AccessoryDoor struct {
 //NewAccessoryDoor returns AccessoryDoor
 //  args[0](int) - TargetPosition.SetValue(args[0]) default(0)
 //  args[1](int) - TargetPosition.SetMinValue(args[1]) default(0)
-//  args[2](int) - TargetPosition.SetMaxValue(args[2]) default(2)
+//  args[2](int) - TargetPosition.SetMaxValue(args[2]) default(100)
 //  args[3](int) - TargetPosition.SetStepValue(args[3]) default(1)
 func NewAccessoryDoor(info accessory.Info, args ...interface{}) *AccessoryDoor {
 	acc := AccessoryDoor{}
@@ -22,17 +22,21 @@ func NewAccessoryDoor(info accessory.Info, args ...interface{}) *AccessoryDoor {
 	acc.Door = haps.NewDoor()
 	n := len(args)
 	if n > 0 {
-		acc.Door.TargetPosition.SetValue(toInt(args[0], 0))
+		acc.Door.TargetPosition.SetValue(toi(args[0], 0))
 	}
 	if n > 1 {
-		acc.Door.TargetPosition.SetMinValue(toInt(args[1], 0))
+		acc.Door.TargetPosition.SetMinValue(toi(args[1], 0))
 	}
 	if n > 2 {
-		acc.Door.TargetPosition.SetMaxValue(toInt(args[2], 100))
+		acc.Door.TargetPosition.SetMaxValue(toi(args[2], 100))
 	}
 	if n > 3 {
-		acc.Door.TargetPosition.SetStepValue(toInt(args[3], 1))
+		acc.Door.TargetPosition.SetStepValue(toi(args[3], 1))
 	}
 	acc.AddService(acc.Door.Service)
 	return &acc
+}
+
+func (acc *AccessoryDoor) OnValuesRemoteUpdates(fn func()) {
+	acc.Door.TargetPosition.OnValueRemoteUpdate(func(int) { fn() })
 }

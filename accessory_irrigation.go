@@ -20,3 +20,8 @@ func NewAccessoryIrrigation(info accessory.Info, args ...interface{}) *Accessory
 	acc.AddService(acc.Valve.Service)
 	return &acc
 }
+
+func (acc *AccessoryIrrigation) OnValuesRemoteUpdates(fn func()) {
+	acc.Valve.Active.OnValueRemoteUpdate(func(int) { fn() })
+	// acc.Valve.InUse.OnValueRemoteUpdate(func(int) { fn() })
+}

@@ -19,3 +19,8 @@ func NewAccessoryFan2Speed(info accessory.Info, args ...interface{}) *AccessoryF
 	acc.AddService(acc.Fan2.Service)
 	return &acc
 }
+
+func (acc *AccessoryFan2Speed) OnValuesRemoteUpdates(fn func()) {
+	acc.Fan2.Active.OnValueRemoteUpdate(func(int) { fn() })
+	acc.Fan2.RotationSpeed.OnValueRemoteUpdate(func(float64) { fn() })
+}

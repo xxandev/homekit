@@ -19,3 +19,7 @@ func NewAccessoryLock(info accessory.Info, args ...interface{}) *AccessoryLock {
 	acc.AddService(acc.LockMechanism.Service)
 	return &acc
 }
+
+func (acc *AccessoryLock) OnValuesRemoteUpdates(fn func()) {
+	acc.LockMechanism.LockTargetState.OnValueRemoteUpdate(func(int) { fn() })
+}

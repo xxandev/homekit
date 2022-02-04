@@ -27,5 +27,5 @@ func (acc *AccessorySwitch) GetName() string                    { return acc.Acc
 func (acc *AccessorySwitch) GetAccessory() *accessory.Accessory { return acc.Accessory }
 
 func (acc *AccessorySwitch) OnValuesRemoteUpdates(fn func()) {
-	acc.Switch.On.OnValueRemoteUpdate(func(_ bool) { fn() })
+	acc.Switch.On.OnValueRemoteUpdate(func(bool) { fn() })
 }

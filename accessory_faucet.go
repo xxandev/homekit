@@ -25,3 +25,8 @@ func NewAccessoryFaucet(info accessory.Info, args ...interface{}) *AccessoryFauc
 	acc.AddService(acc.Valve.Service)
 	return &acc
 }
+
+func (acc *AccessoryFaucet) OnValuesRemoteUpdates(fn func()) {
+	acc.Valve.Active.OnValueRemoteUpdate(func(int) { fn() })
+	// acc.Valve.InUse.OnValueRemoteUpdate(func(int) { fn() })
+}

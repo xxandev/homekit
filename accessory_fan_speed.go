@@ -22,22 +22,22 @@ func NewAccessoryFanSpeed(info accessory.Info, args ...interface{}) *AccessoryFa
 	acc.Fan = haps.NewFanRS()
 	n := len(args)
 	if n > 0 {
-		acc.Fan.RotationSpeed.SetValue(toFloat64(args[0], 0.0))
+		acc.Fan.RotationSpeed.SetValue(tof64(args[0], 0.0))
 	}
 	if n > 1 {
-		acc.Fan.RotationSpeed.SetMinValue(toFloat64(args[1], 0.0))
+		acc.Fan.RotationSpeed.SetMinValue(tof64(args[1], 0.0))
 	}
 	if n > 2 {
-		acc.Fan.RotationSpeed.SetMaxValue(toFloat64(args[2], 100.0))
+		acc.Fan.RotationSpeed.SetMaxValue(tof64(args[2], 100.0))
 	}
 	if n > 3 {
-		acc.Fan.RotationSpeed.SetStepValue(toFloat64(args[3], 1.0))
+		acc.Fan.RotationSpeed.SetStepValue(tof64(args[3], 1.0))
 	}
 	acc.AddService(acc.Fan.Service)
 	return &acc
 }
 
 func (acc *AccessoryFanSpeed) OnValuesRemoteUpdates(fn func()) {
-	acc.Fan.On.OnValueRemoteUpdate(func(_ bool) { fn() })
-	acc.Fan.RotationSpeed.OnValueRemoteUpdate(func(_ float64) { fn() })
+	acc.Fan.On.OnValueRemoteUpdate(func(bool) { fn() })
+	acc.Fan.RotationSpeed.OnValueRemoteUpdate(func(float64) { fn() })
 }

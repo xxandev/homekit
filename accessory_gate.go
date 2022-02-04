@@ -19,3 +19,8 @@ func NewAccessoryGate(info accessory.Info, args ...interface{}) *AccessoryGate {
 	acc.AddService(acc.GarageDoorOpener.Service)
 	return &acc
 }
+
+func (acc *AccessoryGate) OnValuesRemoteUpdates(fn func()) {
+	acc.GarageDoorOpener.TargetDoorState.OnValueRemoteUpdate(func(int) { fn() })
+	// acc.GarageDoorOpener.ObstructionDetected.OnValueRemoteUpdate(func(bool) { fn() })
+}

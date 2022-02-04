@@ -22,18 +22,23 @@ func NewAccessoryAirPurifier(info accessory.Info, args ...interface{}) *Accessor
 	acc.AirPurifier = haps.NewAirPurifier()
 	n := len(args)
 	if n > 0 {
-		acc.AirPurifier.RotationSpeed.SetValue(toFloat64(args[0], 0.0))
+		acc.AirPurifier.RotationSpeed.SetValue(tof64(args[0], 0.0))
 	}
 	if n > 1 {
-		acc.AirPurifier.RotationSpeed.SetMinValue(toFloat64(args[1], 0.0))
+		acc.AirPurifier.RotationSpeed.SetMinValue(tof64(args[1], 0.0))
 	}
 	if n > 2 {
-		acc.AirPurifier.RotationSpeed.SetMaxValue(toFloat64(args[2], 100.0))
+		acc.AirPurifier.RotationSpeed.SetMaxValue(tof64(args[2], 100.0))
 	}
 	if n > 3 {
-		acc.AirPurifier.RotationSpeed.SetStepValue(toFloat64(args[3], 1.0))
+		acc.AirPurifier.RotationSpeed.SetStepValue(tof64(args[3], 1.0))
 	}
 	acc.AddService(acc.AirPurifier.Service)
-
 	return &acc
+}
+
+func (acc *AccessoryAirPurifier) OnValuesRemoteUpdates(fn func()) {
+	acc.AirPurifier.Active.OnValueRemoteUpdate(func(int) { fn() })
+	acc.AirPurifier.TargetAirPurifierState.OnValueRemoteUpdate(func(int) { fn() })
+	acc.AirPurifier.RotationSpeed.OnValueRemoteUpdate(func(float64) { fn() })
 }

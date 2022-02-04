@@ -22,17 +22,21 @@ func NewAccessorySecuritySystemSimple(info accessory.Info, args ...interface{}) 
 	acc.SecuritySystemSimple = service.NewSecuritySystem()
 	n := len(args)
 	if n > 0 {
-		acc.SecuritySystemSimple.SecuritySystemTargetState.SetValue(toInt(args[0], 0))
+		acc.SecuritySystemSimple.SecuritySystemTargetState.SetValue(toi(args[0], 0))
 	}
 	if n > 1 {
-		acc.SecuritySystemSimple.SecuritySystemTargetState.SetMinValue(toInt(args[1], 0))
+		acc.SecuritySystemSimple.SecuritySystemTargetState.SetMinValue(toi(args[1], 0))
 	}
 	if n > 2 {
-		acc.SecuritySystemSimple.SecuritySystemTargetState.SetMaxValue(toInt(args[2], 3))
+		acc.SecuritySystemSimple.SecuritySystemTargetState.SetMaxValue(toi(args[2], 3))
 	}
 	if n > 3 {
-		acc.SecuritySystemSimple.SecuritySystemTargetState.SetStepValue(toInt(args[3], 1))
+		acc.SecuritySystemSimple.SecuritySystemTargetState.SetStepValue(toi(args[3], 1))
 	}
 	acc.AddService(acc.SecuritySystemSimple.Service)
 	return &acc
+}
+
+func (acc *AccessorySecuritySystemSimple) OnValuesRemoteUpdates(fn func()) {
+	acc.SecuritySystemSimple.SecuritySystemTargetState.OnValueRemoteUpdate(func(int) { fn() })
 }

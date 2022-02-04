@@ -22,17 +22,24 @@ func NewAccessoryHumidifierDehumidifier(info accessory.Info, args ...interface{}
 	acc.HumidifierDehumidifier = haps.NewHumidifierDehumidifier()
 	n := len(args)
 	if n > 0 {
-		acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.SetValue(toInt(args[0], 0))
+		acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.SetValue(toi(args[0], 0))
 	}
 	if n > 1 {
-		acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.SetMinValue(toInt(args[1], 0))
+		acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.SetMinValue(toi(args[1], 0))
 	}
 	if n > 2 {
-		acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.SetMaxValue(toInt(args[2], 2))
+		acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.SetMaxValue(toi(args[2], 2))
 	}
 	if n > 3 {
-		acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.SetStepValue(toInt(args[3], 1))
+		acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.SetStepValue(toi(args[3], 1))
 	}
 	acc.AddService(acc.HumidifierDehumidifier.Service)
 	return &acc
+}
+
+func (acc *AccessoryHumidifierDehumidifier) OnValuesRemoteUpdates(fn func()) {
+	acc.HumidifierDehumidifier.Active.OnValueRemoteUpdate(func(int) { fn() })
+	acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.OnValueRemoteUpdate(func(int) { fn() })
+	acc.HumidifierDehumidifier.RelativeHumidityDehumidifierThreshold.OnValueRemoteUpdate(func(float64) { fn() })
+	acc.HumidifierDehumidifier.RelativeHumidityHumidifierThreshold.OnValueRemoteUpdate(func(float64) { fn() })
 }

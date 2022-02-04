@@ -21,8 +21,8 @@ func NewAccessoryLightbulbColored(info accessory.Info, args ...interface{}) *Acc
 }
 
 func (acc *AccessoryLightbulbColored) OnValuesRemoteUpdates(fn func()) {
-	acc.LightbulbColored.On.OnValueRemoteUpdate(func(_ bool) { fn() })
-	acc.LightbulbColored.Brightness.OnValueRemoteUpdate(func(_ int) { fn() })
-	acc.LightbulbColored.Saturation.OnValueRemoteUpdate(func(_ float64) { fn() })
-	acc.LightbulbColored.Hue.OnValueRemoteUpdate(func(_ float64) { fn() })
+	acc.LightbulbColored.On.OnValueRemoteUpdate(func(bool) { fn() })
+	acc.LightbulbColored.Brightness.OnValueRemoteUpdate(func(int) { fn() })
+	acc.LightbulbColored.Saturation.OnValueRemoteUpdate(func(float64) { fn() })
+	acc.LightbulbColored.Hue.OnValueRemoteUpdate(func(float64) { fn() })
 }

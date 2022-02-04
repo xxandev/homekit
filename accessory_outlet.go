@@ -20,3 +20,8 @@ func NewAccessoryOutlet(info accessory.Info, args ...interface{}) *AccessoryOutl
 	acc.AddService(acc.Outlet.Service)
 	return &acc
 }
+
+func (acc *AccessoryOutlet) OnValuesRemoteUpdates(fn func()) {
+	acc.Outlet.On.OnValueRemoteUpdate(func(bool) { fn() })
+	// acc.Outlet.OutletInUse.OnValueRemoteUpdate(func(bool) { fn() })
+}

@@ -21,6 +21,6 @@ func NewAccessoryLightbulbDimmer(info accessory.Info, args ...interface{}) *Acce
 }
 
 func (acc *AccessoryLightbulbDimmer) OnValuesRemoteUpdates(fn func()) {
-	acc.LightbulbDimmer.On.OnValueRemoteUpdate(func(_ bool) { fn() })
-	acc.LightbulbDimmer.Brightness.OnValueRemoteUpdate(func(_ int) { fn() })
+	acc.LightbulbDimmer.On.OnValueRemoteUpdate(func(bool) { fn() })
+	acc.LightbulbDimmer.Brightness.OnValueRemoteUpdate(func(int) { fn() })
 }

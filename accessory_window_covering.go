@@ -23,16 +23,16 @@ func NewAccessoryWindowCovering(info accessory.Info, args ...interface{}) *Acces
 
 	n := len(args)
 	if n > 0 {
-		acc.WindowCovering.TargetPosition.SetValue(toInt(args[0], 0))
+		acc.WindowCovering.TargetPosition.SetValue(toi(args[0], 0))
 	}
 	if n > 1 {
-		acc.WindowCovering.TargetPosition.SetMinValue(toInt(args[1], 0))
+		acc.WindowCovering.TargetPosition.SetMinValue(toi(args[1], 0))
 	}
 	if n > 2 {
-		acc.WindowCovering.TargetPosition.SetMaxValue(toInt(args[2], 100))
+		acc.WindowCovering.TargetPosition.SetMaxValue(toi(args[2], 100))
 	}
 	if n > 3 {
-		acc.WindowCovering.TargetPosition.SetStepValue(toInt(args[3], 1))
+		acc.WindowCovering.TargetPosition.SetStepValue(toi(args[3], 1))
 	}
 
 	acc.AddService(acc.WindowCovering.Service)

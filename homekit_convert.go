@@ -1,13 +1,13 @@
 package homekit
 
-func toBool(value interface{}, def bool) bool {
+func tob(value interface{}, def bool) bool {
 	if val, ok := value.(bool); ok {
 		return val
 	}
 	return def
 }
 
-func toInt(value interface{}, def int) int {
+func toi(value interface{}, def int) int {
 	switch val := value.(type) {
 	case int:
 		return val
@@ -23,7 +23,7 @@ func toInt(value interface{}, def int) int {
 	return def
 }
 
-func toInt32(value interface{}, def int32) int32 {
+func toi32(value interface{}, def int32) int32 {
 	switch val := value.(type) {
 	case int32:
 		return val
@@ -39,7 +39,7 @@ func toInt32(value interface{}, def int32) int32 {
 	return def
 }
 
-func toInt64(value interface{}, def int64) int64 {
+func toi64(value interface{}, def int64) int64 {
 	switch val := value.(type) {
 	case int64:
 		return val
@@ -55,7 +55,7 @@ func toInt64(value interface{}, def int64) int64 {
 	return def
 }
 
-func toFloat32(value interface{}, def float32) float32 {
+func tof32(value interface{}, def float32) float32 {
 	switch val := value.(type) {
 	case float32:
 		return val
@@ -67,7 +67,7 @@ func toFloat32(value interface{}, def float32) float32 {
 	return def
 }
 
-func toFloat64(value interface{}, def float64) float64 {
+func tof64(value interface{}, def float64) float64 {
 	switch val := value.(type) {
 	case float64:
 		return val
