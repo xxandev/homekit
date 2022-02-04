@@ -1,6 +1,8 @@
 package homekit
 
 import (
+	"fmt"
+
 	haps "github.com/alpr777/homekit/hap-service"
 	"github.com/brutella/hc/accessory"
 )
@@ -9,6 +11,26 @@ import (
 type AccessoryAirPurifier struct {
 	*accessory.Accessory
 	AirPurifier *haps.AirPurifier
+}
+
+func (acc *AccessoryAirPurifier) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessoryAirPurifier) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessoryAirPurifier) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessoryAirPurifier) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessoryAirPurifier) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
 }
 
 //NewAccessoryAirPurifier returns AccessoryAirPurifier
@@ -41,4 +63,16 @@ func (acc *AccessoryAirPurifier) OnValuesRemoteUpdates(fn func()) {
 	acc.AirPurifier.Active.OnValueRemoteUpdate(func(int) { fn() })
 	acc.AirPurifier.TargetAirPurifierState.OnValueRemoteUpdate(func(int) { fn() })
 	acc.AirPurifier.RotationSpeed.OnValueRemoteUpdate(func(float64) { fn() })
+}
+
+func (acc *AccessoryAirPurifier) OnValuesRemoteUpdatesPrint() {
+	acc.AirPurifier.Active.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("[%T - %s] remote update active: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
+	acc.AirPurifier.TargetAirPurifierState.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
+	acc.AirPurifier.RotationSpeed.OnValueRemoteUpdate(func(v float64) {
+		fmt.Printf("[%T - %s] remote update rotation speed: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
 }

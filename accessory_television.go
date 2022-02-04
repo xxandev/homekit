@@ -14,6 +14,26 @@ type AccessoryTelevision struct {
 	Speaker    *haps.TelevisionSpeaker
 }
 
+func (acc *AccessoryTelevision) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessoryTelevision) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessoryTelevision) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessoryTelevision) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessoryTelevision) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
+}
+
 //NewAccessoryTelevision returns AccessoryTelevision (args... are not used)
 func NewAccessoryTelevision(info accessory.Info, args ...interface{}) *AccessoryTelevision {
 	acc := AccessoryTelevision{}
@@ -70,3 +90,6 @@ func (acc *AccessoryTelevision) ProcessInputSource(insource *service.InputSource
 		insource.Name.OnValueRemoteUpdate(func(v string) { events[5](v) })
 	}
 }
+
+func (acc *AccessoryTelevision) OnValuesRemoteUpdates(fn func()) {}
+func (acc *AccessoryTelevision) OnValuesRemoteUpdatesPrint()     {}

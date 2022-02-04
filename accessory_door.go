@@ -1,6 +1,8 @@
 package homekit
 
 import (
+	"fmt"
+
 	haps "github.com/alpr777/homekit/hap-service"
 	"github.com/brutella/hc/accessory"
 )
@@ -9,6 +11,26 @@ import (
 type AccessoryDoor struct {
 	*accessory.Accessory
 	Door *haps.Door
+}
+
+func (acc *AccessoryDoor) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessoryDoor) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessoryDoor) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessoryDoor) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessoryDoor) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
 }
 
 //NewAccessoryDoor returns AccessoryDoor
@@ -39,4 +61,10 @@ func NewAccessoryDoor(info accessory.Info, args ...interface{}) *AccessoryDoor {
 
 func (acc *AccessoryDoor) OnValuesRemoteUpdates(fn func()) {
 	acc.Door.TargetPosition.OnValueRemoteUpdate(func(int) { fn() })
+}
+
+func (acc *AccessoryDoor) OnValuesRemoteUpdatesPrint() {
+	acc.Door.TargetPosition.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("[%T - %s] remote update target position: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
 }

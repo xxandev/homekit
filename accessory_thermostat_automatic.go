@@ -1,6 +1,8 @@
 package homekit
 
 import (
+	"fmt"
+
 	"github.com/brutella/hc/accessory"
 	"github.com/brutella/hc/characteristic"
 	"github.com/brutella/hc/service"
@@ -21,6 +23,26 @@ type AccessoryThermostatAutomatic struct {
 		*service.Service
 		On *characteristic.On
 	}
+}
+
+func (acc *AccessoryThermostatAutomatic) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessoryThermostatAutomatic) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessoryThermostatAutomatic) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessoryThermostatAutomatic) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessoryThermostatAutomatic) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
 }
 
 //NewAccessoryThermostatAutomatic returns AccessoryThermostatAutomatic
@@ -85,6 +107,19 @@ func NewAccessoryThermostatAutomatic(info accessory.Info, args ...interface{}) *
 }
 
 func (acc *AccessoryThermostatAutomatic) OnValuesRemoteUpdates(fn func()) {
+	acc.Switch.On.OnValueRemoteUpdate(func(bool) { fn() })
 	acc.Thermostat.TargetHeatingCoolingState.OnValueRemoteUpdate(func(int) { fn() })
 	acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(float64) { fn() })
+}
+
+func (acc *AccessoryThermostatAutomatic) OnValuesRemoteUpdatesPrint() {
+	acc.Switch.On.OnValueRemoteUpdate(func(v bool) {
+		fmt.Printf("[%T - %s] remote update on: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
+	acc.Thermostat.TargetHeatingCoolingState.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
+	acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(v float64) {
+		fmt.Printf("[%T - %s] remote update target temp: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
 }

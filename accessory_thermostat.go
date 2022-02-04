@@ -1,6 +1,8 @@
 package homekit
 
 import (
+	"fmt"
+
 	"github.com/brutella/hc/accessory"
 	"github.com/brutella/hc/service"
 )
@@ -9,6 +11,26 @@ import (
 type AccessoryThermostat struct {
 	*accessory.Accessory
 	Thermostat *service.Thermostat
+}
+
+func (acc *AccessoryThermostat) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessoryThermostat) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessoryThermostat) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessoryThermostat) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessoryThermostat) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
 }
 
 //NewAccessoryThermostat returns AccessoryThermostat
@@ -68,4 +90,13 @@ func NewAccessoryThermostat(info accessory.Info, args ...interface{}) *Accessory
 func (acc *AccessoryThermostat) OnValuesRemoteUpdates(fn func()) {
 	acc.Thermostat.TargetHeatingCoolingState.OnValueRemoteUpdate(func(int) { fn() })
 	acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(float64) { fn() })
+}
+
+func (acc *AccessoryThermostat) OnValuesRemoteUpdatesPrint() {
+	acc.Thermostat.TargetHeatingCoolingState.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
+	acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(v float64) {
+		fmt.Printf("[%T - %s] remote update target temp: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
 }

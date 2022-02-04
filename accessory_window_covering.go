@@ -1,6 +1,8 @@
 package homekit
 
 import (
+	"fmt"
+
 	"github.com/brutella/hc/accessory"
 	"github.com/brutella/hc/service"
 )
@@ -9,6 +11,26 @@ import (
 type AccessoryWindowCovering struct {
 	*accessory.Accessory
 	WindowCovering *service.WindowCovering
+}
+
+func (acc *AccessoryWindowCovering) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessoryWindowCovering) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessoryWindowCovering) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessoryWindowCovering) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessoryWindowCovering) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
 }
 
 //NewAccessoryWindowCovering returns AccessoryWindowCovering
@@ -38,4 +60,18 @@ func NewAccessoryWindowCovering(info accessory.Info, args ...interface{}) *Acces
 	acc.AddService(acc.WindowCovering.Service)
 
 	return &acc
+}
+
+func (acc *AccessoryWindowCovering) OnValuesRemoteUpdates(fn func()) {
+	acc.WindowCovering.TargetPosition.OnValueRemoteUpdate(func(int) { fn() })
+	acc.WindowCovering.PositionState.OnValueRemoteUpdate(func(int) { fn() })
+}
+
+func (acc *AccessoryWindowCovering) OnValuesRemoteUpdatesPrint() {
+	acc.WindowCovering.TargetPosition.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("[%T - %s] remote update target position: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
+	acc.WindowCovering.PositionState.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("[%T - %s] remote update position state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
 }

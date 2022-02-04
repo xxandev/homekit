@@ -14,6 +14,26 @@ type AccessoryDoorbell struct {
 	Microphone       *service.Microphone
 }
 
+func (acc *AccessoryDoorbell) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessoryDoorbell) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessoryDoorbell) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessoryDoorbell) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessoryDoorbell) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
+}
+
 //NewAccessoryDoorbell returns a Video Doorbell accessory.
 func NewAccessoryDoorbell(info accessory.Info, args ...interface{}) *AccessoryDoorbell {
 	acc := AccessoryDoorbell{}
@@ -32,3 +52,6 @@ func NewAccessoryDoorbell(info accessory.Info, args ...interface{}) *AccessoryDo
 
 	return &acc
 }
+
+func (acc *AccessoryDoorbell) OnValuesRemoteUpdates(fn func()) {}
+func (acc *AccessoryDoorbell) OnValuesRemoteUpdatesPrint()     {}

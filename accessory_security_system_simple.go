@@ -1,6 +1,8 @@
 package homekit
 
 import (
+	"fmt"
+
 	"github.com/brutella/hc/accessory"
 	"github.com/brutella/hc/service"
 )
@@ -9,6 +11,26 @@ import (
 type AccessorySecuritySystemSimple struct {
 	*accessory.Accessory
 	SecuritySystemSimple *service.SecuritySystem
+}
+
+func (acc *AccessorySecuritySystemSimple) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessorySecuritySystemSimple) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessorySecuritySystemSimple) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessorySecuritySystemSimple) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessorySecuritySystemSimple) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
 }
 
 //NewAccessorySecuritySystemSimple returns AccessorySecuritySystemSimple
@@ -39,4 +61,10 @@ func NewAccessorySecuritySystemSimple(info accessory.Info, args ...interface{}) 
 
 func (acc *AccessorySecuritySystemSimple) OnValuesRemoteUpdates(fn func()) {
 	acc.SecuritySystemSimple.SecuritySystemTargetState.OnValueRemoteUpdate(func(int) { fn() })
+}
+
+func (acc *AccessorySecuritySystemSimple) OnValuesRemoteUpdatesPrint() {
+	acc.SecuritySystemSimple.SecuritySystemTargetState.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
 }

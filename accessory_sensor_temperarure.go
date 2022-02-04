@@ -11,6 +11,26 @@ type AccessorySensorTemperature struct {
 	TempSensor *service.TemperatureSensor
 }
 
+func (acc *AccessorySensorTemperature) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessorySensorTemperature) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessorySensorTemperature) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessorySensorTemperature) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessorySensorTemperature) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
+}
+
 //NewAccessorySensorTemperature returns AccessorySensorTemperature (args... are not used)
 func NewAccessorySensorTemperature(info accessory.Info, args ...interface{}) *AccessorySensorTemperature {
 	acc := AccessorySensorTemperature{}
@@ -23,3 +43,6 @@ func NewAccessorySensorTemperature(info accessory.Info, args ...interface{}) *Ac
 	acc.AddService(acc.TempSensor.Service)
 	return &acc
 }
+
+func (acc *AccessorySensorTemperature) OnValuesRemoteUpdates(fn func()) {}
+func (acc *AccessorySensorTemperature) OnValuesRemoteUpdatesPrint()     {}

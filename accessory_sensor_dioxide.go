@@ -11,6 +11,26 @@ type AccessorySensorDioxide struct {
 	CarbonDioxideSensor *service.CarbonDioxideSensor
 }
 
+func (acc *AccessorySensorDioxide) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessorySensorDioxide) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessorySensorDioxide) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessorySensorDioxide) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessorySensorDioxide) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
+}
+
 //NewAccessorySensorLight return AccessorySensorLight (args... are not used)
 func NewAccessorySensorDioxide(info accessory.Info, args ...interface{}) *AccessorySensorDioxide {
 	acc := AccessorySensorDioxide{}
@@ -19,3 +39,6 @@ func NewAccessorySensorDioxide(info accessory.Info, args ...interface{}) *Access
 	acc.AddService(acc.CarbonDioxideSensor.Service)
 	return &acc
 }
+
+func (acc *AccessorySensorDioxide) OnValuesRemoteUpdates(fn func()) {}
+func (acc *AccessorySensorDioxide) OnValuesRemoteUpdatesPrint()     {}

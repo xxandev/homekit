@@ -1,6 +1,8 @@
 package homekit
 
 import (
+	"fmt"
+
 	haps "github.com/alpr777/homekit/hap-service"
 	"github.com/brutella/hc/accessory"
 )
@@ -9,6 +11,26 @@ import (
 type AccessoryFan2Speed struct {
 	*accessory.Accessory
 	Fan2 *haps.Fan2RS
+}
+
+func (acc *AccessoryFan2Speed) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessoryFan2Speed) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessoryFan2Speed) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessoryFan2Speed) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessoryFan2Speed) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
 }
 
 //NewAccessoryFanV2Multifunc return AccessoryFanV2Multifunc (args... are not used)
@@ -23,4 +45,13 @@ func NewAccessoryFan2Speed(info accessory.Info, args ...interface{}) *AccessoryF
 func (acc *AccessoryFan2Speed) OnValuesRemoteUpdates(fn func()) {
 	acc.Fan2.Active.OnValueRemoteUpdate(func(int) { fn() })
 	acc.Fan2.RotationSpeed.OnValueRemoteUpdate(func(float64) { fn() })
+}
+
+func (acc *AccessoryFan2Speed) OnValuesRemoteUpdatesPrint() {
+	acc.Fan2.Active.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("[%T - %s] remote update active: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
+	acc.Fan2.RotationSpeed.OnValueRemoteUpdate(func(v float64) {
+		fmt.Printf("[%T - %s] remote update rotation speed: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
 }

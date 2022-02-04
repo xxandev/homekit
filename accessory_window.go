@@ -1,6 +1,8 @@
 package homekit
 
 import (
+	"fmt"
+
 	"github.com/brutella/hc/accessory"
 	"github.com/brutella/hc/service"
 )
@@ -9,6 +11,26 @@ import (
 type AccessoryWindow struct {
 	*accessory.Accessory
 	Window *service.Window
+}
+
+func (acc *AccessoryWindow) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessoryWindow) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessoryWindow) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessoryWindow) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessoryWindow) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
 }
 
 //NewAccessoryWindow returns AccessoryWindow
@@ -35,4 +57,18 @@ func NewAccessoryWindow(info accessory.Info, args ...interface{}) *AccessoryWind
 	}
 	acc.AddService(acc.Window.Service)
 	return &acc
+}
+
+func (acc *AccessoryWindow) OnValuesRemoteUpdates(fn func()) {
+	acc.Window.TargetPosition.OnValueRemoteUpdate(func(int) { fn() })
+	acc.Window.PositionState.OnValueRemoteUpdate(func(int) { fn() })
+}
+
+func (acc *AccessoryWindow) OnValuesRemoteUpdatesPrint() {
+	acc.Window.TargetPosition.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("[%T - %s] remote update target position: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
+	acc.Window.PositionState.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("[%T - %s] remote update position state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
 }

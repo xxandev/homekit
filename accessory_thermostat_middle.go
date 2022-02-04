@@ -1,6 +1,8 @@
 package homekit
 
 import (
+	"fmt"
+
 	haps "github.com/alpr777/homekit/hap-service"
 	"github.com/brutella/hc/accessory"
 )
@@ -9,6 +11,26 @@ import (
 type AccessoryThermostatMiddle struct {
 	*accessory.Accessory
 	Thermostat *haps.ThermostatMiddle
+}
+
+func (acc *AccessoryThermostatMiddle) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessoryThermostatMiddle) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessoryThermostatMiddle) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessoryThermostatMiddle) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessoryThermostatMiddle) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
 }
 
 //NewAccessoryThermostatMiddle returns NewAccessoryThermostatMiddle
@@ -62,4 +84,30 @@ func NewAccessoryThermostatMiddle(info accessory.Info, args ...interface{}) *Acc
 	acc.AddService(acc.Thermostat.Service)
 
 	return &acc
+}
+
+func (acc *AccessoryThermostatMiddle) OnValuesRemoteUpdates(fn func()) {
+	acc.Thermostat.TargetHeatingCoolingState.OnValueRemoteUpdate(func(int) { fn() })
+	acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(float64) { fn() })
+	acc.Thermostat.TargetRelativeHumidity.OnValueRemoteUpdate(func(float64) { fn() })
+	acc.Thermostat.CoolingThresholdTemperature.OnValueRemoteUpdate(func(float64) { fn() })
+	acc.Thermostat.HeatingThresholdTemperature.OnValueRemoteUpdate(func(float64) { fn() })
+}
+
+func (acc *AccessoryThermostatMiddle) OnValuesRemoteUpdatesPrint() {
+	acc.Thermostat.TargetHeatingCoolingState.OnValueRemoteUpdate(func(v int) {
+		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
+	acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(v float64) {
+		fmt.Printf("[%T - %s] remote update target temp: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
+	acc.Thermostat.TargetRelativeHumidity.OnValueRemoteUpdate(func(v float64) {
+		fmt.Printf("[%T - %s] remote update relative humidity: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
+	acc.Thermostat.CoolingThresholdTemperature.OnValueRemoteUpdate(func(v float64) {
+		fmt.Printf("[%T - %s] remote update cooling threshold temp: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
+	acc.Thermostat.HeatingThresholdTemperature.OnValueRemoteUpdate(func(v float64) {
+		fmt.Printf("[%T - %s] remote update heating threshold temp: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+	})
 }

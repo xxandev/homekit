@@ -13,6 +13,26 @@ type AccessoryCamera struct {
 	StreamManagement2 *service.CameraRTPStreamManagement
 }
 
+func (acc *AccessoryCamera) GetType() uint8 {
+	return uint8(acc.Accessory.Type)
+}
+
+func (acc *AccessoryCamera) GetID() uint64 {
+	return acc.Accessory.ID
+}
+
+func (acc *AccessoryCamera) GetSN() string {
+	return acc.Accessory.Info.SerialNumber.GetValue()
+}
+
+func (acc *AccessoryCamera) GetName() string {
+	return acc.Accessory.Info.Name.GetValue()
+}
+
+func (acc *AccessoryCamera) GetAccessory() *accessory.Accessory {
+	return acc.Accessory
+}
+
 //NewAccessoryCamera returns an IP camera accessory.
 func NewAccessoryCamera(info accessory.Info, args ...interface{}) *AccessoryCamera {
 	acc := AccessoryCamera{}
@@ -28,3 +48,6 @@ func NewAccessoryCamera(info accessory.Info, args ...interface{}) *AccessoryCame
 
 	return &acc
 }
+
+func (acc *AccessoryCamera) OnValuesRemoteUpdates(fn func()) {}
+func (acc *AccessoryCamera) OnValuesRemoteUpdatesPrint()     {}
