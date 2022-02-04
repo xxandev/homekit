@@ -1,19 +1,22 @@
 # HomeKit  Accessoryies
 This repository is an add-on to brutella/hc from Matthias Hochgatterer https://github.com/brutella/hc
 
+![](https://github.com/alpr777/homekit/blob/main/gallery/homekit.jpg)
+
 ![](https://github.com/alpr777/homekit/blob/main/gallery/home_on.png)
 
 ![](https://github.com/alpr777/homekit/blob/main/gallery/home_off.png)
 
-**hc version:** 1.2.3 (aac10474c5d81a74dc91be5db4cca38301d1ec8a)
 
 ### Development environment
 
+**HC version:** [1.2.3 (f97b373)](https://github.com/brutella/hc/tree/f97b3737590ca10582f69f50a4b54619e0e1a8b5)
+
 OS: ubuntu 20.04 lts
 
-GO: version 1.15.8 linux/amd64 (https://golang.org/, https://golang.org/dl/)
+GO: version 1.17 linux/amd64 (https://golang.org/, https://golang.org/dl/)
 
-APPLE DEVICE: ipad (os 14.4)
+APPLE DEVICE: ipad/iphone (os 15.3)
 
 ## List accessories:
 - [Bridge](https://github.com/alpr777/homekit/tree/main/example/bridge)
