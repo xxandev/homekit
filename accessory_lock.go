@@ -46,7 +46,7 @@ func (acc *AccessoryLock) OnValuesRemoteUpdates(fn func()) {
 	acc.LockMechanism.LockTargetState.OnValueRemoteUpdate(func(int) { fn() })
 }
 
-func (acc *AccessoryLock) OnValuesRemoteUpdatesPrint() {
+func (acc *AccessoryLock) OnExample() {
 	acc.LockMechanism.LockTargetState.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
 	})

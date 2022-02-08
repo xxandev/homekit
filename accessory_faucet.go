@@ -53,7 +53,7 @@ func (acc *AccessoryFaucet) OnValuesRemoteUpdates(fn func()) {
 	// acc.Valve.InUse.OnValueRemoteUpdate(func(int) { fn() })
 }
 
-func (acc *AccessoryFaucet) OnValuesRemoteUpdatesPrint() {
+func (acc *AccessoryFaucet) OnExample() {
 	acc.Valve.Active.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("[%T - %s] remote update active: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
 	})

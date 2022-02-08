@@ -92,4 +92,4 @@ func (acc *AccessoryTelevision) ProcessInputSource(insource *service.InputSource
 }
 
 func (acc *AccessoryTelevision) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessoryTelevision) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessoryTelevision) OnExample()                      {}

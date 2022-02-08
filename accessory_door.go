@@ -63,7 +63,7 @@ func (acc *AccessoryDoor) OnValuesRemoteUpdates(fn func()) {
 	acc.Door.TargetPosition.OnValueRemoteUpdate(func(int) { fn() })
 }
 
-func (acc *AccessoryDoor) OnValuesRemoteUpdatesPrint() {
+func (acc *AccessoryDoor) OnExample() {
 	acc.Door.TargetPosition.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("[%T - %s] remote update target position: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
 	})

@@ -41,4 +41,4 @@ func NewAccessorySensorSmoke(info accessory.Info, args ...interface{}) *Accessor
 }
 
 func (acc *AccessorySensorSmoke) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySensorSmoke) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessorySensorSmoke) OnExample()                      {}

@@ -45,4 +45,4 @@ func NewAccessorySensorTemperature(info accessory.Info, args ...interface{}) *Ac
 }
 
 func (acc *AccessorySensorTemperature) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySensorTemperature) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessorySensorTemperature) OnExample()                      {}

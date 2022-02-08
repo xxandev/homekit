@@ -49,7 +49,7 @@ func (acc *AccessoryLightbulbColored) OnValuesRemoteUpdates(fn func()) {
 	acc.LightbulbColored.Hue.OnValueRemoteUpdate(func(float64) { fn() })
 }
 
-func (acc *AccessoryLightbulbColored) OnValuesRemoteUpdatesPrint() {
+func (acc *AccessoryLightbulbColored) OnExample() {
 	acc.LightbulbColored.On.OnValueRemoteUpdate(func(v bool) {
 		fmt.Printf("[%T - %s] remote update on: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
 	})

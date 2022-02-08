@@ -64,7 +64,7 @@ func (acc *AccessoryFanSpeed) OnValuesRemoteUpdates(fn func()) {
 	acc.Fan.RotationSpeed.OnValueRemoteUpdate(func(float64) { fn() })
 }
 
-func (acc *AccessoryFanSpeed) OnValuesRemoteUpdatesPrint() {
+func (acc *AccessoryFanSpeed) OnExample() {
 	acc.Fan.On.OnValueRemoteUpdate(func(v bool) {
 		fmt.Printf("[%T - %s] remote update on: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
 	})

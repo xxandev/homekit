@@ -41,4 +41,4 @@ func NewAccessorySensorContact(info accessory.Info, args ...interface{}) *Access
 }
 
 func (acc *AccessorySensorContact) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySensorContact) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessorySensorContact) OnExample()                      {}

@@ -43,4 +43,4 @@ func NewAccessoryWifiRouter(info accessory.Info, args ...interface{}) *Accessory
 }
 
 func (acc *AccessoryWifiRouter) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessoryWifiRouter) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessoryWifiRouter) OnExample()                      {}

@@ -41,4 +41,4 @@ func NewAccessorySmartSpeaker(info accessory.Info, args ...interface{}) *Accesso
 }
 
 func (acc *AccessorySmartSpeaker) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySmartSpeaker) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessorySmartSpeaker) OnExample()                      {}

@@ -66,7 +66,7 @@ func (acc *AccessoryHumidifierDehumidifier) OnValuesRemoteUpdates(fn func()) {
 	acc.HumidifierDehumidifier.RelativeHumidityHumidifierThreshold.OnValueRemoteUpdate(func(float64) { fn() })
 }
 
-func (acc *AccessoryHumidifierDehumidifier) OnValuesRemoteUpdatesPrint() {
+func (acc *AccessoryHumidifierDehumidifier) OnExample() {
 	acc.HumidifierDehumidifier.Active.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("[%T - %s] remote update active: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
 	})

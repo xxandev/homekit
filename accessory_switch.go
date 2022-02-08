@@ -46,7 +46,7 @@ func (acc *AccessorySwitch) OnValuesRemoteUpdates(fn func()) {
 	acc.Switch.On.OnValueRemoteUpdate(func(bool) { fn() })
 }
 
-func (acc *AccessorySwitch) OnValuesRemoteUpdatesPrint() {
+func (acc *AccessorySwitch) OnExample() {
 	acc.Switch.On.OnValueRemoteUpdate(func(v bool) {
 		fmt.Printf("[%T - %s] remote update on: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
 	})

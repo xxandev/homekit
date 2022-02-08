@@ -41,4 +41,4 @@ func NewAccessorySensorDioxide(info accessory.Info, args ...interface{}) *Access
 }
 
 func (acc *AccessorySensorDioxide) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySensorDioxide) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessorySensorDioxide) OnExample()                      {}

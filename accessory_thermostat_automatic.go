@@ -112,7 +112,7 @@ func (acc *AccessoryThermostatAutomatic) OnValuesRemoteUpdates(fn func()) {
 	acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(float64) { fn() })
 }
 
-func (acc *AccessoryThermostatAutomatic) OnValuesRemoteUpdatesPrint() {
+func (acc *AccessoryThermostatAutomatic) OnExample() {
 	acc.Switch.On.OnValueRemoteUpdate(func(v bool) {
 		fmt.Printf("[%T - %s] remote update on: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
 	})

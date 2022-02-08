@@ -50,4 +50,4 @@ func NewAccessoryCamera(info accessory.Info, args ...interface{}) *AccessoryCame
 }
 
 func (acc *AccessoryCamera) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessoryCamera) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessoryCamera) OnExample()                      {}

@@ -47,7 +47,7 @@ func (acc *AccessoryLightbulbDimmer) OnValuesRemoteUpdates(fn func()) {
 	acc.LightbulbDimmer.Brightness.OnValueRemoteUpdate(func(int) { fn() })
 }
 
-func (acc *AccessoryLightbulbDimmer) OnValuesRemoteUpdatesPrint() {
+func (acc *AccessoryLightbulbDimmer) OnExample() {
 	acc.LightbulbDimmer.On.OnValueRemoteUpdate(func(v bool) {
 		fmt.Printf("[%T - %s] remote update on: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
 	})

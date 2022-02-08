@@ -41,4 +41,4 @@ func NewAccessorySensorLight(info accessory.Info, args ...interface{}) *Accessor
 }
 
 func (acc *AccessorySensorLight) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySensorLight) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessorySensorLight) OnExample()                      {}

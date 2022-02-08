@@ -41,4 +41,4 @@ func NewAccessorySensorMotion(info accessory.Info, args ...interface{}) *Accesso
 }
 
 func (acc *AccessorySensorMotion) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySensorMotion) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessorySensorMotion) OnExample()                      {}

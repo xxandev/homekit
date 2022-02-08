@@ -65,7 +65,7 @@ func (acc *AccessoryAirPurifier) OnValuesRemoteUpdates(fn func()) {
 	acc.AirPurifier.RotationSpeed.OnValueRemoteUpdate(func(float64) { fn() })
 }
 
-func (acc *AccessoryAirPurifier) OnValuesRemoteUpdatesPrint() {
+func (acc *AccessoryAirPurifier) OnExample() {
 	acc.AirPurifier.Active.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("[%T - %s] remote update active: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
 	})

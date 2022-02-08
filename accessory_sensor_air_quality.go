@@ -41,4 +41,4 @@ func NewAccessorySensorAirQuality(info accessory.Info, args ...interface{}) *Acc
 }
 
 func (acc *AccessorySensorAirQuality) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySensorAirQuality) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessorySensorAirQuality) OnExample()                      {}

@@ -41,4 +41,4 @@ func NewAccessorySensorLeak(info accessory.Info, args ...interface{}) *Accessory
 }
 
 func (acc *AccessorySensorLeak) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySensorLeak) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessorySensorLeak) OnExample()                      {}

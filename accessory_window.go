@@ -64,7 +64,7 @@ func (acc *AccessoryWindow) OnValuesRemoteUpdates(fn func()) {
 	acc.Window.PositionState.OnValueRemoteUpdate(func(int) { fn() })
 }
 
-func (acc *AccessoryWindow) OnValuesRemoteUpdatesPrint() {
+func (acc *AccessoryWindow) OnExample() {
 	acc.Window.TargetPosition.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("[%T - %s] remote update target position: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
 	})

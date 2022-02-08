@@ -47,7 +47,7 @@ func (acc *AccessoryGate) OnValuesRemoteUpdates(fn func()) {
 	// acc.GarageDoorOpener.ObstructionDetected.OnValueRemoteUpdate(func(bool) { fn() })
 }
 
-func (acc *AccessoryGate) OnValuesRemoteUpdatesPrint() {
+func (acc *AccessoryGate) OnExample() {
 	acc.GarageDoorOpener.TargetDoorState.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
 	})

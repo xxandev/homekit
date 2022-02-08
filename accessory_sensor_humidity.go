@@ -41,4 +41,4 @@ func NewAccessorySensorHumidity(info accessory.Info, args ...interface{}) *Acces
 }
 
 func (acc *AccessorySensorHumidity) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySensorHumidity) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessorySensorHumidity) OnExample()                      {}

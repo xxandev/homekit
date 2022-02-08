@@ -41,4 +41,4 @@ func NewAccessoryProgrammableSwitch(info accessory.Info, args ...interface{}) *A
 }
 
 func (acc *AccessoryProgrammableSwitch) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessoryProgrammableSwitch) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessoryProgrammableSwitch) OnExample()                      {}

@@ -11,12 +11,12 @@ import (
 
 type AccessoryInterface interface {
 	GetAccessory() *accessory.Accessory
-	OnValuesRemoteUpdatesPrint()
+	OnExample()
 }
 
 //do not use such names func!!!
 func aadd(a AccessoryInterface) *accessory.Accessory {
-	go a.OnValuesRemoteUpdatesPrint()
+	go a.OnExample()
 	return a.GetAccessory()
 }
 

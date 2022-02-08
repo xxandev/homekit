@@ -63,7 +63,7 @@ func (acc *AccessorySecuritySystemSimple) OnValuesRemoteUpdates(fn func()) {
 	acc.SecuritySystemSimple.SecuritySystemTargetState.OnValueRemoteUpdate(func(int) { fn() })
 }
 
-func (acc *AccessorySecuritySystemSimple) OnValuesRemoteUpdatesPrint() {
+func (acc *AccessorySecuritySystemSimple) OnExample() {
 	acc.SecuritySystemSimple.SecuritySystemTargetState.OnValueRemoteUpdate(func(v int) {
 		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
 	})

@@ -54,4 +54,4 @@ func NewAccessoryDoorbell(info accessory.Info, args ...interface{}) *AccessoryDo
 }
 
 func (acc *AccessoryDoorbell) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessoryDoorbell) OnValuesRemoteUpdatesPrint()     {}
+func (acc *AccessoryDoorbell) OnExample()                      {}
