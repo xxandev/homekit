@@ -14,11 +14,11 @@ import (
 )
 
 const (
-	NAME    string = "Bridge"
-	SN      string = "EX-Brg"
-	MODEL   string = "HAP-BRG"
-	ADDRESS string = ":11102"
-	PIN     string = "12344321"
+	BRG_NAME    string = "Bridge"
+	BRG_SN      string = "EX-Brg"
+	BRG_MODEL   string = "HAP-BRG"
+	BRG_ADDRESS string = ":11102"
+	BRG_PIN     string = "12344321"
 )
 
 type AccessoryInterface interface {
@@ -39,7 +39,7 @@ func newinfo(name, sn, model string) accessory.Info {
 
 func main() {
 	homekit.OnLog(false)
-	bridge := accessory.NewBridge(accessory.Info{Name: NAME, SerialNumber: SN, Model: MODEL, Manufacturer: homekit.Manufacturer, Firmware: homekit.Firmware})
+	bridge := accessory.NewBridge(accessory.Info{Name: BRG_NAME, SerialNumber: BRG_SN, Model: BRG_MODEL, Manufacturer: homekit.Manufacturer, Firmware: homekit.Firmware})
 	llog := log.New(os.Stdout, fmt.Sprintf("[ %v / %v ] ", bridge.A.Info.SerialNumber.Value(), bridge.A.Info.Name.Value()), log.Ldate|log.Ltime|log.Lmsgprefix)
 	storage := hap.NewFsStore(fmt.Sprintf("./%s", bridge.Info.SerialNumber.Value()))
 	server, err := hap.NewServer(storage, bridge.A,
@@ -91,7 +91,7 @@ func main() {
 		signal.Stop(sig)
 		cancel()
 	}()
-	homekit.SetServer(server, ADDRESS, PIN)
+	homekit.SetServer(server, BRG_ADDRESS, BRG_PIN)
 	llog.Printf("hap server starting set, address %v, pin %v.\n", server.Addr, server.Pin)
 	llog.Fatalf("hap server: %v\n", server.ListenAndServe(ctx))
 }
