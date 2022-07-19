@@ -3,8 +3,8 @@ package homekit
 import (
 	"fmt"
 
-	haps "github.com/alpr777/homekit/hap-service"
 	"github.com/brutella/hc/accessory"
+	haps "github.com/xxandev/homekit/hap-service"
 )
 
 //AccessoryFanV2Multifunc struct

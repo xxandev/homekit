@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/alpr777/homekit"
 	"github.com/brutella/hc"
 	"github.com/brutella/hc/accessory"
 	"github.com/brutella/hc/characteristic"
+	"github.com/xxandev/homekit"
 )
 
 func main() {

@@ -5,9 +5,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/alpr777/homekit"
 	"github.com/brutella/hc"
 	"github.com/brutella/hc/accessory"
+	"github.com/xxandev/homekit"
 )
 
 func invState(arg int) int {

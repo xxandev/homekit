@@ -1,10 +1,10 @@
 package homekit
 
 import (
-	haps "github.com/alpr777/homekit/hap-service"
 	"github.com/brutella/hc/accessory"
 	"github.com/brutella/hc/characteristic"
 	"github.com/brutella/hc/service"
+	haps "github.com/xxandev/homekit/hap-service"
 )
 
 //AccessoryTelevision struct

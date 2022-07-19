@@ -1,8 +1,8 @@
 package haps
 
 import (
-	hapc "github.com/alpr777/homekit/hap-characteristic"
 	"github.com/brutella/hc/service"
+	hapc "github.com/xxandev/homekit/hap-characteristic"
 )
 
 //TypeWifiTransport - 00000203-0000-1000-8000-0000022A

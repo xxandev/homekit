@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/alpr777/homekit"
 	"github.com/brutella/hc"
 	"github.com/brutella/hc/accessory"
+	"github.com/xxandev/homekit"
 )
 
 type AccessoryInterface interface {

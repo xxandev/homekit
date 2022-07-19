@@ -1,9 +1,9 @@
 package haps
 
 import (
-	hapc "github.com/alpr777/homekit/hap-characteristic"
 	"github.com/brutella/hc/characteristic"
 	"github.com/brutella/hc/service"
+	hapc "github.com/xxandev/homekit/hap-characteristic"
 )
 
 //TypeWiFiRouter - 0000020A-0000-1000-8000-0026BB765291
