@@ -3,34 +3,38 @@ package homekit
 import (
 	"fmt"
 
-	"github.com/brutella/hc/accessory"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/accessory"
+	"github.com/brutella/hap/service"
 )
 
 //AccessoryThermostat struct
 type AccessoryThermostat struct {
-	*accessory.Accessory
+	*accessory.A
 	Thermostat *service.Thermostat
 }
 
 func (acc *AccessoryThermostat) GetType() uint8 {
-	return uint8(acc.Accessory.Type)
+	return uint8(acc.A.Type)
 }
 
 func (acc *AccessoryThermostat) GetID() uint64 {
-	return acc.Accessory.ID
+	return acc.A.Id
+}
+
+func (acc *AccessoryThermostat) SetID(id uint64) {
+	acc.A.Id = id
 }
 
 func (acc *AccessoryThermostat) GetSN() string {
-	return acc.Accessory.Info.SerialNumber.GetValue()
+	return acc.A.Info.SerialNumber.Value()
 }
 
 func (acc *AccessoryThermostat) GetName() string {
-	return acc.Accessory.Info.Name.GetValue()
+	return acc.A.Info.Name.Value()
 }
 
-func (acc *AccessoryThermostat) GetAccessory() *accessory.Accessory {
-	return acc.Accessory
+func (acc *AccessoryThermostat) GetAccessory() *accessory.A {
+	return acc.A
 }
 
 //NewAccessoryThermostat returns AccessoryThermostat
@@ -44,7 +48,7 @@ func (acc *AccessoryThermostat) GetAccessory() *accessory.Accessory {
 //  args[7](float64) - TargetTemperature.SetStepValue(args[3]) default(1.0)
 func NewAccessoryThermostat(info accessory.Info, args ...interface{}) *AccessoryThermostat {
 	acc := AccessoryThermostat{}
-	acc.Accessory = accessory.New(info, accessory.TypeThermostat)
+	acc.A = accessory.New(info, accessory.TypeThermostat)
 	acc.Thermostat = service.NewThermostat()
 
 	n := len(args)
@@ -82,7 +86,7 @@ func NewAccessoryThermostat(info accessory.Info, args ...interface{}) *Accessory
 		acc.Thermostat.TargetTemperature.SetStepValue(1.0)
 	}
 
-	acc.AddService(acc.Thermostat.Service)
+	acc.AddS(acc.Thermostat.S)
 
 	return &acc
 }
@@ -94,9 +98,9 @@ func (acc *AccessoryThermostat) OnValuesRemoteUpdates(fn func()) {
 
 func (acc *AccessoryThermostat) OnExample() {
 	acc.Thermostat.TargetHeatingCoolingState.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.A.Info.SerialNumber.Value(), v, v)
 	})
 	acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(v float64) {
-		fmt.Printf("[%T - %s] remote update target temp: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		fmt.Printf("[%T - %s] remote update target temp: %T - %v \n", acc, acc.A.Info.SerialNumber.Value(), v, v)
 	})
 }

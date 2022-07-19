@@ -1,42 +1,46 @@
 package homekit
 
 import (
-	haps "github.com/alpr777/homekit/hap-service"
-	"github.com/brutella/hc/accessory"
+	"github.com/brutella/hap/accessory"
+	haps "github.com/xxandev/homekit/hap-service"
 )
 
 //AccessorySmartSpeaker struct
 type AccessorySmartSpeaker struct {
-	*accessory.Accessory
+	*accessory.A
 	SmartSpeaker *haps.SmartSpeaker
 }
 
-func (acc *AccessorySmartSpeaker) GetType() uint8 {
-	return uint8(acc.Accessory.Type)
+func (acc *AccessorySmartSpeaker) GetType() byte {
+	return acc.A.Type
 }
 
 func (acc *AccessorySmartSpeaker) GetID() uint64 {
-	return acc.Accessory.ID
+	return acc.A.Id
+}
+
+func (acc *AccessorySmartSpeaker) SetID(id uint64) {
+	acc.A.Id = id
 }
 
 func (acc *AccessorySmartSpeaker) GetSN() string {
-	return acc.Accessory.Info.SerialNumber.GetValue()
+	return acc.A.Info.SerialNumber.Value()
 }
 
 func (acc *AccessorySmartSpeaker) GetName() string {
-	return acc.Accessory.Info.Name.GetValue()
+	return acc.A.Info.Name.Value()
 }
 
-func (acc *AccessorySmartSpeaker) GetAccessory() *accessory.Accessory {
-	return acc.Accessory
+func (acc *AccessorySmartSpeaker) GetAccessory() *accessory.A {
+	return acc.A
 }
 
 //NewAccessorySmartSpeaker returns AccessorySmartSpeaker (args... are not used)
 func NewAccessorySmartSpeaker(info accessory.Info, args ...interface{}) *AccessorySmartSpeaker {
 	acc := AccessorySmartSpeaker{}
-	acc.Accessory = accessory.New(info, AccessoryTypeSpeaker)
+	acc.A = accessory.New(info, AccessoryTypeSpeaker)
 	acc.SmartSpeaker = haps.NewSmartSpeaker()
-	acc.AddService(acc.SmartSpeaker.Service)
+	acc.AddS(acc.SmartSpeaker.S)
 	return &acc
 }
 

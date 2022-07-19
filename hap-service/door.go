@@ -1,8 +1,8 @@
 package haps
 
 import (
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/characteristic"
+	"github.com/brutella/hap/service"
 )
 
 //Door
@@ -11,7 +11,7 @@ import (
 //	◈ PositionState
 //	◇ ObstructionDetected
 type Door struct {
-	*service.Service
+	*service.S
 	CurrentPosition     *characteristic.CurrentPosition
 	TargetPosition      *characteristic.TargetPosition
 	PositionState       *characteristic.PositionState
@@ -21,19 +21,19 @@ type Door struct {
 //NewDoor return *Door
 func NewDoor() *Door {
 	svc := Door{}
-	svc.Service = service.New(service.TypeDoor)
+	svc.S = service.New(service.TypeDoor)
 
 	svc.CurrentPosition = characteristic.NewCurrentPosition()
-	svc.AddCharacteristic(svc.CurrentPosition.Characteristic)
+	svc.AddC(svc.CurrentPosition.C)
 
 	svc.PositionState = characteristic.NewPositionState()
-	svc.AddCharacteristic(svc.PositionState.Characteristic)
+	svc.AddC(svc.PositionState.C)
 
 	svc.TargetPosition = characteristic.NewTargetPosition()
-	svc.AddCharacteristic(svc.TargetPosition.Characteristic)
+	svc.AddC(svc.TargetPosition.C)
 
 	svc.ObstructionDetected = characteristic.NewObstructionDetected()
-	svc.AddCharacteristic(svc.ObstructionDetected.Characteristic)
+	svc.AddC(svc.ObstructionDetected.C)
 
 	return &svc
 }

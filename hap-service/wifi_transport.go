@@ -1,8 +1,8 @@
 package haps
 
 import (
-	hapc "github.com/alpr777/homekit/hap-characteristic"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/service"
+	hapc "github.com/xxandev/homekit/hap-characteristic"
 )
 
 //TypeWifiTransport - 00000203-0000-1000-8000-0000022A
@@ -13,7 +13,7 @@ const TypeWiFiTransport string = "22A"
 //	◈ WifiCapabilities
 //	◇ WifiConfigurationControl
 type WiFiTransport struct {
-	*service.Service
+	*service.S
 
 	CurrentTransport         *hapc.CurrentTransport
 	WifiCapabilities         *hapc.WifiCapabilities
@@ -23,16 +23,16 @@ type WiFiTransport struct {
 //NewWifiTransport return *WiFiTransport
 func NewWifiTransport() *WiFiTransport {
 	svc := WiFiTransport{}
-	svc.Service = service.New(TypeWiFiTransport)
+	svc.S = service.New(TypeWiFiTransport)
 
 	svc.CurrentTransport = hapc.NewCurrentTransport()
-	svc.AddCharacteristic(svc.CurrentTransport.Characteristic)
+	svc.AddC(svc.CurrentTransport.C)
 
 	svc.WifiCapabilities = hapc.NewWifiCapabilities()
-	svc.AddCharacteristic(svc.WifiCapabilities.Characteristic)
+	svc.AddC(svc.WifiCapabilities.C)
 
 	svc.WifiConfigurationControl = hapc.NewWifiConfigurationControl()
-	svc.AddCharacteristic(svc.WifiConfigurationControl.Characteristic)
+	svc.AddC(svc.WifiConfigurationControl.C)
 
 	return &svc
 }

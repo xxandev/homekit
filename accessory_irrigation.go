@@ -3,43 +3,46 @@ package homekit
 import (
 	"fmt"
 
-	"github.com/brutella/hc/accessory"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/accessory"
+	"github.com/brutella/hap/service"
 )
 
 //AccessoryIrrigation struct
 type AccessoryIrrigation struct {
-	*accessory.Accessory
+	*accessory.A
 	Valve *service.Valve
 }
 
-func (acc *AccessoryIrrigation) GetType() uint8 {
-	return uint8(acc.Accessory.Type)
+func (acc *AccessoryIrrigation) GetType() byte {
+	return acc.A.Type
 }
 
 func (acc *AccessoryIrrigation) GetID() uint64 {
-	return acc.Accessory.ID
+	return acc.A.Id
 }
 
+func (acc *AccessoryIrrigation) SetID(id uint64) {
+	acc.A.Id = id
+}
 func (acc *AccessoryIrrigation) GetSN() string {
-	return acc.Accessory.Info.SerialNumber.GetValue()
+	return acc.A.Info.SerialNumber.Value()
 }
 
 func (acc *AccessoryIrrigation) GetName() string {
-	return acc.Accessory.Info.Name.GetValue()
+	return acc.A.Info.Name.Value()
 }
 
-func (acc *AccessoryIrrigation) GetAccessory() *accessory.Accessory {
-	return acc.Accessory
+func (acc *AccessoryIrrigation) GetAccessory() *accessory.A {
+	return acc.A
 }
 
 //NewAccessoryIrrigation return AccessoryIrrigation (args... are not used)
 func NewAccessoryIrrigation(info accessory.Info, args ...interface{}) *AccessoryIrrigation {
 	acc := AccessoryIrrigation{}
-	acc.Accessory = accessory.New(info, accessory.TypeSprinklers)
+	acc.A = accessory.New(info, accessory.TypeSprinkler)
 	acc.Valve = service.NewValve()
 	acc.Valve.ValveType.SetValue(1)
-	acc.AddService(acc.Valve.Service)
+	acc.AddS(acc.Valve.S)
 	return &acc
 }
 
@@ -50,6 +53,7 @@ func (acc *AccessoryIrrigation) OnValuesRemoteUpdates(fn func()) {
 
 func (acc *AccessoryIrrigation) OnExample() {
 	acc.Valve.Active.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("[%T - %s] remote update active: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		acc.Valve.InUse.SetValue(v)
+		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update active: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
 	})
 }

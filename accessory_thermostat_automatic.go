@@ -3,16 +3,16 @@ package homekit
 import (
 	"fmt"
 
-	"github.com/brutella/hc/accessory"
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/accessory"
+	"github.com/brutella/hap/characteristic"
+	"github.com/brutella/hap/service"
 )
 
 //AccessoryThermostat struct
 type AccessoryThermostatAutomatic struct {
-	*accessory.Accessory
+	*accessory.A
 	Thermostat struct {
-		*service.Service
+		*service.S
 		CurrentHeatingCoolingState *characteristic.CurrentHeatingCoolingState
 		TargetHeatingCoolingState  *characteristic.TargetHeatingCoolingState
 		CurrentTemperature         *characteristic.CurrentTemperature
@@ -20,29 +20,33 @@ type AccessoryThermostatAutomatic struct {
 		TemperatureDisplayUnits    *characteristic.TemperatureDisplayUnits
 	}
 	Switch struct {
-		*service.Service
+		*service.S
 		On *characteristic.On
 	}
 }
 
-func (acc *AccessoryThermostatAutomatic) GetType() uint8 {
-	return uint8(acc.Accessory.Type)
+func (acc *AccessoryThermostatAutomatic) GetType() byte {
+	return acc.A.Type
 }
 
 func (acc *AccessoryThermostatAutomatic) GetID() uint64 {
-	return acc.Accessory.ID
+	return acc.A.Id
+}
+
+func (acc *AccessoryThermostatAutomatic) SetID(id uint64) {
+	acc.A.Id = id
 }
 
 func (acc *AccessoryThermostatAutomatic) GetSN() string {
-	return acc.Accessory.Info.SerialNumber.GetValue()
+	return acc.A.Info.SerialNumber.Value()
 }
 
 func (acc *AccessoryThermostatAutomatic) GetName() string {
-	return acc.Accessory.Info.Name.GetValue()
+	return acc.A.Info.Name.Value()
 }
 
-func (acc *AccessoryThermostatAutomatic) GetAccessory() *accessory.Accessory {
-	return acc.Accessory
+func (acc *AccessoryThermostatAutomatic) GetAccessory() *accessory.A {
+	return acc.A
 }
 
 //NewAccessoryThermostatAutomatic returns AccessoryThermostatAutomatic
@@ -52,27 +56,27 @@ func (acc *AccessoryThermostatAutomatic) GetAccessory() *accessory.Accessory {
 //  args[3](float64) - TargetTemperature.SetStepValue(args[3]) default(1.0)
 func NewAccessoryThermostatAutomatic(info accessory.Info, args ...interface{}) *AccessoryThermostatAutomatic {
 	acc := AccessoryThermostatAutomatic{}
-	acc.Accessory = accessory.New(info, accessory.TypeThermostat)
-	acc.Thermostat.Service = service.New(service.TypeThermostat)
-	acc.Switch.Service = service.New(service.TypeSwitch)
+	acc.A = accessory.New(info, accessory.TypeThermostat)
+	acc.Thermostat.S = service.New(service.TypeThermostat)
+	acc.Switch.S = service.New(service.TypeSwitch)
 
 	acc.Thermostat.CurrentHeatingCoolingState = characteristic.NewCurrentHeatingCoolingState()
-	acc.Thermostat.AddCharacteristic(acc.Thermostat.CurrentHeatingCoolingState.Characteristic)
+	acc.Thermostat.AddC(acc.Thermostat.CurrentHeatingCoolingState.C)
 
 	acc.Thermostat.TargetHeatingCoolingState = characteristic.NewTargetHeatingCoolingState()
-	acc.Thermostat.AddCharacteristic(acc.Thermostat.TargetHeatingCoolingState.Characteristic)
+	acc.Thermostat.AddC(acc.Thermostat.TargetHeatingCoolingState.C)
 
 	acc.Thermostat.CurrentTemperature = characteristic.NewCurrentTemperature()
-	acc.Thermostat.AddCharacteristic(acc.Thermostat.CurrentTemperature.Characteristic)
+	acc.Thermostat.AddC(acc.Thermostat.CurrentTemperature.C)
 
 	acc.Thermostat.TargetTemperature = characteristic.NewTargetTemperature()
-	acc.Thermostat.AddCharacteristic(acc.Thermostat.TargetTemperature.Characteristic)
+	acc.Thermostat.AddC(acc.Thermostat.TargetTemperature.C)
 
 	acc.Thermostat.TemperatureDisplayUnits = characteristic.NewTemperatureDisplayUnits()
-	acc.Thermostat.AddCharacteristic(acc.Thermostat.TemperatureDisplayUnits.Characteristic)
+	acc.Thermostat.AddC(acc.Thermostat.TemperatureDisplayUnits.C)
 
 	acc.Switch.On = characteristic.NewOn()
-	acc.Switch.AddCharacteristic(acc.Switch.On.Characteristic)
+	acc.Switch.AddC(acc.Switch.On.C)
 
 	n := len(args)
 	acc.Thermostat.TargetHeatingCoolingState.SetValue(3)
@@ -101,8 +105,8 @@ func NewAccessoryThermostatAutomatic(info accessory.Info, args ...interface{}) *
 		acc.Thermostat.TargetTemperature.SetStepValue(1.0)
 	}
 
-	acc.AddService(acc.Thermostat.Service)
-	acc.AddService(acc.Switch.Service)
+	acc.AddS(acc.Thermostat.S)
+	acc.AddS(acc.Switch.S)
 	return &acc
 }
 
@@ -114,12 +118,12 @@ func (acc *AccessoryThermostatAutomatic) OnValuesRemoteUpdates(fn func()) {
 
 func (acc *AccessoryThermostatAutomatic) OnExample() {
 	acc.Switch.On.OnValueRemoteUpdate(func(v bool) {
-		fmt.Printf("[%T - %s] remote update on: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		fmt.Printf("[%T - %s] remote update on: %T - %v \n", acc, acc.A.Info.SerialNumber.Value(), v, v)
 	})
 	acc.Thermostat.TargetHeatingCoolingState.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.A.Info.SerialNumber.Value(), v, v)
 	})
 	acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(v float64) {
-		fmt.Printf("[%T - %s] remote update target temp: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		fmt.Printf("[%T - %s] remote update target temp: %T - %v \n", acc, acc.A.Info.SerialNumber.Value(), v, v)
 	})
 }

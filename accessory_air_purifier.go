@@ -3,34 +3,38 @@ package homekit
 import (
 	"fmt"
 
-	haps "github.com/alpr777/homekit/hap-service"
-	"github.com/brutella/hc/accessory"
+	"github.com/brutella/hap/accessory"
+	haps "github.com/xxandev/homekit/hap-service"
 )
 
 //AccessoryAirPurifier struct
 type AccessoryAirPurifier struct {
-	*accessory.Accessory
+	*accessory.A
 	AirPurifier *haps.AirPurifier
 }
 
-func (acc *AccessoryAirPurifier) GetType() uint8 {
-	return uint8(acc.Accessory.Type)
+func (acc *AccessoryAirPurifier) GetType() byte {
+	return acc.A.Type
 }
 
 func (acc *AccessoryAirPurifier) GetID() uint64 {
-	return acc.Accessory.ID
+	return acc.A.Id
+}
+
+func (acc *AccessoryAirPurifier) SetID(id uint64) {
+	acc.A.Id = id
 }
 
 func (acc *AccessoryAirPurifier) GetSN() string {
-	return acc.Accessory.Info.SerialNumber.GetValue()
+	return acc.A.Info.SerialNumber.Value()
 }
 
 func (acc *AccessoryAirPurifier) GetName() string {
-	return acc.Accessory.Info.Name.GetValue()
+	return acc.A.Info.Name.Value()
 }
 
-func (acc *AccessoryAirPurifier) GetAccessory() *accessory.Accessory {
-	return acc.Accessory
+func (acc *AccessoryAirPurifier) GetAccessory() *accessory.A {
+	return acc.A
 }
 
 //NewAccessoryAirPurifier returns AccessoryAirPurifier
@@ -40,7 +44,7 @@ func (acc *AccessoryAirPurifier) GetAccessory() *accessory.Accessory {
 //  args[3](float64) - RotationSpeed.SetStepValue(args[3]) default(1.0)
 func NewAccessoryAirPurifier(info accessory.Info, args ...interface{}) *AccessoryAirPurifier {
 	acc := AccessoryAirPurifier{}
-	acc.Accessory = accessory.New(info, accessory.TypeAirPurifier)
+	acc.A = accessory.New(info, accessory.TypeAirPurifier)
 	acc.AirPurifier = haps.NewAirPurifier()
 	n := len(args)
 	if n > 0 {
@@ -55,7 +59,7 @@ func NewAccessoryAirPurifier(info accessory.Info, args ...interface{}) *Accessor
 	if n > 3 {
 		acc.AirPurifier.RotationSpeed.SetStepValue(tof64(args[3], 1.0))
 	}
-	acc.AddService(acc.AirPurifier.Service)
+	acc.AddS(acc.AirPurifier.S)
 	return &acc
 }
 
@@ -67,12 +71,17 @@ func (acc *AccessoryAirPurifier) OnValuesRemoteUpdates(fn func()) {
 
 func (acc *AccessoryAirPurifier) OnExample() {
 	acc.AirPurifier.Active.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("[%T - %s] remote update active: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		if v > 0 {
+			acc.AirPurifier.CurrentAirPurifierState.SetValue(2)
+		} else {
+			acc.AirPurifier.CurrentAirPurifierState.SetValue(0)
+		}
+		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update active: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
 	})
 	acc.AirPurifier.TargetAirPurifierState.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update target state: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
 	})
 	acc.AirPurifier.RotationSpeed.OnValueRemoteUpdate(func(v float64) {
-		fmt.Printf("[%T - %s] remote update rotation speed: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update rotation speed: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
 	})
 }

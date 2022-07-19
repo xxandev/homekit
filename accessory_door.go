@@ -3,34 +3,38 @@ package homekit
 import (
 	"fmt"
 
-	haps "github.com/alpr777/homekit/hap-service"
-	"github.com/brutella/hc/accessory"
+	"github.com/brutella/hap/accessory"
+	haps "github.com/xxandev/homekit/hap-service"
 )
 
 //AccessoryDoor struct
 type AccessoryDoor struct {
-	*accessory.Accessory
+	*accessory.A
 	Door *haps.Door
 }
 
-func (acc *AccessoryDoor) GetType() uint8 {
-	return uint8(acc.Accessory.Type)
+func (acc *AccessoryDoor) GetType() byte {
+	return acc.A.Type
 }
 
 func (acc *AccessoryDoor) GetID() uint64 {
-	return acc.Accessory.ID
+	return acc.A.Id
+}
+
+func (acc *AccessoryDoor) SetID(id uint64) {
+	acc.A.Id = id
 }
 
 func (acc *AccessoryDoor) GetSN() string {
-	return acc.Accessory.Info.SerialNumber.GetValue()
+	return acc.A.Info.SerialNumber.Value()
 }
 
 func (acc *AccessoryDoor) GetName() string {
-	return acc.Accessory.Info.Name.GetValue()
+	return acc.A.Info.Name.Value()
 }
 
-func (acc *AccessoryDoor) GetAccessory() *accessory.Accessory {
-	return acc.Accessory
+func (acc *AccessoryDoor) GetAccessory() *accessory.A {
+	return acc.A
 }
 
 //NewAccessoryDoor returns AccessoryDoor
@@ -40,7 +44,7 @@ func (acc *AccessoryDoor) GetAccessory() *accessory.Accessory {
 //  args[3](int) - TargetPosition.SetStepValue(args[3]) default(1)
 func NewAccessoryDoor(info accessory.Info, args ...interface{}) *AccessoryDoor {
 	acc := AccessoryDoor{}
-	acc.Accessory = accessory.New(info, accessory.TypeDoor)
+	acc.A = accessory.New(info, accessory.TypeDoor)
 	acc.Door = haps.NewDoor()
 	n := len(args)
 	if n > 0 {
@@ -55,7 +59,7 @@ func NewAccessoryDoor(info accessory.Info, args ...interface{}) *AccessoryDoor {
 	if n > 3 {
 		acc.Door.TargetPosition.SetStepValue(toi(args[3], 1))
 	}
-	acc.AddService(acc.Door.Service)
+	acc.AddS(acc.Door.S)
 	return &acc
 }
 
@@ -65,6 +69,7 @@ func (acc *AccessoryDoor) OnValuesRemoteUpdates(fn func()) {
 
 func (acc *AccessoryDoor) OnExample() {
 	acc.Door.TargetPosition.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("[%T - %s] remote update target position: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		acc.Door.CurrentPosition.SetValue(v)
+		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update target position: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
 	})
 }

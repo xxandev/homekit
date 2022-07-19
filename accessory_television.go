@@ -1,55 +1,58 @@
 package homekit
 
 import (
-	haps "github.com/alpr777/homekit/hap-service"
-	"github.com/brutella/hc/accessory"
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/accessory"
+	"github.com/brutella/hap/characteristic"
+	haps "github.com/xxandev/homekit/hap-service"
 )
 
 //AccessoryTelevision struct
 type AccessoryTelevision struct {
-	*accessory.Accessory
-	Television *service.Television
+	*accessory.A
+	Television *haps.Television
 	Speaker    *haps.TelevisionSpeaker
 }
 
-func (acc *AccessoryTelevision) GetType() uint8 {
-	return uint8(acc.Accessory.Type)
+func (acc *AccessoryTelevision) GetType() byte {
+	return acc.A.Type
 }
 
 func (acc *AccessoryTelevision) GetID() uint64 {
-	return acc.Accessory.ID
+	return acc.A.Id
+}
+
+func (acc *AccessoryTelevision) SetID(id uint64) {
+	acc.A.Id = id
 }
 
 func (acc *AccessoryTelevision) GetSN() string {
-	return acc.Accessory.Info.SerialNumber.GetValue()
+	return acc.A.Info.SerialNumber.Value()
 }
 
 func (acc *AccessoryTelevision) GetName() string {
-	return acc.Accessory.Info.Name.GetValue()
+	return acc.A.Info.Name.Value()
 }
 
-func (acc *AccessoryTelevision) GetAccessory() *accessory.Accessory {
-	return acc.Accessory
+func (acc *AccessoryTelevision) GetAccessory() *accessory.A {
+	return acc.A
 }
 
 //NewAccessoryTelevision returns AccessoryTelevision (args... are not used)
 func NewAccessoryTelevision(info accessory.Info, args ...interface{}) *AccessoryTelevision {
 	acc := AccessoryTelevision{}
-	acc.Accessory = accessory.New(info, accessory.TypeTelevision)
-	acc.Television = service.NewTelevision()
+	acc.A = accessory.New(info, accessory.TypeTelevision)
+	acc.Television = haps.NewTelevision()
 	acc.Speaker = haps.NewTelevisionSpeaker()
 
-	acc.AddService(acc.Television.Service)
-	acc.AddService(acc.Speaker.Service)
+	acc.AddS(acc.Television.S)
+	acc.AddS(acc.Speaker.S)
 
 	return &acc
 }
 
 //AddInputSource -
-func (acc *AccessoryTelevision) AddInputSource(id int, name string, inputSourceType int) *service.InputSource {
-	inSource := service.NewInputSource()
+func (acc *AccessoryTelevision) AddInputSource(id int, name string, inputSourceType int) *haps.InputSource {
+	inSource := haps.NewInputSource()
 
 	inSource.Identifier.SetValue(id)
 	inSource.ConfiguredName.SetValue(name)
@@ -57,8 +60,8 @@ func (acc *AccessoryTelevision) AddInputSource(id int, name string, inputSourceT
 	inSource.InputSourceType.SetValue(inputSourceType)
 	inSource.IsConfigured.SetValue(characteristic.IsConfiguredConfigured)
 
-	acc.AddService(inSource.Service)
-	acc.Television.AddLinkedService(inSource.Service)
+	acc.AddS(inSource.S)
+	acc.Television.S.AddS(inSource.S)
 	return inSource
 }
 
@@ -69,7 +72,7 @@ func (acc *AccessoryTelevision) AddInputSource(id int, name string, inputSourceT
 //  events[3](val int) - Identifier
 //  events[4](val int) - TargetVisibilityState
 //  events[5](val string) - Name
-func (acc *AccessoryTelevision) ProcessInputSource(insource *service.InputSource, events ...func(interface{})) {
+func (acc *AccessoryTelevision) ProcessInputSource(insource *haps.InputSource, events ...func(interface{})) {
 	n := len(events)
 	if n > 0 {
 		insource.ConfiguredName.OnValueRemoteUpdate(func(v string) { events[0](v) })

@@ -1,6 +1,6 @@
 package hapc
 
-import "github.com/brutella/hc/characteristic"
+import "github.com/brutella/hap/characteristic"
 
 //TypeNetworkClientProfileControl - 0000020C-0000-1000-8000-0026BB765291
 const TypeNetworkClientProfileControl string = "20C"
@@ -14,7 +14,11 @@ type NetworkClientProfileControl struct {
 func NewNetworkClientProfileControl() *NetworkClientProfileControl {
 	char := characteristic.NewBytes(TypeNetworkClientProfileControl)
 	char.Format = characteristic.FormatTLV8
-	char.Perms = []string{characteristic.PermRead, characteristic.PermWrite, characteristic.PermEvents}
+	char.Permissions = []string{
+		characteristic.PermissionRead,
+		characteristic.PermissionWrite,
+		characteristic.PermissionEvents,
+	}
 
 	char.SetValue([]byte{})
 

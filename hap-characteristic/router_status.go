@@ -1,6 +1,6 @@
 package hapc
 
-import "github.com/brutella/hc/characteristic"
+import "github.com/brutella/hap/characteristic"
 
 const (
 	//RouterStatusRead - read(0)
@@ -22,7 +22,10 @@ type RouterStatus struct {
 func NewRouterStatus() *RouterStatus {
 	char := characteristic.NewInt(TypeRouterStatus)
 	char.Format = characteristic.FormatUInt8
-	char.Perms = []string{characteristic.PermRead, characteristic.PermEvents}
+	char.Permissions = []string{
+		characteristic.PermissionRead,
+		characteristic.PermissionEvents,
+	}
 
 	char.SetMinValue(0)
 	char.SetMaxValue(1)

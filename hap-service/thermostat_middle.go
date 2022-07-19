@@ -1,8 +1,8 @@
 package haps
 
 import (
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/characteristic"
+	"github.com/brutella/hap/service"
 )
 
 //ThermostatMiddle
@@ -16,7 +16,7 @@ import (
 //	◇ CurrentRelativeHumidity
 //	◇ TargetRelativeHumidity
 type ThermostatMiddle struct {
-	*service.Service
+	*service.S
 	CurrentHeatingCoolingState  *characteristic.CurrentHeatingCoolingState
 	TargetHeatingCoolingState   *characteristic.TargetHeatingCoolingState
 	CurrentTemperature          *characteristic.CurrentTemperature
@@ -31,34 +31,34 @@ type ThermostatMiddle struct {
 //NewThermostatMiddle return *ThermostatMiddle
 func NewThermostatMiddle() *ThermostatMiddle {
 	svc := ThermostatMiddle{}
-	svc.Service = service.New(service.TypeThermostat)
+	svc.S = service.New(service.TypeThermostat)
 
 	svc.CurrentHeatingCoolingState = characteristic.NewCurrentHeatingCoolingState()
-	svc.AddCharacteristic(svc.CurrentHeatingCoolingState.Characteristic)
+	svc.AddC(svc.CurrentHeatingCoolingState.C)
 
 	svc.TargetHeatingCoolingState = characteristic.NewTargetHeatingCoolingState()
-	svc.AddCharacteristic(svc.TargetHeatingCoolingState.Characteristic)
+	svc.AddC(svc.TargetHeatingCoolingState.C)
 
 	svc.CurrentTemperature = characteristic.NewCurrentTemperature()
-	svc.AddCharacteristic(svc.CurrentTemperature.Characteristic)
+	svc.AddC(svc.CurrentTemperature.C)
 
 	svc.TargetTemperature = characteristic.NewTargetTemperature()
-	svc.AddCharacteristic(svc.TargetTemperature.Characteristic)
+	svc.AddC(svc.TargetTemperature.C)
 
 	svc.TemperatureDisplayUnits = characteristic.NewTemperatureDisplayUnits()
-	svc.AddCharacteristic(svc.TemperatureDisplayUnits.Characteristic)
+	svc.AddC(svc.TemperatureDisplayUnits.C)
 
 	svc.CoolingThresholdTemperature = characteristic.NewCoolingThresholdTemperature()
-	svc.AddCharacteristic(svc.CoolingThresholdTemperature.Characteristic)
+	svc.AddC(svc.CoolingThresholdTemperature.C)
 
 	svc.HeatingThresholdTemperature = characteristic.NewHeatingThresholdTemperature()
-	svc.AddCharacteristic(svc.HeatingThresholdTemperature.Characteristic)
+	svc.AddC(svc.HeatingThresholdTemperature.C)
 
 	svc.CurrentRelativeHumidity = characteristic.NewCurrentRelativeHumidity()
-	svc.AddCharacteristic(svc.CurrentRelativeHumidity.Characteristic)
+	svc.AddC(svc.CurrentRelativeHumidity.C)
 
 	svc.TargetRelativeHumidity = characteristic.NewTargetRelativeHumidity()
-	svc.AddCharacteristic(svc.TargetRelativeHumidity.Characteristic)
+	svc.AddC(svc.TargetRelativeHumidity.C)
 
 	return &svc
 }

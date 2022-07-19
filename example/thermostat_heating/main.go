@@ -1,52 +1,47 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
-	"time"
+	"os"
+	"os/signal"
+	"syscall"
 
-	"github.com/alpr777/homekit"
-	"github.com/brutella/hc"
-	"github.com/brutella/hc/accessory"
+	"github.com/brutella/hap"
+	"github.com/brutella/hap/accessory"
+	"github.com/xxandev/homekit"
 )
 
-func invState(arg int) int {
-	if arg > 0 {
-		return 0
-	}
-	return 1
-}
+const (
+	NAME    string = "Thermostat"
+	SN      string = "EX-ThermH"
+	MODEL   string = "HAP-TRMH"
+	ADDRESS string = ":11130"
+	PIN     string = "12344321"
+)
 
 func main() {
-	// log.Debug.Enable()
-	acc := homekit.NewAccessoryThermostat(accessory.Info{Name: "Thermostat", SerialNumber: "Ex-Therm-Htn", Model: "HAP-TRM-HTN", Manufacturer: homekit.Manufacturer, FirmwareRevision: homekit.Revision}, 0, 0, 1, 1)
-	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: "11223344"}, acc.Accessory)
+	homekit.OnLog(false)
+	acc := homekit.NewAccessoryThermostat(accessory.Info{Name: NAME, SerialNumber: SN, Model: MODEL, Manufacturer: homekit.Manufacturer, Firmware: homekit.Firmware}, 0, 0, 1, 1)
+	llog := log.New(os.Stdout, fmt.Sprintf("[ %v / %v ] ", acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value()), log.Ldate|log.Ltime|log.Lmsgprefix)
+	storage := hap.NewFsStore(fmt.Sprintf("./%s", acc.Info.SerialNumber.Value()))
+	server, err := hap.NewServer(storage, acc.A)
 	if err != nil {
-		log.Fatalf("[ %v / %v ] error create hap transport: %v\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue(), err)
+		llog.Fatalf("error create hap server: %v\n", err)
 	}
+	llog.Printf("hap server create successful.\n")
+	acc.OnExample()
+	sig := make(chan os.Signal)
+	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
+	ctx, cancel := context.WithCancel(context.Background())
 	go func() {
-		tickerUpdateState := time.NewTicker(10 * time.Second)
-		tickerUpdateTemp := time.NewTicker(2 * time.Second)
-		for {
-			select {
-			case <-tickerUpdateState.C:
-				acc.Thermostat.CurrentHeatingCoolingState.SetValue(invState(acc.Thermostat.CurrentHeatingCoolingState.GetValue()))
-				fmt.Printf("acc thermostat update current state: %T - %v \n", acc.Thermostat.CurrentHeatingCoolingState.GetValue(), acc.Thermostat.CurrentHeatingCoolingState.GetValue())
-				continue
-			case <-tickerUpdateTemp.C:
-				acc.Thermostat.CurrentTemperature.SetValue(float64(time.Now().Second()-30) + float64(time.Now().Second()+40)/100)
-				fmt.Printf("acc thermostat update current temp: %T - %v \n", acc.Thermostat.CurrentTemperature.GetValue(), acc.Thermostat.CurrentTemperature.GetValue())
-				continue
-			}
-		}
+		<-sig
+		llog.Printf("stop program signal.\n")
+		signal.Stop(sig)
+		cancel()
 	}()
-	go acc.Thermostat.TargetHeatingCoolingState.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("acc thermostat remote update target state: %T - %v \n", v, v)
-	})
-	go acc.Thermostat.TargetTemperature.OnValueRemoteUpdate(func(v float64) {
-		fmt.Printf("acc thermostat remote update target temp: %T - %v \n", v, v)
-	})
-	fmt.Println("homekit accessory transport start [", "/", acc.Accessory.Info.Name.GetValue(), "]")
-	hc.OnTermination(func() { <-transp.Stop() })
-	transp.Start()
+	homekit.SetServer(server, ADDRESS, PIN)
+	llog.Printf("hap server starting set, address %v, pin %v.\n", server.Addr, server.Pin)
+	llog.Fatalf("hap server: %v\n", server.ListenAndServe(ctx))
 }

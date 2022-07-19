@@ -3,42 +3,46 @@ package homekit
 import (
 	"fmt"
 
-	"github.com/brutella/hc/accessory"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/accessory"
+	"github.com/brutella/hap/service"
 )
 
 //AccessoryGate struct
 type AccessoryGate struct {
-	*accessory.Accessory
+	*accessory.A
 	GarageDoorOpener *service.GarageDoorOpener
 }
 
-func (acc *AccessoryGate) GetType() uint8 {
-	return uint8(acc.Accessory.Type)
+func (acc *AccessoryGate) GetType() byte {
+	return acc.A.Type
 }
 
 func (acc *AccessoryGate) GetID() uint64 {
-	return acc.Accessory.ID
+	return acc.A.Id
+}
+
+func (acc *AccessoryGate) SetID(id uint64) {
+	acc.A.Id = id
 }
 
 func (acc *AccessoryGate) GetSN() string {
-	return acc.Accessory.Info.SerialNumber.GetValue()
+	return acc.A.Info.SerialNumber.Value()
 }
 
 func (acc *AccessoryGate) GetName() string {
-	return acc.Accessory.Info.Name.GetValue()
+	return acc.A.Info.Name.Value()
 }
 
-func (acc *AccessoryGate) GetAccessory() *accessory.Accessory {
-	return acc.Accessory
+func (acc *AccessoryGate) GetAccessory() *accessory.A {
+	return acc.A
 }
 
 //NewAccessoryGate return AccessoryGate (args... are not used)
 func NewAccessoryGate(info accessory.Info, args ...interface{}) *AccessoryGate {
 	acc := AccessoryGate{}
-	acc.Accessory = accessory.New(info, accessory.TypeGarageDoorOpener)
+	acc.A = accessory.New(info, accessory.TypeGarageDoorOpener)
 	acc.GarageDoorOpener = service.NewGarageDoorOpener()
-	acc.AddService(acc.GarageDoorOpener.Service)
+	acc.AddS(acc.GarageDoorOpener.S)
 	return &acc
 }
 
@@ -49,6 +53,7 @@ func (acc *AccessoryGate) OnValuesRemoteUpdates(fn func()) {
 
 func (acc *AccessoryGate) OnExample() {
 	acc.GarageDoorOpener.TargetDoorState.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		acc.GarageDoorOpener.CurrentDoorState.SetValue(v)
+		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update target state: %[4]T - %[4]v\n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
 	})
 }

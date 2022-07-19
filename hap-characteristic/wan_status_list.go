@@ -1,6 +1,6 @@
 package hapc
 
-import "github.com/brutella/hc/characteristic"
+import "github.com/brutella/hap/characteristic"
 
 //TypeWANStatusList - 00000212-0000-1000-8000-0026BB765291
 const TypeWANStatusList string = "212"
@@ -14,7 +14,10 @@ type WANStatusList struct {
 func NewWANStatusList() *WANStatusList {
 	char := characteristic.NewBytes(TypeWANStatusList)
 	char.Format = characteristic.FormatTLV8
-	char.Perms = []string{characteristic.PermRead, characteristic.PermEvents}
+	char.Permissions = []string{
+		characteristic.PermissionRead,
+		characteristic.PermissionEvents,
+	}
 
 	char.SetValue([]byte{})
 

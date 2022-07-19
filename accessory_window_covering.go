@@ -3,34 +3,38 @@ package homekit
 import (
 	"fmt"
 
-	"github.com/brutella/hc/accessory"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/accessory"
+	"github.com/brutella/hap/service"
 )
 
 //AccessoryWindowCovering struct
 type AccessoryWindowCovering struct {
-	*accessory.Accessory
+	*accessory.A
 	WindowCovering *service.WindowCovering
 }
 
-func (acc *AccessoryWindowCovering) GetType() uint8 {
-	return uint8(acc.Accessory.Type)
+func (acc *AccessoryWindowCovering) GetType() byte {
+	return acc.A.Type
 }
 
 func (acc *AccessoryWindowCovering) GetID() uint64 {
-	return acc.Accessory.ID
+	return acc.A.Id
+}
+
+func (acc *AccessoryWindowCovering) SetID(id uint64) {
+	acc.A.Id = id
 }
 
 func (acc *AccessoryWindowCovering) GetSN() string {
-	return acc.Accessory.Info.SerialNumber.GetValue()
+	return acc.A.Info.SerialNumber.Value()
 }
 
 func (acc *AccessoryWindowCovering) GetName() string {
-	return acc.Accessory.Info.Name.GetValue()
+	return acc.A.Info.Name.Value()
 }
 
-func (acc *AccessoryWindowCovering) GetAccessory() *accessory.Accessory {
-	return acc.Accessory
+func (acc *AccessoryWindowCovering) GetAccessory() *accessory.A {
+	return acc.A
 }
 
 //NewAccessoryWindowCovering returns AccessoryWindowCovering
@@ -40,7 +44,7 @@ func (acc *AccessoryWindowCovering) GetAccessory() *accessory.Accessory {
 //  args[3](int) - TargetPosition.SetStepValue(args[3]) default(1)
 func NewAccessoryWindowCovering(info accessory.Info, args ...interface{}) *AccessoryWindowCovering {
 	acc := AccessoryWindowCovering{}
-	acc.Accessory = accessory.New(info, accessory.TypeWindowCovering)
+	acc.A = accessory.New(info, accessory.TypeWindowCovering)
 	acc.WindowCovering = service.NewWindowCovering()
 
 	n := len(args)
@@ -57,7 +61,7 @@ func NewAccessoryWindowCovering(info accessory.Info, args ...interface{}) *Acces
 		acc.WindowCovering.TargetPosition.SetStepValue(toi(args[3], 1))
 	}
 
-	acc.AddService(acc.WindowCovering.Service)
+	acc.AddS(acc.WindowCovering.S)
 
 	return &acc
 }
@@ -69,9 +73,9 @@ func (acc *AccessoryWindowCovering) OnValuesRemoteUpdates(fn func()) {
 
 func (acc *AccessoryWindowCovering) OnExample() {
 	acc.WindowCovering.TargetPosition.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("[%T - %s] remote update target position: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		fmt.Printf("[%T - %s] remote update target position: %T - %v \n", acc, acc.A.Info.SerialNumber.Value(), v, v)
 	})
 	acc.WindowCovering.PositionState.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("[%T - %s] remote update position state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		fmt.Printf("[%T - %s] remote update position state: %T - %v \n", acc, acc.A.Info.SerialNumber.Value(), v, v)
 	})
 }

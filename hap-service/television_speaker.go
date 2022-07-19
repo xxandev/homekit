@@ -1,8 +1,8 @@
 package haps
 
 import (
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/characteristic"
+	"github.com/brutella/hap/service"
 )
 
 //TelevisionSpeaker
@@ -12,7 +12,7 @@ import (
 //	◇ VolumeControlType
 //	◇ VolumeSelector
 type TelevisionSpeaker struct {
-	*service.Service
+	*service.S
 
 	Mute *characteristic.Mute
 	//Active            *characteristic.Active
@@ -24,22 +24,22 @@ type TelevisionSpeaker struct {
 //NewTelevisionSpeaker return *TelevisionSpeaker
 func NewTelevisionSpeaker() *TelevisionSpeaker {
 	svc := TelevisionSpeaker{}
-	svc.Service = service.New(service.TypeSpeaker)
+	svc.S = service.New(service.TypeSpeaker)
 
 	svc.Mute = characteristic.NewMute()
-	svc.AddCharacteristic(svc.Mute.Characteristic)
+	svc.AddC(svc.Mute.C)
 
 	// svc.Active = characteristic.NewActive()
 	// svc.AddCharacteristic(svc.Active.Characteristic)
 
 	svc.Volume = characteristic.NewVolume()
-	svc.AddCharacteristic(svc.Volume.Characteristic)
+	svc.AddC(svc.Volume.C)
 
 	svc.VolumeControlType = characteristic.NewVolumeControlType()
-	svc.AddCharacteristic(svc.VolumeControlType.Characteristic)
+	svc.AddC(svc.VolumeControlType.C)
 
 	svc.VolumeSelector = characteristic.NewVolumeSelector()
-	svc.AddCharacteristic(svc.VolumeSelector.Characteristic)
+	svc.AddC(svc.VolumeSelector.C)
 
 	return &svc
 }

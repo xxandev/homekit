@@ -1,44 +1,48 @@
 package homekit
 
 import (
-	haps "github.com/alpr777/homekit/hap-service"
-	"github.com/brutella/hc/accessory"
+	"github.com/brutella/hap/accessory"
+	haps "github.com/xxandev/homekit/hap-service"
 )
 
 //AccessoryWifiRouter struct
 //
 //https://github.com/homebridge/HAP-NodeJS/blob/master/src/accessories/Wi-FiRouter_accessory.ts
 type AccessoryWifiRouter struct {
-	*accessory.Accessory
+	*accessory.A
 	Router *haps.WiFiRouter
 }
 
-func (acc *AccessoryWifiRouter) GetType() uint8 {
-	return uint8(acc.Accessory.Type)
+func (acc *AccessoryWifiRouter) GetType() byte {
+	return acc.A.Type
 }
 
 func (acc *AccessoryWifiRouter) GetID() uint64 {
-	return acc.Accessory.ID
+	return acc.A.Id
+}
+
+func (acc *AccessoryWifiRouter) SetID(id uint64) {
+	acc.A.Id = id
 }
 
 func (acc *AccessoryWifiRouter) GetSN() string {
-	return acc.Accessory.Info.SerialNumber.GetValue()
+	return acc.A.Info.SerialNumber.Value()
 }
 
 func (acc *AccessoryWifiRouter) GetName() string {
-	return acc.Accessory.Info.Name.GetValue()
+	return acc.A.Info.Name.Value()
 }
 
-func (acc *AccessoryWifiRouter) GetAccessory() *accessory.Accessory {
-	return acc.Accessory
+func (acc *AccessoryWifiRouter) GetAccessory() *accessory.A {
+	return acc.A
 }
 
 //NewAccessoryWifiRouter returns AccessorySwitch (args... are not used)
 func NewAccessoryWifiRouter(info accessory.Info, args ...interface{}) *AccessoryWifiRouter {
 	acc := AccessoryWifiRouter{}
-	acc.Accessory = accessory.New(info, AccessoryTypeWiFiRouter)
+	acc.A = accessory.New(info, AccessoryTypeWiFiRouter)
 	acc.Router = haps.NewWiFiRouter()
-	acc.AddService(acc.Router.Service)
+	acc.AddS(acc.Router.S)
 	return &acc
 }
 

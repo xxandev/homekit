@@ -1,8 +1,8 @@
 package haps
 
 import (
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/characteristic"
+	"github.com/brutella/hap/service"
 )
 
 //TypeSmartSpeaker - 00000228-0000-1000-8000-0026BB765291
@@ -16,7 +16,7 @@ const TypeSmartSpeaker string = "228"
 //	◇ Mute
 //	◇ Volume
 type SmartSpeaker struct {
-	*service.Service
+	*service.S
 	CurrentMediaState *characteristic.CurrentMediaState
 	TargetMediaState  *characteristic.TargetMediaState
 	Name              *characteristic.Name
@@ -28,25 +28,25 @@ type SmartSpeaker struct {
 //NewSmartSpeaker return *SmartSpeaker
 func NewSmartSpeaker() *SmartSpeaker {
 	svc := SmartSpeaker{}
-	svc.Service = service.New(TypeSmartSpeaker)
+	svc.S = service.New(TypeSmartSpeaker)
 
 	svc.TargetMediaState = characteristic.NewTargetMediaState()
-	svc.AddCharacteristic(svc.TargetMediaState.Characteristic)
+	svc.AddC(svc.TargetMediaState.C)
 
 	svc.CurrentMediaState = characteristic.NewCurrentMediaState()
-	svc.AddCharacteristic(svc.CurrentMediaState.Characteristic)
+	svc.AddC(svc.CurrentMediaState.C)
 
 	svc.Name = characteristic.NewName()
-	svc.AddCharacteristic(svc.Name.Characteristic)
+	svc.AddC(svc.Name.C)
 
 	svc.ConfiguredName = characteristic.NewConfiguredName()
-	svc.AddCharacteristic(svc.ConfiguredName.Characteristic)
+	svc.AddC(svc.ConfiguredName.C)
 
 	svc.Mute = characteristic.NewMute()
-	svc.AddCharacteristic(svc.Mute.Characteristic)
+	svc.AddC(svc.Mute.C)
 
 	svc.Volume = characteristic.NewVolume()
-	svc.AddCharacteristic(svc.Volume.Characteristic)
+	svc.AddC(svc.Volume.C)
 
 	return &svc
 }

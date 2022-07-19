@@ -1,15 +1,15 @@
 package haps
 
 import (
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/characteristic"
+	"github.com/brutella/hap/service"
 )
 
 //FanRS
 //	◈ On
 //	◇ RotationSpeed
 type FanRS struct {
-	*service.Service
+	*service.S
 	On            *characteristic.On
 	RotationSpeed *characteristic.RotationSpeed
 }
@@ -17,13 +17,13 @@ type FanRS struct {
 //NewFanRS return *FanRS
 func NewFanRS() *FanRS {
 	svc := FanRS{}
-	svc.Service = service.New(service.TypeFan)
+	svc.S = service.New(service.TypeFan)
 
 	svc.On = characteristic.NewOn()
-	svc.AddCharacteristic(svc.On.Characteristic)
+	svc.AddC(svc.On.C)
 
 	svc.RotationSpeed = characteristic.NewRotationSpeed()
-	svc.AddCharacteristic(svc.RotationSpeed.Characteristic)
+	svc.AddC(svc.RotationSpeed.C)
 
 	return &svc
 }

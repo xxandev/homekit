@@ -1,6 +1,6 @@
 package hapc
 
-import "github.com/brutella/hc/characteristic"
+import "github.com/brutella/hap/characteristic"
 
 //TypeWifiConfigurationControl - 0000021E-0000-1000-8000-0000022D
 const TypeWifiConfigurationControl string = "22D"
@@ -14,7 +14,11 @@ type WifiConfigurationControl struct {
 func NewWifiConfigurationControl() *WifiConfigurationControl {
 	char := characteristic.NewBytes(TypeWifiCapabilities)
 	char.Format = characteristic.FormatTLV8
-	char.Perms = []string{characteristic.PermRead, characteristic.PermWrite, characteristic.PermEvents}
+	char.Permissions = []string{
+		characteristic.PermissionRead,
+		characteristic.PermissionWrite,
+		characteristic.PermissionEvents,
+	}
 
 	return &WifiConfigurationControl{char}
 }

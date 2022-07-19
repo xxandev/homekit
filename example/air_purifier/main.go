@@ -1,36 +1,47 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
-	"github.com/alpr777/homekit"
-	"github.com/brutella/hc"
-	"github.com/brutella/hc/accessory"
+	"github.com/brutella/hap"
+	"github.com/brutella/hap/accessory"
+	"github.com/xxandev/homekit"
+)
+
+const (
+	NAME    string = "AirPurifier"
+	SN      string = "EX-AirPur"
+	MODEL   string = "HAP-AP"
+	ADDRESS string = ":11101"
+	PIN     string = "12344321"
 )
 
 func main() {
-	// log.Debug.Enable()
-	acc := homekit.NewAccessoryAirPurifier(accessory.Info{Name: "Air purifier", SerialNumber: "Ex-Air-Pru", Model: "HAP-AP", Manufacturer: homekit.Manufacturer, FirmwareRevision: homekit.Revision}, 0, 0, 100, 1)
-	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: "11223344"}, acc.Accessory)
+	homekit.OnLog(false)
+	acc := homekit.NewAccessoryAirPurifier(accessory.Info{Name: NAME, SerialNumber: SN, Model: MODEL, Manufacturer: homekit.Manufacturer, Firmware: homekit.Firmware}, 0, 0, 100, 1)
+	llog := log.New(os.Stdout, fmt.Sprintf("[ %v / %v ] ", acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value()), log.Ldate|log.Ltime|log.Lmsgprefix)
+	storage := hap.NewFsStore(fmt.Sprintf("./%s", acc.Info.SerialNumber.Value()))
+	server, err := hap.NewServer(storage, acc.A)
 	if err != nil {
-		log.Fatalf("[ %v / %v ] error create hap transport: %v\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue(), err)
+		llog.Fatalf("error create hap server: %v\n", err)
 	}
-	go acc.AirPurifier.Active.OnValueRemoteUpdate(func(v int) {
-		if v > 0 {
-			acc.AirPurifier.CurrentAirPurifierState.SetValue(2)
-		} else {
-			acc.AirPurifier.CurrentAirPurifierState.SetValue(0)
-		}
-		fmt.Printf("acc air purifier remote update: update active %T - %v, current state %T - %v \n", v, v, acc.AirPurifier.CurrentAirPurifierState.GetValue(), acc.AirPurifier.CurrentAirPurifierState.GetValue())
-	})
-	go acc.AirPurifier.RotationSpeed.OnValueRemoteUpdate(func(v float64) {
-		fmt.Printf("acc air purifier remote update rotation speed: %T - %v \n", v, v)
-	})
-	go acc.AirPurifier.TargetAirPurifierState.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("acc air purifier remote update target state: %T - %v \n", v, v)
-	})
-	fmt.Printf("[ %v / %v ] accessories transport start\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue())
-	hc.OnTermination(func() { <-transp.Stop() })
-	transp.Start()
+	llog.Printf("hap server create successful.\n")
+	acc.OnExample()
+	sig := make(chan os.Signal)
+	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
+	ctx, cancel := context.WithCancel(context.Background())
+	go func() {
+		<-sig
+		llog.Printf("stop program signal.\n")
+		signal.Stop(sig)
+		cancel()
+	}()
+	homekit.SetServer(server, ADDRESS, PIN)
+	llog.Printf("hap server starting set, address %v, pin %v.\n", server.Addr, server.Pin)
+	llog.Fatalf("hap server: %v\n", server.ListenAndServe(ctx))
 }

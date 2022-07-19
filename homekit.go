@@ -7,85 +7,69 @@ import (
 	"strings"
 	"time"
 
-	"github.com/brutella/hc"
-	"github.com/brutella/hc/accessory"
-	"github.com/brutella/hc/log"
+	"github.com/brutella/hap"
+	"github.com/brutella/hap/accessory"
+	"github.com/brutella/hap/log"
 )
 
 //https://github.com/homebridge/HAP-NodeJS/blob/master/src/lib/Accessory.ts >> export const enum Categories
 const (
-	AccessoryTypeUnknown            accessory.AccessoryType = 0
-	AccessoryTypeOther              accessory.AccessoryType = 1
-	AccessoryTypeBridge             accessory.AccessoryType = 2
-	AccessoryTypeFan                accessory.AccessoryType = 3
-	AccessoryTypeGarageDoorOpener   accessory.AccessoryType = 4
-	AccessoryTypeLightbulb          accessory.AccessoryType = 5
-	AccessoryTypeDoorLock           accessory.AccessoryType = 6
-	AccessoryTypeOutlet             accessory.AccessoryType = 7
-	AccessoryTypeSwitch             accessory.AccessoryType = 8
-	AccessoryTypeThermostat         accessory.AccessoryType = 9
-	AccessoryTypeSensor             accessory.AccessoryType = 10
-	AccessoryTypeSecuritySystem     accessory.AccessoryType = 11
-	AccessoryTypeDoor               accessory.AccessoryType = 12
-	AccessoryTypeWindow             accessory.AccessoryType = 13
-	AccessoryTypeWindowCovering     accessory.AccessoryType = 14
-	AccessoryTypeProgrammableSwitch accessory.AccessoryType = 15
-	AccessoryTypeRangeExtender      accessory.AccessoryType = 16
-	AccessoryTypeIPCamera           accessory.AccessoryType = 17
-	AccessoryTypeVideoDoorbell      accessory.AccessoryType = 18
-	AccessoryTypeAirPurifier        accessory.AccessoryType = 19
-	AccessoryTypeHeater             accessory.AccessoryType = 20
-	AccessoryTypeAirConditioner     accessory.AccessoryType = 21
-	AccessoryTypeHumidifier         accessory.AccessoryType = 22
-	AccessoryTypeDehumidifier       accessory.AccessoryType = 23
-	AccessoryTypeAppleTV            accessory.AccessoryType = 24
-	AccessoryTypeSpeaker            accessory.AccessoryType = 26
-	AccessoryTypeAirport            accessory.AccessoryType = 27
-	AccessoryTypeSprinklers         accessory.AccessoryType = 28
-	AccessoryTypeFaucets            accessory.AccessoryType = 29
-	AccessoryTypeShowerSystems      accessory.AccessoryType = 30
-	AccessoryTypeTelevision         accessory.AccessoryType = 31
-	AccessoryTypeRemoteControl      accessory.AccessoryType = 32
-	AccessoryTypeWiFiRouter         accessory.AccessoryType = 33
-	AccessoryTypeAudioReceiver      accessory.AccessoryType = 34
-	AccessoryTypeTVSetTopBox        accessory.AccessoryType = 35
-	AccessoryTypeTVStick            accessory.AccessoryType = 36
+	AccessoryTypeUnknown            byte = 0
+	AccessoryTypeOther              byte = 1
+	AccessoryTypeBridge             byte = 2
+	AccessoryTypeFan                byte = 3
+	AccessoryTypeGarageDoorOpener   byte = 4
+	AccessoryTypeLightbulb          byte = 5
+	AccessoryTypeDoorLock           byte = 6
+	AccessoryTypeOutlet             byte = 7
+	AccessoryTypeSwitch             byte = 8
+	AccessoryTypeThermostat         byte = 9
+	AccessoryTypeSensor             byte = 10
+	AccessoryTypeSecuritySystem     byte = 11
+	AccessoryTypeDoor               byte = 12
+	AccessoryTypeWindow             byte = 13
+	AccessoryTypeWindowCovering     byte = 14
+	AccessoryTypeProgrammableSwitch byte = 15
+	AccessoryTypeRangeExtender      byte = 16
+	AccessoryTypeIPCamera           byte = 17
+	AccessoryTypeVideoDoorbell      byte = 18
+	AccessoryTypeAirPurifier        byte = 19
+	AccessoryTypeHeater             byte = 20
+	AccessoryTypeAirConditioner     byte = 21
+	AccessoryTypeHumidifier         byte = 22
+	AccessoryTypeDehumidifier       byte = 23
+	AccessoryTypeAppleTV            byte = 24
+	AccessoryTypeSpeaker            byte = 26
+	AccessoryTypeAirport            byte = 27
+	AccessoryTypeSprinkler          byte = 28
+	AccessoryTypeFaucet             byte = 29
+	AccessoryTypeShowerSystems      byte = 30
+	AccessoryTypeTelevision         byte = 31
+	AccessoryTypeRemoteControl      byte = 32
+	AccessoryTypeWiFiRouter         byte = 33
+	AccessoryTypeAudioReceiver      byte = 34
+	AccessoryTypeTVSetTopBox        byte = 35
+	AccessoryTypeTVStick            byte = 36
 )
 
 const (
-	Revision             string = "1.2.3"
+	Firmware             string = "1.2.3"
 	Manufacturer         string = "alpr777"
 	MaxBridgeAccessories int    = 150
 )
 
-type ConfigAccessory struct {
-	Name string `json:"name,omitempty" xml:"name,omitempty"`
-	SN   string `json:"sn" xml:"sn"`
-	Port uint16 `json:"port" xml:"port"`
-	Pin  string `json:"pin,omitempty" xml:"pin,omitempty"`
+func SetServer(s *hap.Server, address, pin string) error {
+	// valid
+
+	//set
+	s.Addr = address
+	s.Pin = pin
+	return nil
 }
 
-func (a *ConfigAccessory) GetInfo(manufacturer, model, revision string) accessory.Info {
-	return accessory.Info{
-		Name:             a.GetName(),
-		SerialNumber:     a.GetSN(),
-		Manufacturer:     manufacturer,
-		Model:            model,
-		FirmwareRevision: revision,
-	}
-}
-
-func (a *ConfigAccessory) GetConfigHC(storagepath string) hc.Config {
-	return hc.Config{
-		StoragePath: storagepath,
-		Pin:         a.GetPin(),
-		Port:        a.GetPort(),
-	}
-}
-
-//OnDebug
+//OnLog - on/off hap log
 //  if use systemd, recommended flag 64, or 77 for full debug
-func (a *ConfigAccessory) OnDebug(active bool) {
+func OnLog(active bool) {
 	log.Debug.SetFlags(67) // if use systemd, recommended flag 64, or 77 for full debug
 	log.Info.SetFlags(67)  // if use systemd, recommended flag 64, or 77 for full debug
 	log.Debug.SetPrefix("[HAP_DBG]")
@@ -95,6 +79,41 @@ func (a *ConfigAccessory) OnDebug(active bool) {
 	if active {
 		log.Debug.Enable()
 		log.Info.Enable()
+	}
+}
+
+func LogOff() {
+	log.Debug.SetFlags(67) // if use systemd, recommended flag 64, or 77 for full debug
+	log.Info.SetFlags(67)  // if use systemd, recommended flag 64, or 77 for full debug
+	log.Debug.SetPrefix("[HAP_DBG]")
+	log.Info.SetPrefix("[HAP_INFO]")
+	log.Debug.Disable()
+	log.Info.Disable()
+}
+
+func LogOn() {
+	log.Debug.SetFlags(67) // if use systemd, recommended flag 64, or 77 for full debug
+	log.Info.SetFlags(67)  // if use systemd, recommended flag 64, or 77 for full debug
+	log.Debug.SetPrefix("[HAP_DBG]")
+	log.Info.SetPrefix("[HAP_INFO]")
+	log.Debug.Enable()
+	log.Info.Enable()
+}
+
+type ConfigAccessory struct {
+	Name string `json:"name,omitempty" xml:"name,omitempty"`
+	SN   string `json:"sn" xml:"sn"`
+	Port uint16 `json:"port" xml:"port"`
+	Pin  string `json:"pin,omitempty" xml:"pin,omitempty"`
+}
+
+func (a *ConfigAccessory) GetInfo(manufacturer, model, firmware string) accessory.Info {
+	return accessory.Info{
+		Name:         a.GetName(),
+		SerialNumber: a.GetSN(),
+		Manufacturer: manufacturer,
+		Model:        model,
+		Firmware:     firmware,
 	}
 }
 
@@ -114,7 +133,7 @@ func (a *ConfigAccessory) GetSN() string {
 }
 
 func (a *ConfigAccessory) GetPort() string {
-	return fmt.Sprint(a.Port)
+	return fmt.Sprintf(":%v", a.Port)
 }
 
 func (a *ConfigAccessory) GetPin() string {
@@ -166,36 +185,13 @@ type ConfigBridge struct {
 	Pin  string `json:"pin,omitempty" xml:"pin,omitempty"`
 }
 
-func (b *ConfigBridge) GetInfo(manufacturer, model, revision string) accessory.Info {
+func (b *ConfigBridge) GetInfo(manufacturer, model, Firmware string) accessory.Info {
 	return accessory.Info{
-		Name:             b.GetName(),
-		SerialNumber:     b.GetSN(),
-		Manufacturer:     manufacturer,
-		Model:            model,
-		FirmwareRevision: revision,
-	}
-}
-
-func (b *ConfigBridge) GetConfigHC(storagepath string) hc.Config {
-	return hc.Config{
-		StoragePath: storagepath,
-		Pin:         b.GetPin(),
-		Port:        b.GetPort(),
-	}
-}
-
-//OnDebug
-//  if use systemd, recommended flag 64, or 77 for full debug
-func (b *ConfigBridge) OnDebug(active bool) {
-	log.Debug.SetFlags(67) // if use systemd, recommended flag 64, or 77 for full debug
-	log.Info.SetFlags(67)  // if use systemd, recommended flag 64, or 77 for full debug
-	log.Debug.SetPrefix("[HAP_DBG]")
-	log.Info.SetPrefix("[HAP_INFO]")
-	log.Debug.Disable()
-	log.Info.Disable()
-	if active {
-		log.Debug.Enable()
-		log.Info.Enable()
+		Name:         b.GetName(),
+		SerialNumber: b.GetSN(),
+		Manufacturer: manufacturer,
+		Model:        model,
+		Firmware:     Firmware,
 	}
 }
 
@@ -266,14 +262,13 @@ type ConfigSlaveAccessory struct {
 	SN   string `json:"sn,omitempty" xml:"sn,omitempty"`
 }
 
-func (sa *ConfigSlaveAccessory) GetInfo(manufacturer, model, revision string) accessory.Info {
+func (sa *ConfigSlaveAccessory) GetInfo(manufacturer, model, firmware string) accessory.Info {
 	return accessory.Info{
-		ID:               sa.ID,
-		Name:             sa.GetName(),
-		SerialNumber:     sa.GetSN(),
-		Manufacturer:     manufacturer,
-		Model:            model,
-		FirmwareRevision: revision,
+		Name:         sa.GetName(),
+		SerialNumber: sa.GetSN(),
+		Manufacturer: manufacturer,
+		Model:        model,
+		Firmware:     firmware,
 	}
 }
 

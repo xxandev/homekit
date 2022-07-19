@@ -1,8 +1,8 @@
 package haps
 
 import (
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/characteristic"
+	"github.com/brutella/hap/service"
 )
 
 //AirPurifier
@@ -11,7 +11,7 @@ import (
 //	◈ TargetAirPurifierState
 //	◇ RotationSpeed
 type AirPurifier struct {
-	*service.Service
+	*service.S
 	Active                  *characteristic.Active
 	CurrentAirPurifierState *characteristic.CurrentAirPurifierState
 	TargetAirPurifierState  *characteristic.TargetAirPurifierState
@@ -21,19 +21,19 @@ type AirPurifier struct {
 //NewAirPurifier return *AirPurifier
 func NewAirPurifier() *AirPurifier {
 	svc := AirPurifier{}
-	svc.Service = service.New(service.TypeAirPurifier)
+	svc.S = service.New(service.TypeAirPurifier)
 
 	svc.Active = characteristic.NewActive()
-	svc.AddCharacteristic(svc.Active.Characteristic)
+	svc.AddC(svc.Active.C)
 
 	svc.CurrentAirPurifierState = characteristic.NewCurrentAirPurifierState()
-	svc.AddCharacteristic(svc.CurrentAirPurifierState.Characteristic)
+	svc.AddC(svc.CurrentAirPurifierState.C)
 
 	svc.TargetAirPurifierState = characteristic.NewTargetAirPurifierState()
-	svc.AddCharacteristic(svc.TargetAirPurifierState.Characteristic)
+	svc.AddC(svc.TargetAirPurifierState.C)
 
 	svc.RotationSpeed = characteristic.NewRotationSpeed()
-	svc.AddCharacteristic(svc.RotationSpeed.Characteristic)
+	svc.AddC(svc.RotationSpeed.C)
 
 	return &svc
 }

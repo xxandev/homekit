@@ -1,8 +1,8 @@
 package haps
 
 import (
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/characteristic"
+	"github.com/brutella/hap/service"
 )
 
 //HumidifierDehumidifier
@@ -13,7 +13,7 @@ import (
 //	◇ RelativeHumidityDehumidifierThreshold
 //	◇ RelativeHumidityHumidifierThreshold
 type HumidifierDehumidifier struct {
-	*service.Service
+	*service.S
 	Active                                *characteristic.Active
 	CurrentHumidifierDehumidifierState    *characteristic.CurrentHumidifierDehumidifierState
 	TargetHumidifierDehumidifierState     *characteristic.TargetHumidifierDehumidifierState
@@ -25,25 +25,25 @@ type HumidifierDehumidifier struct {
 //NewHumidifierDehumidifier return *HumidifierDehumidifier
 func NewHumidifierDehumidifier() *HumidifierDehumidifier {
 	svc := HumidifierDehumidifier{}
-	svc.Service = service.New(service.TypeHumidifierDehumidifier)
+	svc.S = service.New(service.TypeHumidifierDehumidifier)
 
 	svc.Active = characteristic.NewActive()
-	svc.AddCharacteristic(svc.Active.Characteristic)
+	svc.AddC(svc.Active.C)
 
 	svc.CurrentHumidifierDehumidifierState = characteristic.NewCurrentHumidifierDehumidifierState()
-	svc.AddCharacteristic(svc.CurrentHumidifierDehumidifierState.Characteristic)
+	svc.AddC(svc.CurrentHumidifierDehumidifierState.C)
 
 	svc.TargetHumidifierDehumidifierState = characteristic.NewTargetHumidifierDehumidifierState()
-	svc.AddCharacteristic(svc.TargetHumidifierDehumidifierState.Characteristic)
+	svc.AddC(svc.TargetHumidifierDehumidifierState.C)
 
 	svc.CurrentRelativeHumidity = characteristic.NewCurrentRelativeHumidity()
-	svc.AddCharacteristic(svc.CurrentRelativeHumidity.Characteristic)
+	svc.AddC(svc.CurrentRelativeHumidity.C)
 
 	svc.RelativeHumidityDehumidifierThreshold = characteristic.NewRelativeHumidityDehumidifierThreshold()
-	svc.AddCharacteristic(svc.RelativeHumidityDehumidifierThreshold.Characteristic)
+	svc.AddC(svc.RelativeHumidityDehumidifierThreshold.C)
 
 	svc.RelativeHumidityHumidifierThreshold = characteristic.NewRelativeHumidityHumidifierThreshold()
-	svc.AddCharacteristic(svc.RelativeHumidityHumidifierThreshold.Characteristic)
+	svc.AddC(svc.RelativeHumidityHumidifierThreshold.C)
 
 	return &svc
 }

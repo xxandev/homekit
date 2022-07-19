@@ -1,34 +1,47 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
-	"time"
+	"os"
+	"os/signal"
+	"syscall"
 
-	"github.com/alpr777/homekit"
-	"github.com/brutella/hc"
-	"github.com/brutella/hc/accessory"
+	"github.com/brutella/hap"
+	"github.com/brutella/hap/accessory"
+	"github.com/xxandev/homekit"
+)
+
+const (
+	NAME    string = "Dioxide"
+	SN      string = "EX-Dioxide"
+	MODEL   string = "HAP-SRDXO"
+	ADDRESS string = ":11117"
+	PIN     string = "12344321"
 )
 
 func main() {
-	// log.Debug.Enable()
-	acc := homekit.NewAccessorySensorDioxide(accessory.Info{Name: "Dioxide", SerialNumber: "Ex-Dioxide", Model: "HAP-DXD", Manufacturer: homekit.Manufacturer, FirmwareRevision: homekit.Revision})
-	transp, err := hc.NewIPTransport(hc.Config{StoragePath: "./" + acc.Info.SerialNumber.GetValue(), Pin: "11223344"}, acc.Accessory)
+	homekit.OnLog(false)
+	acc := homekit.NewAccessorySensorDioxide(accessory.Info{Name: NAME, SerialNumber: SN, Model: MODEL, Manufacturer: homekit.Manufacturer, Firmware: homekit.Firmware})
+	llog := log.New(os.Stdout, fmt.Sprintf("[ %v / %v ] ", acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value()), log.Ldate|log.Ltime|log.Lmsgprefix)
+	storage := hap.NewFsStore(fmt.Sprintf("./%s", acc.Info.SerialNumber.Value()))
+	server, err := hap.NewServer(storage, acc.A)
 	if err != nil {
-		log.Fatalf("[ %v / %v ] error create hap transport: %v\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue(), err)
+		llog.Fatalf("error create hap server: %v\n", err)
 	}
+	llog.Printf("hap server create successful.\n")
+	acc.OnExample()
+	sig := make(chan os.Signal)
+	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
+	ctx, cancel := context.WithCancel(context.Background())
 	go func() {
-		t := time.NewTicker(2 * time.Second)
-		for {
-			<-t.C
-			acc.CarbonDioxideSensor.CarbonDioxideDetected.SetValue(1)
-			fmt.Printf("acc sensor dioxide update current state: %T - %v \n", acc.CarbonDioxideSensor.CarbonDioxideDetected.GetValue(), acc.CarbonDioxideSensor.CarbonDioxideDetected.GetValue())
-			<-t.C
-			acc.CarbonDioxideSensor.CarbonDioxideDetected.SetValue(0)
-			fmt.Printf("acc sensor dioxide update current state: %T - %v \n", acc.CarbonDioxideSensor.CarbonDioxideDetected.GetValue(), acc.CarbonDioxideSensor.CarbonDioxideDetected.GetValue())
-		}
+		<-sig
+		llog.Printf("stop program signal.\n")
+		signal.Stop(sig)
+		cancel()
 	}()
-	fmt.Printf("[ %v / %v ] accessories transport start\n", acc.Accessory.Info.SerialNumber.GetValue(), acc.Accessory.Info.Name.GetValue())
-	hc.OnTermination(func() { <-transp.Stop() })
-	transp.Start()
+	homekit.SetServer(server, ADDRESS, PIN)
+	llog.Printf("hap server starting set, address %v, pin %v.\n", server.Addr, server.Pin)
+	llog.Fatalf("hap server: %v\n", server.ListenAndServe(ctx))
 }

@@ -1,44 +1,59 @@
 package homekit
 
 import (
-	"github.com/brutella/hc/accessory"
-	"github.com/brutella/hc/service"
+	"fmt"
+	"math/rand"
+	"time"
+
+	"github.com/brutella/hap/accessory"
+	"github.com/brutella/hap/service"
 )
 
 //AccessorySensorLight struct
 type AccessorySensorLight struct {
-	*accessory.Accessory
+	*accessory.A
 	LightSensor *service.LightSensor
 }
 
-func (acc *AccessorySensorLight) GetType() uint8 {
-	return uint8(acc.Accessory.Type)
+func (acc *AccessorySensorLight) GetType() byte {
+	return acc.A.Type
 }
 
 func (acc *AccessorySensorLight) GetID() uint64 {
-	return acc.Accessory.ID
+	return acc.A.Id
+}
+
+func (acc *AccessorySensorLight) SetID(id uint64) {
+	acc.A.Id = id
 }
 
 func (acc *AccessorySensorLight) GetSN() string {
-	return acc.Accessory.Info.SerialNumber.GetValue()
+	return acc.A.Info.SerialNumber.Value()
 }
 
 func (acc *AccessorySensorLight) GetName() string {
-	return acc.Accessory.Info.Name.GetValue()
+	return acc.A.Info.Name.Value()
 }
 
-func (acc *AccessorySensorLight) GetAccessory() *accessory.Accessory {
-	return acc.Accessory
+func (acc *AccessorySensorLight) GetAccessory() *accessory.A {
+	return acc.A
 }
 
 //NewAccessorySensorLight return AccessorySensorLight (args... are not used)
 func NewAccessorySensorLight(info accessory.Info, args ...interface{}) *AccessorySensorLight {
 	acc := AccessorySensorLight{}
-	acc.Accessory = accessory.New(info, accessory.TypeSensor)
+	acc.A = accessory.New(info, accessory.TypeSensor)
 	acc.LightSensor = service.NewLightSensor()
-	acc.AddService(acc.LightSensor.Service)
+	acc.AddS(acc.LightSensor.S)
 	return &acc
 }
 
 func (acc *AccessorySensorLight) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySensorLight) OnExample()                      {}
+func (acc *AccessorySensorLight) OnExample() {
+	go func() {
+		for range time.Tick(10 * time.Second) {
+			acc.LightSensor.CurrentAmbientLightLevel.SetValue(rand.Float64())
+			fmt.Printf("[%[1]T - %[2]v - %[3]v] update current state: %[4]T - %[4]v\n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), acc.LightSensor.CurrentAmbientLightLevel.Value())
+		}
+	}()
+}

@@ -1,15 +1,15 @@
 package haps
 
 import (
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/characteristic"
+	"github.com/brutella/hap/service"
 )
 
 //LightbulbDimmer
 //	◈ On
 //	◇ Brightness
 type LightbulbDimmer struct {
-	*service.Service
+	*service.S
 	On         *characteristic.On
 	Brightness *characteristic.Brightness
 }
@@ -17,13 +17,13 @@ type LightbulbDimmer struct {
 //NewLightbulbDimmer return *LightbulbDimmer
 func NewLightbulbDimmer() *LightbulbDimmer {
 	svc := LightbulbDimmer{}
-	svc.Service = service.New(service.TypeLightbulb)
+	svc.S = service.New(service.TypeLightbulb)
 
 	svc.On = characteristic.NewOn()
-	svc.AddCharacteristic(svc.On.Characteristic)
+	svc.AddC(svc.On.C)
 
 	svc.Brightness = characteristic.NewBrightness()
-	svc.AddCharacteristic(svc.Brightness.Characteristic)
+	svc.AddC(svc.Brightness.C)
 
 	return &svc
 }

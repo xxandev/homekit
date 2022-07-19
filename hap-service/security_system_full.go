@@ -1,8 +1,8 @@
 package haps
 
 import (
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/characteristic"
+	"github.com/brutella/hap/service"
 )
 
 //SecuritySystemMultifunc
@@ -12,7 +12,7 @@ import (
 //	◇ StatusFault
 //	◇ StatusTampered
 type SecuritySystemFull struct {
-	*service.Service
+	*service.S
 	SecuritySystemCurrentState *characteristic.SecuritySystemCurrentState
 	SecuritySystemTargetState  *characteristic.SecuritySystemTargetState
 	SecuritySystemAlarmType    *characteristic.SecuritySystemAlarmType
@@ -23,22 +23,22 @@ type SecuritySystemFull struct {
 //NewSecuritySystemMultifunc return *SecuritySystemMultifunc
 func NewSecuritySystemMultifunc() *SecuritySystemFull {
 	svc := SecuritySystemFull{}
-	svc.Service = service.New(service.TypeSecuritySystem)
+	svc.S = service.New(service.TypeSecuritySystem)
 
 	svc.SecuritySystemCurrentState = characteristic.NewSecuritySystemCurrentState()
-	svc.AddCharacteristic(svc.SecuritySystemCurrentState.Characteristic)
+	svc.AddC(svc.SecuritySystemCurrentState.C)
 
 	svc.SecuritySystemTargetState = characteristic.NewSecuritySystemTargetState()
-	svc.AddCharacteristic(svc.SecuritySystemTargetState.Characteristic)
+	svc.AddC(svc.SecuritySystemTargetState.C)
 
 	svc.SecuritySystemAlarmType = characteristic.NewSecuritySystemAlarmType()
-	svc.AddCharacteristic(svc.SecuritySystemAlarmType.Characteristic)
+	svc.AddC(svc.SecuritySystemAlarmType.C)
 
 	svc.StatusFault = characteristic.NewStatusFault()
-	svc.AddCharacteristic(svc.StatusFault.Characteristic)
+	svc.AddC(svc.StatusFault.C)
 
 	svc.StatusTampered = characteristic.NewStatusTampered()
-	svc.AddCharacteristic(svc.StatusTampered.Characteristic)
+	svc.AddC(svc.StatusTampered.C)
 
 	return &svc
 }

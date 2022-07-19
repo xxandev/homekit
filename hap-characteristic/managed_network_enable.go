@@ -1,6 +1,6 @@
 package hapc
 
-import "github.com/brutella/hc/characteristic"
+import "github.com/brutella/hap/characteristic"
 
 const (
 	//ManagedNetworkEnableDisable - disable(0)
@@ -25,7 +25,11 @@ type ManagedNetworkEnable struct {
 func NewManagedNetworkEnable() *ManagedNetworkEnable {
 	char := characteristic.NewInt(TypeManagedNetworkEnable)
 	char.Format = characteristic.FormatUInt8
-	char.Perms = []string{characteristic.PermRead, characteristic.PermWrite, characteristic.PermEvents}
+	char.Permissions = []string{
+		characteristic.PermissionRead,
+		characteristic.PermissionWrite,
+		characteristic.PermissionEvents,
+	}
 
 	char.SetMinValue(0)
 	char.SetMaxValue(1)

@@ -1,8 +1,8 @@
 package haps
 
 import (
-	"github.com/brutella/hc/characteristic"
-	"github.com/brutella/hc/service"
+	"github.com/brutella/hap/characteristic"
+	"github.com/brutella/hap/service"
 )
 
 //Fan2RS
@@ -14,7 +14,7 @@ import (
 //	◇ SwingMode
 //	◇ LockPhysicalControls
 type Fan2RS struct {
-	*service.Service
+	*service.S
 	Active        *characteristic.Active
 	RotationSpeed *characteristic.RotationSpeed
 }
@@ -22,13 +22,13 @@ type Fan2RS struct {
 //NewFanV2Multifunc return *FanV2Multifunc
 func NewFanV2Multifunc() *Fan2RS {
 	svc := Fan2RS{}
-	svc.Service = service.New(service.TypeFanV2)
+	svc.S = service.New(service.TypeFanV2)
 
 	svc.Active = characteristic.NewActive()
-	svc.AddCharacteristic(svc.Active.Characteristic)
+	svc.AddC(svc.Active.C)
 
 	svc.RotationSpeed = characteristic.NewRotationSpeed()
-	svc.AddCharacteristic(svc.RotationSpeed.Characteristic)
+	svc.AddC(svc.RotationSpeed.C)
 
 	return &svc
 }

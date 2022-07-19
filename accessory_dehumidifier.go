@@ -3,34 +3,38 @@ package homekit
 import (
 	"fmt"
 
-	haps "github.com/alpr777/homekit/hap-service"
-	"github.com/brutella/hc/accessory"
+	"github.com/brutella/hap/accessory"
+	haps "github.com/xxandev/homekit/hap-service"
 )
 
 //AccessoryHumidifierDehumidifier struct
 type AccessoryHumidifierDehumidifier struct {
-	*accessory.Accessory
+	*accessory.A
 	HumidifierDehumidifier *haps.HumidifierDehumidifier
 }
 
-func (acc *AccessoryHumidifierDehumidifier) GetType() uint8 {
-	return uint8(acc.Accessory.Type)
+func (acc *AccessoryHumidifierDehumidifier) GetType() byte {
+	return acc.A.Type
 }
 
 func (acc *AccessoryHumidifierDehumidifier) GetID() uint64 {
-	return acc.Accessory.ID
+	return acc.A.Id
+}
+
+func (acc *AccessoryHumidifierDehumidifier) SetID(id uint64) {
+	acc.A.Id = id
 }
 
 func (acc *AccessoryHumidifierDehumidifier) GetSN() string {
-	return acc.Accessory.Info.SerialNumber.GetValue()
+	return acc.A.Info.SerialNumber.Value()
 }
 
 func (acc *AccessoryHumidifierDehumidifier) GetName() string {
-	return acc.Accessory.Info.Name.GetValue()
+	return acc.A.Info.Name.Value()
 }
 
-func (acc *AccessoryHumidifierDehumidifier) GetAccessory() *accessory.Accessory {
-	return acc.Accessory
+func (acc *AccessoryHumidifierDehumidifier) GetAccessory() *accessory.A {
+	return acc.A
 }
 
 //NewAccessoryHumidifierDehumidifier returns AccessoryHumidifierDehumidifier
@@ -40,7 +44,7 @@ func (acc *AccessoryHumidifierDehumidifier) GetAccessory() *accessory.Accessory 
 //  args[3](int) - TargetHumidifierDehumidifierState.SetStepValue(args[3]) default(1)
 func NewAccessoryHumidifierDehumidifier(info accessory.Info, args ...interface{}) *AccessoryHumidifierDehumidifier {
 	acc := AccessoryHumidifierDehumidifier{}
-	acc.Accessory = accessory.New(info, accessory.TypeDehumidifier)
+	acc.A = accessory.New(info, accessory.TypeDehumidifier)
 	acc.HumidifierDehumidifier = haps.NewHumidifierDehumidifier()
 	n := len(args)
 	if n > 0 {
@@ -55,7 +59,7 @@ func NewAccessoryHumidifierDehumidifier(info accessory.Info, args ...interface{}
 	if n > 3 {
 		acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.SetStepValue(toi(args[3], 1))
 	}
-	acc.AddService(acc.HumidifierDehumidifier.Service)
+	acc.AddS(acc.HumidifierDehumidifier.S)
 	return &acc
 }
 
@@ -68,15 +72,15 @@ func (acc *AccessoryHumidifierDehumidifier) OnValuesRemoteUpdates(fn func()) {
 
 func (acc *AccessoryHumidifierDehumidifier) OnExample() {
 	acc.HumidifierDehumidifier.Active.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("[%T - %s] remote update active: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update active: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
 	})
 	acc.HumidifierDehumidifier.TargetHumidifierDehumidifierState.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("[%T - %s] remote update target state: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update target state: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
 	})
 	acc.HumidifierDehumidifier.RelativeHumidityDehumidifierThreshold.OnValueRemoteUpdate(func(v float64) {
-		fmt.Printf("[%T - %s] remote update relative threshold: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update relative threshold: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
 	})
 	acc.HumidifierDehumidifier.RelativeHumidityHumidifierThreshold.OnValueRemoteUpdate(func(v float64) {
-		fmt.Printf("[%T - %s] remote update relative threshold: %T - %v \n", acc, acc.Accessory.Info.SerialNumber.GetValue(), v, v)
+		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update relative threshold: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
 	})
 }
