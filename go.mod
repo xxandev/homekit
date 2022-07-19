@@ -1,14 +1,10 @@
-module homekit
+module github.com/xxandev/homekit
 
 go 1.18
 
-require (
-	github.com/brutella/hc v1.2.5
-	github.com/xxandev/homekit v0.0.0-20220209102644-b895290727a9
-)
+require github.com/brutella/hc v1.2.5
 
 require (
-	github.com/alpr777/homekit v0.0.0-20220209102644-b895290727a9 // indirect
 	github.com/brutella/dnssd v1.2.1 // indirect
 	github.com/miekg/dns v1.1.4 // indirect
 	github.com/tadglines/go-pkgs v0.0.0-20140924210655-1f86682992f1 // indirect
