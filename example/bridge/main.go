@@ -14,9 +14,9 @@ import (
 )
 
 const (
-	BRG_NAME    string = "Bridge-2"
-	BRG_SN      string = "EX-Brg-2"
-	BRG_ADDRESS string = ":11103"
+	BRG_NAME    string = "Bridge"
+	BRG_SN      string = "EX-Brg"
+	BRG_ADDRESS string = ":11102"
 	BRG_PIN     string = "12344321"
 	BRG_MODEL   string = "HAP-BRG"
 )

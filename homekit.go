@@ -54,7 +54,7 @@ const (
 
 const (
 	Firmware             string = "1.2.3"
-	Manufacturer         string = "alpr777"
+	Manufacturer         string = "xxandev"
 	MaxBridgeAccessories int    = 150
 )
 
