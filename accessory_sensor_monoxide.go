@@ -1,9 +1,6 @@
 package homekit
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/brutella/hap/accessory"
 	"github.com/brutella/hap/service"
 )
@@ -38,7 +35,11 @@ func (acc *AccessorySensorMonoxide) GetAccessory() *accessory.A {
 	return acc.A
 }
 
-//NewAccessorySensorMonoxide return AccessorySensorMonoxide (args... are not used)
+//NewAccessorySensorMonoxide return *SensorMonoxide.
+//  (COMPATIBILITY)  - left for compatibility, recommended NewAcc...(id, info, args..)
+//
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
 func NewAccessorySensorMonoxide(info accessory.Info, args ...interface{}) *AccessorySensorMonoxide {
 	acc := AccessorySensorMonoxide{}
 	acc.A = accessory.New(info, accessory.TypeSensor)
@@ -47,16 +48,20 @@ func NewAccessorySensorMonoxide(info accessory.Info, args ...interface{}) *Acces
 	return &acc
 }
 
-func (acc *AccessorySensorMonoxide) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySensorMonoxide) OnExample() {
-	go func() {
-		for range time.Tick(10 * time.Second) {
-			if acc.CarbonMonoxideSensor.CarbonMonoxideDetected.Value() > 0 {
-				acc.CarbonMonoxideSensor.CarbonMonoxideDetected.SetValue(0)
-			} else {
-				acc.CarbonMonoxideSensor.CarbonMonoxideDetected.SetValue(1)
-			}
-			fmt.Printf("[%[1]T - %[2]v - %[3]v] update current state: %[4]T - %[4]v\n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), acc.CarbonMonoxideSensor.CarbonMonoxideDetected.Value())
-		}
-	}()
+//NewAccSensorMonoxide return *SensorMonoxide.
+//  HomeKit requires that every accessory has a unique id, which must not change between system restarts.
+//  The best would be to specify the unique id for every accessory yourself.
+//
+//  id (uint64) - accessory aid
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
+func NewAccSensorMonoxide(id uint64, info accessory.Info, args ...interface{}) *AccessorySensorMonoxide {
+	acc := AccessorySensorMonoxide{}
+	acc.A = accessory.New(info, accessory.TypeSensor)
+	acc.CarbonMonoxideSensor = service.NewCarbonMonoxideSensor()
+	acc.AddS(acc.CarbonMonoxideSensor.S)
+	acc.A.Id = id
+	return &acc
 }
+
+func (acc *AccessorySensorMonoxide) OnValuesRemoteUpdates(fn func()) {}

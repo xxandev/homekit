@@ -19,8 +19,8 @@ type Fan2RS struct {
 	RotationSpeed *characteristic.RotationSpeed
 }
 
-//NewFanV2Multifunc return *FanV2Multifunc
-func NewFanV2Multifunc() *Fan2RS {
+//NewFanV2RS return *Fan2RS
+func NewFanV2RS() *Fan2RS {
 	svc := Fan2RS{}
 	svc.S = service.New(service.TypeFanV2)
 

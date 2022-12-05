@@ -35,7 +35,11 @@ func (acc *AccessorySmartSpeaker) GetAccessory() *accessory.A {
 	return acc.A
 }
 
-//NewAccessorySmartSpeaker returns AccessorySmartSpeaker (args... are not used)
+//NewAccessorySmartSpeaker returns *SmartSpeaker.
+//  (COMPATIBILITY)  - left for compatibility, recommended NewAcc...(id, info, args..)
+//
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
 func NewAccessorySmartSpeaker(info accessory.Info, args ...interface{}) *AccessorySmartSpeaker {
 	acc := AccessorySmartSpeaker{}
 	acc.A = accessory.New(info, AccessoryTypeSpeaker)
@@ -44,5 +48,20 @@ func NewAccessorySmartSpeaker(info accessory.Info, args ...interface{}) *Accesso
 	return &acc
 }
 
+//NewAccSmartSpeaker returns *SmartSpeaker.
+//  HomeKit requires that every accessory has a unique id, which must not change between system restarts.
+//  The best would be to specify the unique id for every accessory yourself.
+//
+//  id (uint64) - accessory aid
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
+func NewAccSmartSpeaker(id uint64, info accessory.Info, args ...interface{}) *AccessorySmartSpeaker {
+	acc := AccessorySmartSpeaker{}
+	acc.A = accessory.New(info, AccessoryTypeSpeaker)
+	acc.SmartSpeaker = haps.NewSmartSpeaker()
+	acc.AddS(acc.SmartSpeaker.S)
+	acc.A.Id = id
+	return &acc
+}
+
 func (acc *AccessorySmartSpeaker) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySmartSpeaker) OnExample()                      {}

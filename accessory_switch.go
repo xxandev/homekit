@@ -1,9 +1,6 @@
 package homekit
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/brutella/hap/accessory"
 	"github.com/brutella/hap/service"
 )
@@ -38,7 +35,11 @@ func (acc *AccessorySwitch) GetAccessory() *accessory.A {
 	return acc.A
 }
 
-// NewAccessorySwitch returns AccessorySwitch (args... are not used)
+// NewAccessorySwitch returns *Switch.
+//  (COMPATIBILITY)  - left for compatibility, recommended NewAcc...(id, info, args..)
+//
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
 func NewAccessorySwitch(info accessory.Info, args ...interface{}) *AccessorySwitch {
 	acc := AccessorySwitch{}
 	acc.A = accessory.New(info, accessory.TypeSwitch)
@@ -47,20 +48,22 @@ func NewAccessorySwitch(info accessory.Info, args ...interface{}) *AccessorySwit
 	return &acc
 }
 
-func (acc *AccessorySwitch) OnValuesRemoteUpdates(fn func()) {
-	acc.Switch.On.OnValueRemoteUpdate(func(bool) { fn() })
+// NewAccSwitch returns *Switch.
+//  HomeKit requires that every accessory has a unique id, which must not change between system restarts.
+//  The best would be to specify the unique id for every accessory yourself.
+//
+//  id (uint64) - accessory aid
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
+func NewAccSwitch(id uint64, info accessory.Info, args ...interface{}) *AccessorySwitch {
+	acc := AccessorySwitch{}
+	acc.A = accessory.New(info, accessory.TypeSwitch)
+	acc.Switch = service.NewSwitch()
+	acc.AddS(acc.Switch.S)
+	acc.A.Id = id
+	return &acc
 }
 
-func (acc *AccessorySwitch) OnExample() {
-	go func() {
-		for range time.Tick(30 * time.Second) {
-			acc.Switch.On.SetValue(!acc.Switch.On.Value())
-			fmt.Printf("[%T - %v - %v] acc switch update on: %T - %v\n",
-				acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), acc.Switch.On.Value(), acc.Switch.On.Value())
-		}
-	}()
-	acc.Switch.On.OnValueRemoteUpdate(func(v bool) {
-		fmt.Printf("[%T - %v - %v] remote update on: %T - %v \n",
-			acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v, v)
-	})
+func (acc *AccessorySwitch) OnValuesRemoteUpdates(fn func()) {
+	acc.Switch.On.OnValueRemoteUpdate(func(bool) { fn() })
 }

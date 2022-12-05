@@ -37,16 +37,36 @@ func (acc *AccessoryTelevision) GetAccessory() *accessory.A {
 	return acc.A
 }
 
-//NewAccessoryTelevision returns AccessoryTelevision (args... are not used)
+//NewAccessoryTelevision returns *Television.
+//  (COMPATIBILITY)  - left for compatibility, recommended NewAcc...(id, info, args..)
+//
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
 func NewAccessoryTelevision(info accessory.Info, args ...interface{}) *AccessoryTelevision {
 	acc := AccessoryTelevision{}
 	acc.A = accessory.New(info, accessory.TypeTelevision)
 	acc.Television = haps.NewTelevision()
 	acc.Speaker = haps.NewTelevisionSpeaker()
-
 	acc.AddS(acc.Television.S)
 	acc.AddS(acc.Speaker.S)
+	return &acc
+}
 
+//NewAccessoryTelevision returns AccessoryTelevision (args... are not used)
+//  HomeKit requires that every accessory has a unique id, which must not change between system restarts.
+//  The best would be to specify the unique id for every accessory yourself.
+//
+//  id (uint64) - accessory aid
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
+func NewAccTelevision(id uint64, info accessory.Info, args ...interface{}) *AccessoryTelevision {
+	acc := AccessoryTelevision{}
+	acc.A = accessory.New(info, accessory.TypeTelevision)
+	acc.Television = haps.NewTelevision()
+	acc.Speaker = haps.NewTelevisionSpeaker()
+	acc.AddS(acc.Television.S)
+	acc.AddS(acc.Speaker.S)
+	acc.A.Id = id
 	return &acc
 }
 
@@ -95,4 +115,3 @@ func (acc *AccessoryTelevision) ProcessInputSource(insource *haps.InputSource, e
 }
 
 func (acc *AccessoryTelevision) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessoryTelevision) OnExample()                      {}

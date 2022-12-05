@@ -1,9 +1,6 @@
 package homekit
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/brutella/hap/accessory"
 	"github.com/brutella/hap/service"
 )
@@ -38,7 +35,11 @@ func (acc *AccessorySensorAirQuality) GetAccessory() *accessory.A {
 	return acc.A
 }
 
-//NewAccessorySensorAirQuality return AccessorySensorAirQuality args... (args... are not used)
+//NewAccessorySensorAirQuality returns *SensorAirQuality.
+//  (COMPATIBILITY)  - left for compatibility, recommended NewAcc...(id, info, args..)
+//
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
 func NewAccessorySensorAirQuality(info accessory.Info, args ...interface{}) *AccessorySensorAirQuality {
 	acc := AccessorySensorAirQuality{}
 	acc.A = accessory.New(info, accessory.TypeSensor)
@@ -47,16 +48,20 @@ func NewAccessorySensorAirQuality(info accessory.Info, args ...interface{}) *Acc
 	return &acc
 }
 
-func (acc *AccessorySensorAirQuality) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySensorAirQuality) OnExample() {
-	go func() {
-		for range time.Tick(10 * time.Second) {
-			if acc.AirQualitySensor.AirQuality.Value() >= 5 {
-				acc.AirQualitySensor.AirQuality.SetValue(0)
-			} else {
-				acc.AirQualitySensor.AirQuality.SetValue(acc.AirQualitySensor.AirQuality.Value() + 1)
-			}
-			fmt.Printf("[%[1]T - %[2]v - %[3]v] update current state: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), acc.AirQualitySensor.AirQuality.Value())
-		}
-	}()
+//NewAccSensorAirQuality returns *SensorAirQuality.
+//  HomeKit requires that every accessory has a unique id, which must not change between system restarts.
+//  The best would be to specify the unique id for every accessory yourself.
+//
+//  id (uint64) - accessory aid
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
+func NewAccSensorAirQuality(id uint64, info accessory.Info, args ...interface{}) *AccessorySensorAirQuality {
+	acc := AccessorySensorAirQuality{}
+	acc.A = accessory.New(info, accessory.TypeSensor)
+	acc.AirQualitySensor = service.NewAirQualitySensor()
+	acc.AddS(acc.AirQualitySensor.S)
+	acc.A.Id = id
+	return &acc
 }
+
+func (acc *AccessorySensorAirQuality) OnValuesRemoteUpdates(fn func()) {}

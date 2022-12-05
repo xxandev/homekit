@@ -1,8 +1,6 @@
 package homekit
 
 import (
-	"fmt"
-
 	"github.com/brutella/hap/accessory"
 	"github.com/brutella/hap/service"
 )
@@ -36,7 +34,11 @@ func (acc *AccessoryIrrigation) GetAccessory() *accessory.A {
 	return acc.A
 }
 
-//NewAccessoryIrrigation return AccessoryIrrigation (args... are not used)
+//NewAccessoryIrrigation return *Irrigation.
+//  (COMPATIBILITY)  - left for compatibility, recommended NewAcc...(id, info, args..)
+//
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
 func NewAccessoryIrrigation(info accessory.Info, args ...interface{}) *AccessoryIrrigation {
 	acc := AccessoryIrrigation{}
 	acc.A = accessory.New(info, accessory.TypeSprinkler)
@@ -46,14 +48,24 @@ func NewAccessoryIrrigation(info accessory.Info, args ...interface{}) *Accessory
 	return &acc
 }
 
+//NewAccIrrigation return *Irrigation.
+//  HomeKit requires that every accessory has a unique id, which must not change between system restarts.
+//  The best would be to specify the unique id for every accessory yourself.
+//
+//  id (uint64) - accessory aid
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
+func NewAccIrrigation(id uint64, info accessory.Info, args ...interface{}) *AccessoryIrrigation {
+	acc := AccessoryIrrigation{}
+	acc.A = accessory.New(info, accessory.TypeSprinkler)
+	acc.Valve = service.NewValve()
+	acc.Valve.ValveType.SetValue(1)
+	acc.AddS(acc.Valve.S)
+	acc.A.Id = id
+	return &acc
+}
+
 func (acc *AccessoryIrrigation) OnValuesRemoteUpdates(fn func()) {
 	acc.Valve.Active.OnValueRemoteUpdate(func(int) { fn() })
 	// acc.Valve.InUse.OnValueRemoteUpdate(func(int) { fn() })
-}
-
-func (acc *AccessoryIrrigation) OnExample() {
-	acc.Valve.Active.OnValueRemoteUpdate(func(v int) {
-		acc.Valve.InUse.SetValue(v)
-		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update active: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
-	})
 }

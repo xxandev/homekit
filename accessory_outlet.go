@@ -1,9 +1,6 @@
 package homekit
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/brutella/hap/accessory"
 	"github.com/brutella/hap/service"
 )
@@ -38,7 +35,11 @@ func (acc *AccessoryOutlet) GetAccessory() *accessory.A {
 	return acc.A
 }
 
-//NewAccessoryOutlet return AccessoryOutlet (args... are not used)
+//NewAccessoryOutlet return *Outlet.
+//  (COMPATIBILITY)  - left for compatibility, recommended NewAcc...(id, info, args..)
+//
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
 func NewAccessoryOutlet(info accessory.Info, args ...interface{}) *AccessoryOutlet {
 	acc := AccessoryOutlet{}
 	acc.A = accessory.New(info, accessory.TypeOutlet)
@@ -48,19 +49,24 @@ func NewAccessoryOutlet(info accessory.Info, args ...interface{}) *AccessoryOutl
 	return &acc
 }
 
+//NewAccOutlet return *Outlet.
+//  HomeKit requires that every accessory has a unique id, which must not change between system restarts.
+//  The best would be to specify the unique id for every accessory yourself.
+//
+//  id (uint64) - accessory aid
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
+func NewAccOutlet(id uint64, info accessory.Info, args ...interface{}) *AccessoryOutlet {
+	acc := AccessoryOutlet{}
+	acc.A = accessory.New(info, accessory.TypeOutlet)
+	acc.Outlet = service.NewOutlet()
+	acc.Outlet.OutletInUse.SetValue(true)
+	acc.AddS(acc.Outlet.S)
+	acc.A.Id = id
+	return &acc
+}
+
 func (acc *AccessoryOutlet) OnValuesRemoteUpdates(fn func()) {
 	acc.Outlet.On.OnValueRemoteUpdate(func(bool) { fn() })
 	// acc.Outlet.OutletInUse.OnValueRemoteUpdate(func(bool) { fn() })
-}
-
-func (acc *AccessoryOutlet) OnExample() {
-	go func() {
-		for range time.Tick(30 * time.Second) {
-			acc.Outlet.On.SetValue(!acc.Outlet.On.Value())
-			fmt.Printf("[%[1]T - %[2]v - %[3]v] update on: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), acc.Outlet.On.Value())
-		}
-	}()
-	acc.Outlet.On.OnValueRemoteUpdate(func(v bool) {
-		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update on: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
-	})
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -13,88 +14,118 @@ import (
 	"github.com/xxandev/homekit"
 )
 
-const (
-	BRG_NAME    string = "Bridge"
-	BRG_SN      string = "EX-Brg"
-	BRG_ADDRESS string = ":11102"
-	BRG_PIN     string = "12344321"
-	BRG_MODEL   string = "HAP-BRG"
+const MANUFACTURER string = ""
+
+type Config struct{ homekit.AccessoryConfig }
+
+var (
+	debug  bool
+	config Config
 )
 
-type AccessoryInterface interface {
-	GetAccessory() *accessory.A
-	OnExample()
-}
+func init() {
+	log.SetOutput(os.Stdout) // log.SetOutput(ioutil.Discard)
+	log.SetFlags(log.Ldate | log.Ltime | log.Lmsgprefix)
 
-//do not use such names func!!!
-func aadd(id uint64, a AccessoryInterface) *accessory.A {
-	a.OnExample()
-	acc := a.GetAccessory()
-	acc.Id = id
-	return acc
-}
+	flag.BoolVar(&debug, "d", false, "hap debug log activate")
+	flag.StringVar(&config.Name, "n", "Bridge", "homekit accessory name")
+	flag.StringVar(&config.SN, "sn", "Ex-Bridge", "homekit accessory serial number")
+	flag.StringVar(&config.Host, "h", "", "homekit host, example: 192.168.1.xxx")
+	flag.UintVar(&config.Port, "p", 10701, "homekit port, example: 10101, 10102...")
+	flag.StringVar(&config.Pin, "pin", "19378246", "homekit pin, example: 82143697, 13974682")
+	flag.Parse()
 
-//do not use such names func!!!
-func newinfo(name, sn, model string) accessory.Info {
-	return accessory.Info{Name: name, SerialNumber: sn, Model: model, Manufacturer: homekit.Manufacturer, Firmware: homekit.Firmware}
+	log.SetPrefix(fmt.Sprintf("[SHOWROOM] <%v> ", config.SN))
+	homekit.OnLog(debug)
 }
 
 func main() {
-	homekit.OnLog(false)
-	bridge := accessory.NewBridge(accessory.Info{Name: BRG_NAME, SerialNumber: BRG_SN, Model: BRG_MODEL, Manufacturer: homekit.Manufacturer, Firmware: homekit.Firmware})
-	bridge.A.Id = 1
-	llog := log.New(os.Stdout, fmt.Sprintf("[ %v / %v ] ", bridge.A.Info.SerialNumber.Value(), bridge.A.Info.Name.Value()), log.Ldate|log.Ltime|log.Lmsgprefix)
-	storage := hap.NewFsStore(fmt.Sprintf("./%s", bridge.Info.SerialNumber.Value()))
+	bridge := homekit.NewAccBridge(1, accessory.Info{Name: config.Name, SerialNumber: config.SN, Model: "HK-Showroom", Manufacturer: homekit.MANUFACTURER, Firmware: "1.0.0"})
+	storage := hap.NewFsStore(fmt.Sprintf("./%s", bridge.GetSN()))
 	server, err := hap.NewServer(storage, bridge.A,
-		aadd(2, homekit.NewAccessoryAirPurifier(newinfo("AirPurifier", "EX-AirPurifier", "HAP-AP"), 0, 0, 100, 1)),
-		aadd(3, homekit.NewAccessoryDoor(newinfo("Door", "EX-dr", "HAP-DR"))),
-		aadd(4, homekit.NewAccessoryFanRS(newinfo("Fan", "EX-fsp", "HAP-FRS"))),
-		aadd(5, homekit.NewAccessoryFanSwitch(newinfo("Fan", "EX-fsw", "HAP-FS"))),
-		aadd(6, homekit.NewAccessoryFan2RS(newinfo("Fan2", "EX-f2sp", "HAP-F2RS"))),
-		aadd(7, homekit.NewAccessoryFan2Switch(newinfo("Fan2", "EX-f2sw", "HAP-F2S"))),
-		aadd(8, homekit.NewAccessoryFaucet(newinfo("Faucet", "EX-fc", "HAP-FCT"))),
-		aadd(9, homekit.NewAccessoryGate(newinfo("Gate", "EX-gt", "HAP-DT"))),
-		aadd(10, homekit.NewAccessoryHumidifierDehumidifier(newinfo("HumDehum", "EX-hdm", "HAP-HMD"))),
-		aadd(11, homekit.NewAccessoryIrrigation(newinfo("Irrigation", "EX-irg", "HAP-IRG"))),
-		aadd(12, homekit.NewAccessoryLightbulbColored(newinfo("LightColor", "EX-lc", "HAP-LBC"))),
-		aadd(13, homekit.NewAccessoryLightbulbDimmer(newinfo("LightDimm", "EX-ld", "HAP-LBD"))),
-		aadd(14, homekit.NewAccessoryLightbulbSwitch(newinfo("LightSwitch", "EX-ls", "HAP-LBS"))),
-		aadd(15, homekit.NewAccessoryLock(newinfo("Lock", "EX-lock", "HAP-LOCK"))),
-		aadd(16, homekit.NewAccessoryOutlet(newinfo("Outlet", "EX-sw", "HAP-OTL"))),
-		aadd(17, homekit.NewAccessorySecuritySystem(newinfo("Alarm", "EX-scr", "HAP-SS"))),
-		aadd(18, homekit.NewAccessorySensorAirQuality(newinfo("AirQuality", "EX-saq", "HAP-SAQ"))),
-		aadd(19, homekit.NewAccessorySensorContact(newinfo("Contact", "EX-sct", "HAP-SCNT"))),
-		aadd(20, homekit.NewAccessorySensorDioxide(newinfo("Dioxide", "EX-sdx", "HAP-SDXD"))),
-		aadd(21, homekit.NewAccessorySensorHumidity(newinfo("Humidity", "EX-shun", "HAP-SHUM"))),
-		aadd(22, homekit.NewAccessorySensorLeak(newinfo("Leak", "EX-sleak", "HAP-SL"))),
-		aadd(23, homekit.NewAccessorySensorLight(newinfo("Light", "EX-slt", "HAP-SLG"))),
-		aadd(24, homekit.NewAccessorySensorMonoxide(newinfo("Monoxide", "EX-smx", "HAP-SMNX"))),
-		aadd(25, homekit.NewAccessorySensorMotion(newinfo("Motion", "EX-smt", "HAP-SMNT"))),
-		aadd(26, homekit.NewAccessorySensorSmoke(newinfo("Smoke", "EX-ssm", "HAP-SSMK"))),
-		aadd(27, homekit.NewAccessorySensorTemperature(newinfo("Temperature", "EX-stemp", "HAP-STEMP"))),
-		aadd(28, homekit.NewAccessorySwitch(newinfo("Switch", "EX-sw", "HAP-SW"))),
-		aadd(29, homekit.NewAccessoryTelevision(newinfo("Television", "EX-tv", "HAP-TV"))),
-		aadd(30, homekit.NewAccessoryThermostatAutomatic(newinfo("ThermAtm", "EX-trmatm", "HAP-TMA"))),
-		aadd(31, homekit.NewAccessoryThermostat(newinfo("Thermostat", "EX-trm", "HAP-TM"))),
-		aadd(32, homekit.NewAccessoryThermostat(newinfo("ThermostatHtn", "EX-trmhtn", "HAP-TM"), 0, 0, 1, 1)),
-		aadd(33, homekit.NewAccessoryThermostat(newinfo("ThermostatUc", "EX-trmhuc", "HAP-TM"), 3, 3, 3, 0)),
-		aadd(34, homekit.NewAccessoryWindow(newinfo("Window", "EX-wnd", "HAP-W"))),
-		aadd(35, homekit.NewAccessoryWindowCovering(newinfo("WindowCovering", "EX-wndcvr", "HAP-WCR"))),
+		ExampleSwitch(10, "CY"),
+		ExampleSwitch(11, "CY"),
+		ExampleSwitch(12, "CY"),
+		ExampleSensorMotion(13, "CY"),
+		ExampleDoor(14, "CY"),
+		ExampleGate(15, "CY"),
+		ExampleIrrigation(16, "CY"),
+		ExampleSwitch(20, "GT"),
+		ExampleSwitch(21, "GT"),
+		ExampleSwitch(22, "GT"),
+		ExampleSwitch(23, "GT"),
+		ExampleGate(24, "GT"),
+		ExampleGate(25, "GT"),
+		ExampleOutlet(26, "GT"),
+		ExampleOutlet(27, "GT"),
+		ExampleAirPurifier(30, "KT"),
+		ExampleFaucet(31, "KT"),
+		ExampleOutlet(32, "KT"),
+		ExampleOutlet(33, "KT"),
+		ExampleSensorLeak(34, "KT"),
+		ExampleSensorHumidity(35, "KT"),
+		ExampleSensorMotion(36, "KT"),
+		ExampleSwitch(37, "KT"),
+		ExampleSwitch(38, "KT"),
+		ExampleLightbulbColored(39, "KT"),
+		ExampleLightbulbDimmer(40, "KT"),
+		ExampleWindow(41, "KT"),
+		ExampleWindowCovering(42, "KT"),
+		ExampleThermostatClimate(43, "KT"),
+		ExampleOutlet(50, "BDR"),
+		ExampleOutlet(51, "BDR"),
+		ExampleSwitch(52, "BDR"),
+		ExampleSwitch(53, "BDR"),
+		ExampleLightbulbColored(54, "BDR"),
+		ExampleLightbulbDimmer(55, "BDR"),
+		ExampleSensorHumidity(56, "BDR"),
+		ExampleSensorMotion(57, "BDR"),
+		ExampleWindowCovering(58, "BDR"),
+		ExampleThermostatClimate(59, "BDR"),
+		ExampleOutlet(70, "LR"),
+		ExampleOutlet(71, "LR"),
+		ExampleSwitch(72, "LR"),
+		ExampleSwitch(73, "LR"),
+		ExampleLightbulbColored(74, "LR"),
+		ExampleLightbulbDimmer(75, "LR"),
+		ExampleSensorHumidity(76, "LR"),
+		ExampleSensorMotion(77, "LR"),
+		ExampleWindowCovering(78, "LR"),
+		ExampleThermostatClimate(79, "LR"),
+		ExampleThermostatHeating(80, "LR"),
+		ExampleLightbulbColored(90, "WC"),
+		ExampleLightbulbDimmer(91, "WC"),
+		ExampleFanRS(92, "WC"),
+		ExampleOutlet(93, "WC"),
+		ExampleSensorLeak(94, "WC"),
+		ExampleSensorMotion(95, "WC"),
+		ExampleFaucet(96, "WC"),
+		ExampleLightbulbColored(100, "BR"),
+		ExampleLightbulbDimmer(101, "BR"),
+		ExampleSensorHumidity(102, "BR"),
+		ExampleFanRS(103, "BR"),
+		ExampleOutlet(104, "BR"),
+		ExampleSensorLeak(105, "BR"),
+		ExampleSensorMotion(106, "BR"),
+		ExampleSensorContact(107, "BR"),
+		ExampleSensorContact(108, "BR"),
+		ExampleWindowCovering(109, "BR"),
+		ExampleFaucet(110, "BR"),
 	)
 	if err != nil {
-		llog.Fatalf("error create hap server: %v\n", err)
+		log.Fatalf("error create hap server: %v\n", err)
 	}
-	llog.Printf("hap server create successful.\n")
+	log.Printf("hap server create successful.\n")
 	sig := make(chan os.Signal)
 	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
 	ctx, cancel := context.WithCancel(context.Background())
 	go func() {
 		<-sig
-		llog.Printf("stop program signal.\n")
+		log.Printf("stop program signal.\n")
 		signal.Stop(sig)
 		cancel()
 	}()
-	homekit.SetServer(server, BRG_ADDRESS, BRG_PIN)
-	llog.Printf("hap server starting set, address %v, pin %v.\n", server.Addr, server.Pin)
-	llog.Fatalf("hap server: %v\n", server.ListenAndServe(ctx))
+	homekit.SetServer(server, config.GetAddress(), config.GetPin())
+	log.Printf("hap server starting set, address %v, pin %v.\n", server.Addr, server.Pin)
+	log.Fatalf("hap server: %v\n", server.ListenAndServe(ctx))
 }

@@ -1,9 +1,6 @@
 package homekit
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/brutella/hap/accessory"
 	haps "github.com/xxandev/homekit/hap-service"
 )
@@ -38,7 +35,11 @@ func (acc *AccessoryLightbulbDimmer) GetAccessory() *accessory.A {
 	return acc.A
 }
 
-//NewAccessoryLightbulbDimmer return AccessoryLightbulbDimmer (args... are not used)
+//NewAccessoryLightbulbDimmer return *LightbulbDimmer.
+//  (COMPATIBILITY)  - left for compatibility, recommended NewAcc...(id, info, args..)
+//
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
 func NewAccessoryLightbulbDimmer(info accessory.Info, args ...interface{}) *AccessoryLightbulbDimmer {
 	acc := AccessoryLightbulbDimmer{}
 	acc.A = accessory.New(info, accessory.TypeLightbulb)
@@ -47,22 +48,23 @@ func NewAccessoryLightbulbDimmer(info accessory.Info, args ...interface{}) *Acce
 	return &acc
 }
 
+//NewAccLightbulbDimmer return *LightbulbDimmer.
+//  HomeKit requires that every accessory has a unique id, which must not change between system restarts.
+//  The best would be to specify the unique id for every accessory yourself.
+//
+//  id (uint64) - accessory aid
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
+func NewAccLightbulbDimmer(id uint64, info accessory.Info, args ...interface{}) *AccessoryLightbulbDimmer {
+	acc := AccessoryLightbulbDimmer{}
+	acc.A = accessory.New(info, accessory.TypeLightbulb)
+	acc.LightbulbDimmer = haps.NewLightbulbDimmer()
+	acc.AddS(acc.LightbulbDimmer.S)
+	acc.A.Id = id
+	return &acc
+}
+
 func (acc *AccessoryLightbulbDimmer) OnValuesRemoteUpdates(fn func()) {
 	acc.LightbulbDimmer.On.OnValueRemoteUpdate(func(bool) { fn() })
 	acc.LightbulbDimmer.Brightness.OnValueRemoteUpdate(func(int) { fn() })
-}
-
-func (acc *AccessoryLightbulbDimmer) OnExample() {
-	go func() {
-		for range time.Tick(30 * time.Second) {
-			acc.LightbulbDimmer.On.SetValue(!acc.LightbulbDimmer.On.Value())
-			fmt.Printf("[%[1]T - %[2]v - %[3]v] update on: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), acc.LightbulbDimmer.On.Value())
-		}
-	}()
-	acc.LightbulbDimmer.On.OnValueRemoteUpdate(func(v bool) {
-		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update on: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
-	})
-	acc.LightbulbDimmer.Brightness.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update brightness: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
-	})
 }

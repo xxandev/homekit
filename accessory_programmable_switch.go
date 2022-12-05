@@ -35,7 +35,11 @@ func (acc *AccessoryProgrammableSwitch) GetAccessory() *accessory.A {
 	return acc.A
 }
 
-// NewAccessoryProgrammableSwitch return AccessoryProgrammableSwitch (args... are not used)
+// NewAccessoryProgrammableSwitch returns *ProgrammableSwitch.
+//  (COMPATIBILITY)  - left for compatibility, recommended NewAcc...(id, info, args..)
+//
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
 func NewAccessoryProgrammableSwitch(info accessory.Info, args ...interface{}) *AccessoryProgrammableSwitch {
 	acc := AccessoryProgrammableSwitch{}
 	acc.A = accessory.New(info, accessory.TypeSwitch)
@@ -44,5 +48,20 @@ func NewAccessoryProgrammableSwitch(info accessory.Info, args ...interface{}) *A
 	return &acc
 }
 
+// NewAccessoryProgrammableSwitch returns *ProgrammableSwitch.
+//  HomeKit requires that every accessory has a unique id, which must not change between system restarts.
+//  The best would be to specify the unique id for every accessory yourself.
+//
+//  id (uint64) - accessory aid
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
+func NewAccProgrammableSwitch(id uint64, info accessory.Info, args ...interface{}) *AccessoryProgrammableSwitch {
+	acc := AccessoryProgrammableSwitch{}
+	acc.A = accessory.New(info, accessory.TypeSwitch)
+	acc.ProgrammableSwitch = service.NewStatelessProgrammableSwitch()
+	acc.AddS(acc.ProgrammableSwitch.S)
+	acc.A.Id = id
+	return &acc
+}
+
 func (acc *AccessoryProgrammableSwitch) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessoryProgrammableSwitch) OnExample()                      {}

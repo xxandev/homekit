@@ -1,8 +1,6 @@
 package homekit
 
 import (
-	"fmt"
-
 	"github.com/brutella/hap/accessory"
 	"github.com/brutella/hap/service"
 )
@@ -37,7 +35,11 @@ func (acc *AccessoryGate) GetAccessory() *accessory.A {
 	return acc.A
 }
 
-//NewAccessoryGate return AccessoryGate (args... are not used)
+//NewAccessoryGate return *GarageDoorOpener.
+//  (COMPATIBILITY)  - left for compatibility, recommended NewAcc...(id, info, args..)
+//
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
 func NewAccessoryGate(info accessory.Info, args ...interface{}) *AccessoryGate {
 	acc := AccessoryGate{}
 	acc.A = accessory.New(info, accessory.TypeGarageDoorOpener)
@@ -46,14 +48,23 @@ func NewAccessoryGate(info accessory.Info, args ...interface{}) *AccessoryGate {
 	return &acc
 }
 
+//NewAccGate return *GarageDoorOpener.
+//  HomeKit requires that every accessory has a unique id, which must not change between system restarts.
+//  The best would be to specify the unique id for every accessory yourself.
+//
+//  id (uint64) - accessory aid
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
+func NewAccGate(id uint64, info accessory.Info, args ...interface{}) *AccessoryGate {
+	acc := AccessoryGate{}
+	acc.A = accessory.New(info, accessory.TypeGarageDoorOpener)
+	acc.GarageDoorOpener = service.NewGarageDoorOpener()
+	acc.AddS(acc.GarageDoorOpener.S)
+	acc.A.Id = id
+	return &acc
+}
+
 func (acc *AccessoryGate) OnValuesRemoteUpdates(fn func()) {
 	acc.GarageDoorOpener.TargetDoorState.OnValueRemoteUpdate(func(int) { fn() })
 	// acc.GarageDoorOpener.ObstructionDetected.OnValueRemoteUpdate(func(bool) { fn() })
-}
-
-func (acc *AccessoryGate) OnExample() {
-	acc.GarageDoorOpener.TargetDoorState.OnValueRemoteUpdate(func(v int) {
-		acc.GarageDoorOpener.CurrentDoorState.SetValue(v)
-		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update target state: %[4]T - %[4]v\n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
-	})
 }

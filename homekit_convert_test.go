@@ -2,69 +2,101 @@ package homekit
 
 import "testing"
 
-func TestConvertBool(t *testing.T) {
-	var correctValues, errorValues []interface{}
-	correctValues = append(correctValues, true, false)
-	errorValues = append(errorValues, "val", 2.32, 0.1, nil, "true", "false", "123", 123, 1, 0)
-	if tob(correctValues[0], false) == false {
-		t.Fatalf("error test - correctValues acchc.toBool(false, %v[%T])\n", correctValues[0], correctValues[0])
+func TestToBool(t *testing.T) {
+	type tester struct {
+		val interface{}
+		def bool
+		res bool
 	}
-	if tob(correctValues[1], true) == true {
-		t.Fatalf("error test - correctValues acchc.toBool(true, %v[%T])\n", correctValues[1], correctValues[1])
+	testik := []tester{
+		{val: "val", def: true, res: true},
+		{val: "val", def: false, res: false},
+		{val: "false", def: true, res: true},
+		{val: "false", def: false, res: false},
+		{val: "true", def: true, res: true},
+		{val: "true", def: false, res: false},
+		{val: 1, def: true, res: true},
+		{val: 1, def: false, res: false},
+		{val: 0, def: true, res: true},
+		{val: 0, def: false, res: false},
+		{val: 0.1, def: true, res: true},
+		{val: 0.1, def: false, res: false},
+		{val: -1, def: true, res: true},
+		{val: -1, def: false, res: false},
+		{val: -0.1, def: true, res: true},
+		{val: -0.1, def: false, res: false},
+		{val: nil, def: true, res: true},
+		{val: nil, def: false, res: false},
+		{val: 0x1, def: true, res: true},
+		{val: 0x1, def: false, res: false},
+		{val: 0x0, def: true, res: true},
+		{val: 0x0, def: false, res: false},
+		{val: true, def: false, res: true},
+		{val: false, def: true, res: false},
 	}
-	for i := range errorValues {
-		if tob(errorValues[i], true) != true {
-			t.Fatal("error test - errorValues acchc.toBool(-127,", errorValues[i], ")")
-		}
-	}
-}
-
-func TestConvertInt(t *testing.T) {
-	var correctValues, errorValues []interface{}
-	correctValues = append(correctValues, 11, 12, 23, 4652, 11, 254, 1, 0, 125)
-	errorValues = append(errorValues, "val", 2.32, 1.0, 0.1, 0.0, nil, true, false, "123")
-	for i := range correctValues {
-		if toi(correctValues[i], -127) == -127 {
-			t.Fatalf("error test - correctValues acchc.toInt(-127, %v[%T])\n", correctValues[i], correctValues[i])
-		}
-		if toi32(correctValues[i], -127) == -127 {
-			t.Fatalf("error test - correctValues acchc.toInt32(-127, %v[%T])\n", correctValues[i], correctValues[i])
-		}
-		if toi64(correctValues[i], -127) == -127 {
-			t.Fatalf("error test - correctValues acchc.toInt64(-127, %v[%T])\n", correctValues[i], correctValues[i])
-		}
-	}
-	for i := range errorValues {
-		if toi(errorValues[i], -127) != -127 {
-			t.Fatalf("error test - errorValues acchc.toInt(-127, %v[%T])\n", errorValues[i], errorValues[i])
-		}
-		if toi32(errorValues[i], -127) != -127 {
-			t.Fatalf("error test - errorValues acchc.toInt32(-127, %v[%T])\n", errorValues[i], errorValues[i])
-		}
-		if toi64(errorValues[i], -127) != -127 {
-			t.Fatalf("error test - errorValues acchc.toInt64(-127, %v[%T])\n", errorValues[i], errorValues[i])
+	for i := range testik {
+		if tob(testik[i].val, testik[i].def) != testik[i].res {
+			t.Fatalf("error test func homekit.tob(%[1]v[%[1]T], %[2]v[%[2]T]) != %[3]v[%[3]T]\n", testik[i].val, testik[i].def, testik[i].res)
 		}
 	}
 }
 
-func TestConvertFloat(t *testing.T) {
-	var correctValues, errorValues []interface{}
-	correctValues = append(correctValues, 0.0, 0.1, 1.0, 123.321, 1.001, 0, 1, 123, 6350453)
-	errorValues = append(errorValues, "val", nil, true, false, "123", "123.123")
-	for i := range correctValues {
-		if tof32(correctValues[i], -0.127) == -0.127 {
-			t.Fatalf("error test - correctValues acchc.convertFloat32(-0.127, %v[%T])\n", correctValues[i], correctValues[i])
-		}
-		if tof64(correctValues[i], -0.127) == -0.127 {
-			t.Fatalf("test Fatal - correctValues acchc.convertFloat64(-0.127, %v[%T])\n", correctValues[i], correctValues[i])
+func TestToInt(t *testing.T) {
+	type tester struct {
+		val interface{}
+		def int
+		res int
+	}
+	testik := []tester{
+		{val: "val", def: 256, res: 256},
+		{val: "32", def: 256, res: 256},
+		{val: "123.8", def: 256, res: 256},
+		{val: true, def: 256, res: 256},
+		{val: false, def: 256, res: 256},
+		{val: 1, def: 256, res: 1},
+		{val: 0, def: 256, res: 0},
+		{val: 0.1, def: 256, res: 256},
+		{val: -1, def: 256, res: -1},
+		{val: -0.1, def: 256, res: 256},
+		{val: 128.64, def: 256, res: 256},
+		{val: -128.64, def: 256, res: 256},
+		{val: nil, def: 256, res: 256},
+		{val: 0x1, def: 256, res: 1},
+		{val: 0x0, def: 256, res: 0},
+	}
+	for i := range testik {
+		if toi(testik[i].val, testik[i].def) != testik[i].res {
+			t.Fatalf("error test func homekit.toi(%[1]v[%[1]T], %[2]v[%[2]T]) != %[3]v[%[3]T]\n", testik[i].val, testik[i].def, testik[i].res)
 		}
 	}
-	for i := range errorValues {
-		if tof32(errorValues[i], -0.127) != -0.127 {
-			t.Fatalf("error test - errorValues acchc.convertFloat32(-0.127, %v[%T])\n", errorValues[i], errorValues[i])
-		}
-		if tof64(errorValues[i], -0.127) != -0.127 {
-			t.Fatalf("test Fatal - errorValues acchc.convertFloat64(-0.127, %v[%T])\n", errorValues[i], errorValues[i])
+}
+
+func TestToFloat64(t *testing.T) {
+	type tester struct {
+		val interface{}
+		def float64
+		res float64
+	}
+	testik := []tester{
+		{val: "val", def: 256.00, res: 256.00},
+		{val: "32", def: 256.00, res: 256.00},
+		{val: "123.8", def: 256.00, res: 256.00},
+		{val: true, def: 256.00, res: 256.00},
+		{val: false, def: 256.00, res: 256.00},
+		{val: 1, def: 256, res: 1.00},
+		{val: 0, def: 256, res: 0.00},
+		{val: 0.1, def: 256.00, res: 0.1},
+		{val: -1, def: 256.00, res: -1.00},
+		{val: -0.1, def: 256.00, res: -0.1},
+		{val: 128.64, def: 256.00, res: 128.64},
+		{val: -128.64, def: 256.00, res: -128.64},
+		{val: nil, def: 256.00, res: 256.00},
+		{val: 0x1, def: 256.00, res: 1.00},
+		{val: 0x0, def: 256.00, res: 0.00},
+	}
+	for i := range testik {
+		if tof64(testik[i].val, testik[i].def) != testik[i].res {
+			t.Fatalf("error test func homekit.tof64(%[1]v[%[1]T], %[2]v[%[2]T]) != %[3]v[%[3]T]\n", testik[i].val, testik[i].def, testik[i].res)
 		}
 	}
 }

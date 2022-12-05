@@ -1,9 +1,6 @@
 package homekit
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/brutella/hap/accessory"
 	"github.com/brutella/hap/service"
 )
@@ -38,7 +35,11 @@ func (acc *AccessorySensorContact) GetAccessory() *accessory.A {
 	return acc.A
 }
 
-//NewAccessorySensorContact return AccessorySensorAirQuality (args... are not used)
+//NewAccessorySensorContact return *SensorContact.
+//  (COMPATIBILITY)  - left for compatibility, recommended NewAcc...(id, info, args..)
+//
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
 func NewAccessorySensorContact(info accessory.Info, args ...interface{}) *AccessorySensorContact {
 	acc := AccessorySensorContact{}
 	acc.A = accessory.New(info, accessory.TypeSensor)
@@ -47,16 +48,20 @@ func NewAccessorySensorContact(info accessory.Info, args ...interface{}) *Access
 	return &acc
 }
 
-func (acc *AccessorySensorContact) OnValuesRemoteUpdates(fn func()) {}
-func (acc *AccessorySensorContact) OnExample() {
-	go func() {
-		for range time.Tick(30 * time.Second) {
-			if acc.ContactSensor.ContactSensorState.Value() > 0 {
-				acc.ContactSensor.ContactSensorState.SetValue(0)
-			} else {
-				acc.ContactSensor.ContactSensorState.SetValue(1)
-			}
-			fmt.Printf("[%[1]T - %[2]v - %[3]v] update current state: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), acc.ContactSensor.ContactSensorState.Value())
-		}
-	}()
+//NewAccSensorContact return *SensorContact.
+//  HomeKit requires that every accessory has a unique id, which must not change between system restarts.
+//  The best would be to specify the unique id for every accessory yourself.
+//
+//  id (uint64) - accessory aid
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
+func NewAccSensorContact(id uint64, info accessory.Info, args ...interface{}) *AccessorySensorContact {
+	acc := AccessorySensorContact{}
+	acc.A = accessory.New(info, accessory.TypeSensor)
+	acc.ContactSensor = service.NewContactSensor()
+	acc.AddS(acc.ContactSensor.S)
+	acc.A.Id = id
+	return &acc
 }
+
+func (acc *AccessorySensorContact) OnValuesRemoteUpdates(fn func()) {}

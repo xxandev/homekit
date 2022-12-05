@@ -1,8 +1,6 @@
 package homekit
 
 import (
-	"fmt"
-
 	"github.com/brutella/hap/accessory"
 	haps "github.com/xxandev/homekit/hap-service"
 )
@@ -37,25 +35,36 @@ func (acc *AccessoryFan2RS) GetAccessory() *accessory.A {
 	return acc.A
 }
 
-//NewAccessoryFanV2Multifunc return AccessoryFanV2Multifunc (args... are not used)
+//NewAccessoryFan2RS return *FanV2RS.
+//  (COMPATIBILITY)  - left for compatibility, recommended NewAcc...(id, info, args..)
+//
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
 func NewAccessoryFan2RS(info accessory.Info, args ...interface{}) *AccessoryFan2RS {
 	acc := AccessoryFan2RS{}
 	acc.A = accessory.New(info, accessory.TypeFan)
-	acc.Fan2 = haps.NewFanV2Multifunc()
+	acc.Fan2 = haps.NewFanV2RS()
 	acc.AddS(acc.Fan2.S)
+	return &acc
+}
+
+//NewAccFan2RS return *FanV2RS.
+//  HomeKit requires that every accessory has a unique id, which must not change between system restarts.
+//  The best would be to specify the unique id for every accessory yourself.
+//
+//  id (uint64) - accessory aid
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args... are not used
+func NewAccFan2RS(id uint64, info accessory.Info, args ...interface{}) *AccessoryFan2RS {
+	acc := AccessoryFan2RS{}
+	acc.A = accessory.New(info, accessory.TypeFan)
+	acc.Fan2 = haps.NewFanV2RS()
+	acc.AddS(acc.Fan2.S)
+	acc.A.Id = id
 	return &acc
 }
 
 func (acc *AccessoryFan2RS) OnValuesRemoteUpdates(fn func()) {
 	acc.Fan2.Active.OnValueRemoteUpdate(func(int) { fn() })
 	acc.Fan2.RotationSpeed.OnValueRemoteUpdate(func(float64) { fn() })
-}
-
-func (acc *AccessoryFan2RS) OnExample() {
-	acc.Fan2.Active.OnValueRemoteUpdate(func(v int) {
-		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update active: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
-	})
-	acc.Fan2.RotationSpeed.OnValueRemoteUpdate(func(v float64) {
-		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update rotation speed: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
-	})
 }

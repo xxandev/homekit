@@ -2,46 +2,85 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"log"
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
 	"github.com/brutella/hap"
-	"github.com/brutella/hap/accessory"
 	"github.com/xxandev/homekit"
 )
 
-const (
-	NAME    string = "Door"
-	SN      string = "EX-Door"
-	MODEL   string = "HAP-DR"
-	ADDRESS string = ":11103"
-	PIN     string = "12344321"
+type Config struct{ homekit.AccessoryConfig }
+
+var (
+	debug  bool
+	config Config
 )
 
+func init() {
+	log.SetOutput(os.Stdout) // log.SetOutput(ioutil.Discard)
+	log.SetFlags(log.Ldate | log.Ltime | log.Lmsgprefix)
+
+	flag.BoolVar(&debug, "d", false, "hap debug log activate")
+	flag.StringVar(&config.Name, "n", "Door", "homekit accessory name")
+	flag.StringVar(&config.SN, "sn", "Ex-Door", "homekit accessory serial number")
+	flag.StringVar(&config.Host, "h", "", "homekit host, example: 192.168.1.xxx")
+	flag.UintVar(&config.Port, "p", 10703, "homekit port, example: 10101, 10102...")
+	flag.StringVar(&config.Pin, "pin", "19736428", "homekit pin, example: 82143697, 13974682")
+	flag.Parse()
+
+	homekit.OnLog(debug)
+}
+
 func main() {
-	homekit.OnLog(false)
-	acc := homekit.NewAccessoryDoor(accessory.Info{Name: NAME, SerialNumber: SN, Model: MODEL, Manufacturer: homekit.Manufacturer, Firmware: homekit.Firmware})
-	llog := log.New(os.Stdout, fmt.Sprintf("[ %v / %v ] ", acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value()), log.Ldate|log.Ltime|log.Lmsgprefix)
-	storage := hap.NewFsStore(fmt.Sprintf("./%s", acc.Info.SerialNumber.Value()))
-	server, err := hap.NewServer(storage, acc.A)
+	acc := homekit.NewAccessoryDoor(config.GetInfo("Ex-Door"))
+	log.SetPrefix(fmt.Sprintf("[%T] <%v> ", acc, acc.GetSN()))
+	storage := hap.NewFsStore(fmt.Sprintf("./%s", acc.GetSN()))
+	server, err := hap.NewServer(storage, acc.GetAccessory())
 	if err != nil {
-		llog.Fatalf("error create hap server: %v\n", err)
+		log.Fatalf("error create hap server: %v\n", err)
 	}
-	llog.Printf("hap server create successful.\n")
-	acc.OnExample()
+	log.Printf("hap server create successful.\n")
+	command := make(chan int, 5)
+	go func() {
+		callbackT := time.NewTimer(time.Millisecond * 10000)
+		for {
+			select {
+			case cmd := <-command:
+				callbackT.Stop()
+				callbackT.Reset(time.Millisecond * 10000)
+				acc.Door.TargetPosition.SetValue(cmd)
+				acc.Door.CurrentPosition.SetValue(cmd)
+				log.Printf("remote update target position, current: %[1]T - %[1]v, target: %[2]T - %[2]v\n", acc.Door.CurrentPosition.Value(), acc.Door.TargetPosition.Value())
+			case <-callbackT.C:
+				acc.Door.TargetPosition.SetValue(0)
+				acc.Door.CurrentPosition.SetValue(0)
+				log.Printf("update position, current: %[1]T - %[1]v, target: %[2]T - %[2]v\n", acc.Door.CurrentPosition.Value(), acc.Door.TargetPosition.Value())
+			case <-time.Tick(time.Millisecond * 320000):
+				callbackT.Stop()
+				callbackT.Reset(time.Millisecond * 10000)
+				acc.Door.TargetPosition.SetValue(100)
+				acc.Door.CurrentPosition.SetValue(100)
+				log.Printf("update position, current: %[1]T - %[1]v, target: %[2]T - %[2]v\n", acc.Door.CurrentPosition.Value(), acc.Door.TargetPosition.Value())
+			}
+		}
+	}()
+	acc.Door.TargetPosition.OnValueRemoteUpdate(func(v int) { command <- v })
+
 	sig := make(chan os.Signal)
 	signal.Notify(sig, os.Interrupt, syscall.SIGTERM)
 	ctx, cancel := context.WithCancel(context.Background())
 	go func() {
 		<-sig
-		llog.Printf("stop program signal.\n")
+		log.Println("program stop.")
 		signal.Stop(sig)
 		cancel()
 	}()
-	homekit.SetServer(server, ADDRESS, PIN)
-	llog.Printf("hap server starting set, address %v, pin %v.\n", server.Addr, server.Pin)
-	llog.Fatalf("hap server: %v\n", server.ListenAndServe(ctx))
+	homekit.SetServer(server, config.GetAddress(), config.GetPin())
+	log.Printf("hap server starting set, address %v, pin %v.\n", server.Addr, server.Pin)
+	log.Fatalf("hap server: %v\n", server.ListenAndServe(ctx))
 }

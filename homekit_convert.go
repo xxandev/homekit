@@ -1,80 +1,36 @@
 package homekit
 
-func tob(value interface{}, def bool) bool {
-	if val, ok := value.(bool); ok {
-		return val
+func tob(v any, def bool) bool {
+	if r, ok := v.(bool); ok {
+		return r
 	}
 	return def
 }
 
-func toi(value interface{}, def int) int {
-	switch val := value.(type) {
+func toi(v any, def int) int {
+	switch r := v.(type) {
 	case int:
-		return val
+		return r
 	case int8:
-		return int(val)
+		return int(r)
 	case int16:
-		return int(val)
+		return int(r)
 	case int32:
-		return int(val)
+		return int(r)
 	case int64:
-		return int(val)
+		return int(r)
 	}
 	return def
 }
 
-func toi32(value interface{}, def int32) int32 {
-	switch val := value.(type) {
-	case int32:
-		return val
-	case int:
-		return int32(val)
-	case int8:
-		return int32(val)
-	case int16:
-		return int32(val)
-	case int64:
-		return int32(val)
-	}
-	return def
-}
-
-func toi64(value interface{}, def int64) int64 {
-	switch val := value.(type) {
-	case int64:
-		return val
-	case int:
-		return int64(val)
-	case int8:
-		return int64(val)
-	case int16:
-		return int64(val)
-	case int32:
-		return int64(val)
-	}
-	return def
-}
-
-func tof32(value interface{}, def float32) float32 {
-	switch val := value.(type) {
-	case float32:
-		return val
+func tof64(v any, def float64) float64 {
+	switch r := v.(type) {
 	case float64:
-		return float32(val)
-	case int:
-		return float32(val)
-	}
-	return def
-}
-
-func tof64(value interface{}, def float64) float64 {
-	switch val := value.(type) {
-	case float64:
-		return val
+		return r
 	case float32:
-		return float64(val)
+		return float64(r)
 	case int:
-		return float64(val)
+		return float64(r)
 	}
 	return def
 }

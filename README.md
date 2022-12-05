@@ -1,30 +1,30 @@
-# HomeKit  Accessoryies
+# HomeKit Accessories
 This repository is an add-on to [brutella/hap](https://github.com/brutella/hap) from Matthias Hochgatterer 
 
 ![](https://github.com/xxandev/homekit/blob/main/gallery/homekit.jpg)
 
-![](https://github.com/xxandev/homekit/blob/main/gallery/home_on.png)
+![](https://github.com/xxandev/homekit/blob/main/gallery/homekit_1.png)
 
-![](https://github.com/xxandev/homekit/blob/main/gallery/home_off.png)
+![](https://github.com/xxandev/homekit/blob/main/gallery/homekit_2.png)
 
 
-### Development environment
+### Environment
 
 **OS:** [ubuntu](https://ubuntu.com/) [22.04 lts](https://ubuntu.com/download/desktop/thank-you?version=22.04&architecture=amd64)
 
-**Lang:** [golang](https://golang.org/) [v1.18](https://golang.org/dl/) 
+**Lang:** [golang 1.18](https://golang.org/)
 
 **Lib:** [hap](https://github.com/brutella/hap)
 
-**APPLE DEVICE:** ipad/iphone (os 15.5)
+**APPLE DEVICE:** ipad/iphone (os 16.1)
 
-## List accessories:
-- [Bridge](https://github.com/xxandev/homekit/tree/main/example/bridge)
+## Accessory List:
+- [Bridge](https://github.com/xxandev/homekit/tree/main/example/_bridge)
 - [Air Purifier](https://github.com/xxandev/homekit/tree/main/example/air_purifier)
 - [Humidifier dehumidifier](https://github.com/xxandev/homekit/tree/main/example/humidifier_dehumidifier)
 - [Door](https://github.com/xxandev/homekit/tree/main/example/door)
 - [Lock](https://github.com/xxandev/homekit/tree/main/example/lock)
-- [Fan](https://github.com/xxandev/homekit/tree/main/example/fan_controlled)
+- [Fan](https://github.com/xxandev/homekit/tree/main/example/fan_rs)
 - [Faucet](https://github.com/xxandev/homekit/tree/main/example/faucet)
 - [Gate (GarageDoorOpener)](https://github.com/xxandev/homekit/tree/main/example/gate)
 - [Irrigation](https://github.com/xxandev/homekit/tree/main/example/irrigation)
@@ -37,7 +37,7 @@ This repository is an add-on to [brutella/hap](https://github.com/brutella/hap) 
 - [Sensor humidity](https://github.com/xxandev/homekit/tree/main/example/sensor_humidity)
 - [Sensor leak](https://github.com/xxandev/homekit/tree/main/example/sensor_leak)
 - [Sensor light](https://github.com/xxandev/homekit/tree/main/example/sensor_light)
-- [Sensor monaxide](https://github.com/xxandev/homekit/tree/main/example/sensor_monaxide)
+- [Sensor monoxide](https://github.com/xxandev/homekit/tree/main/example/sensor_monaxide)
 - [Sensor motion](https://github.com/xxandev/homekit/tree/main/example/sensor_motion)
 - [Sensor smoke](https://github.com/xxandev/homekit/tree/main/example/sensor_smoke)
 - [Sensor temperature](https://github.com/xxandev/homekit/tree/main/example/sensor_temp)
@@ -46,7 +46,7 @@ This repository is an add-on to [brutella/hap](https://github.com/brutella/hap) 
 - [Thermostat](https://github.com/xxandev/homekit/tree/main/example/thermostat_climate)
 - [Window covering](https://github.com/xxandev/homekit/tree/main/example/window_covering)
 - [Window](https://github.com/xxandev/homekit/tree/main/example/window)
-- [Camera](https://github.com/brutella/hkcam) [**dev**](https://github.com/brutella/hkcam)
-- [Doorbell](https://github.com/ra1nb0w/hkdoorbell) [**dev**](https://github.com/ra1nb0w/hkdoorbell)
+- [Camera](https://github.com/brutella/hkcam) [**rtsp**](https://github.com/dbarrosop/hkcam/tree/rtsp)
+- [Doorbell](https://github.com/ra1nb0w/hkdoorbell)
 - [Smart speaker](https://github.com/xxandev/homekit/tree/main/example/smart_speaker) [**dev**](https://github.com/homebridge/HAP-NodeJS/blob/master/src/accessories/SmartSpeaker_accessory.ts)
 - [WiFi router](https://github.com/xxandev/homekit/tree/main/example/wifi_router) [**dev**](https://github.com/homebridge/HAP-NodeJS/blob/master/src/accessories/Wi-FiRouter_accessory.ts)

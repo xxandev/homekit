@@ -1,8 +1,6 @@
 package homekit
 
 import (
-	"fmt"
-
 	"github.com/brutella/hap/accessory"
 	haps "github.com/xxandev/homekit/hap-service"
 )
@@ -37,7 +35,10 @@ func (acc *AccessoryDoor) GetAccessory() *accessory.A {
 	return acc.A
 }
 
-//NewAccessoryDoor returns AccessoryDoor
+//NewAccessoryDoor returns *Door.
+//  (COMPATIBILITY)  - left for compatibility, recommended NewAcc...(id, info, args..)
+//
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
 //  args[0](int) - TargetPosition.SetValue(args[0]) default(0)
 //  args[1](int) - TargetPosition.SetMinValue(args[1]) default(0)
 //  args[2](int) - TargetPosition.SetMaxValue(args[2]) default(100)
@@ -63,13 +64,38 @@ func NewAccessoryDoor(info accessory.Info, args ...interface{}) *AccessoryDoor {
 	return &acc
 }
 
-func (acc *AccessoryDoor) OnValuesRemoteUpdates(fn func()) {
-	acc.Door.TargetPosition.OnValueRemoteUpdate(func(int) { fn() })
+//NewAccDoor returns *Door.
+//  HomeKit requires that every accessory has a unique id, which must not change between system restarts.
+//  The best would be to specify the unique id for every accessory yourself.
+//
+//  id (uint64) - accessory aid
+//  info (accessory.Info) - struct accessory.Info{Name, SerialNumber, Manufacturer, Model, Firmware string}
+//  args[0](int) - TargetPosition.SetValue(args[0]) default(0)
+//  args[1](int) - TargetPosition.SetMinValue(args[1]) default(0)
+//  args[2](int) - TargetPosition.SetMaxValue(args[2]) default(100)
+//  args[3](int) - TargetPosition.SetStepValue(args[3]) default(1)
+func NewAccDoor(id uint64, info accessory.Info, args ...interface{}) *AccessoryDoor {
+	acc := AccessoryDoor{}
+	acc.A = accessory.New(info, accessory.TypeDoor)
+	acc.Door = haps.NewDoor()
+	n := len(args)
+	if n > 0 {
+		acc.Door.TargetPosition.SetValue(toi(args[0], 0))
+	}
+	if n > 1 {
+		acc.Door.TargetPosition.SetMinValue(toi(args[1], 0))
+	}
+	if n > 2 {
+		acc.Door.TargetPosition.SetMaxValue(toi(args[2], 100))
+	}
+	if n > 3 {
+		acc.Door.TargetPosition.SetStepValue(toi(args[3], 1))
+	}
+	acc.AddS(acc.Door.S)
+	acc.A.Id = id
+	return &acc
 }
 
-func (acc *AccessoryDoor) OnExample() {
-	acc.Door.TargetPosition.OnValueRemoteUpdate(func(v int) {
-		acc.Door.CurrentPosition.SetValue(v)
-		fmt.Printf("[%[1]T - %[2]v - %[3]v] remote update target position: %[4]T - %[4]v \n", acc, acc.A.Info.SerialNumber.Value(), acc.A.Info.Name.Value(), v)
-	})
+func (acc *AccessoryDoor) OnValuesRemoteUpdates(fn func()) {
+	acc.Door.TargetPosition.OnValueRemoteUpdate(func(int) { fn() })
 }

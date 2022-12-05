@@ -1,1 +1,0 @@
-# Accessory Thermostat Uncontrol
