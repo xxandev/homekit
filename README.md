@@ -19,7 +19,7 @@ This repository is an add-on to [brutella/hap](https://github.com/brutella/hap) 
 **APPLE DEVICE:** ipad/iphone (os 16.1)
 
 ## Accessory List:
-- [Bridge](https://github.com/xxandev/homekit/tree/main/example/_bridge)
+- [Bridge](https://github.com/xxandev/homekit/tree/main/example/bridge)
 - [Air Purifier](https://github.com/xxandev/homekit/tree/main/example/air_purifier)
 - [Humidifier dehumidifier](https://github.com/xxandev/homekit/tree/main/example/humidifier_dehumidifier)
 - [Door](https://github.com/xxandev/homekit/tree/main/example/door)
